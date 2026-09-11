@@ -80,7 +80,7 @@ function stringMap(value: unknown): Record<string, string> {
 
 function normalizeMeta(raw: Record<string, unknown>): RoomMeta {
   return {
-    name: typeof raw.name === 'string' ? raw.name : 'Schätzrunde',
+    name: typeof raw.name === 'string' ? raw.name : 'EstiMeow',
     deckId: typeof raw.deckId === 'string' ? raw.deckId : 'custom',
     deck: stringList(raw.deck),
     revealed: raw.revealed === true,

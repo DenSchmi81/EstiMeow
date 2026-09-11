@@ -854,6 +854,14 @@ a {
   line-height: 1.5;
 }
 
+.hero .hero-tagline {
+  margin: 20px 0 0;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 .feature-list {
   display: grid;
   gap: 10px;

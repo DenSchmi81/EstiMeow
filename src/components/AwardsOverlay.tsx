@@ -35,7 +35,7 @@ export function AwardsOverlay({ awards, onClose }: { awards: Award[]; onClose: (
       }}
     >
       <div className="awards">
-        <h2 id={titleId}>🏆 Die Awards der Schätzrunde</h2>
+        <h2 id={titleId}>🏆 Die EstiMeow-Awards</h2>
         <p>{awards.length ? 'Tusch! Und die Preise gehen an …' : 'Noch zu wenig gespielt – schätzt noch ein paar Runden!'}</p>
         {awards.length > 0 && (
           <div className="award-grid">

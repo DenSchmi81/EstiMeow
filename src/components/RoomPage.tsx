@@ -17,7 +17,7 @@ import { ThrowLayer } from './ThrowLayer';
 
 const NAME_KEY = 'sr-name';
 const AVATAR_KEY = 'sr-avatar';
-const DEFAULT_TITLE = 'Schätzrunde – Planning Poker';
+const DEFAULT_TITLE = 'EstiMeow – purrfect estimates for agile teams';
 const DRUMROLL_MS = 1100;
 
 function loadStored(key: string): string | null {
@@ -91,7 +91,7 @@ export function RoomPage({ roomId }: { roomId: string }) {
 
   useEffect(() => {
     if (!roomName) return;
-    document.title = `${roomName} · Schätzrunde`;
+    document.title = `${roomName} · EstiMeow`;
     return () => {
       document.title = DEFAULT_TITLE;
     };

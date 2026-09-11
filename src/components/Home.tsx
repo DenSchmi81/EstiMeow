@@ -17,7 +17,7 @@ export function Home() {
     setBusy(true);
     setError(null);
     try {
-      const id = await createRoom(name.trim() || 'Schätzrunde', deck.deckId, cards);
+      const id = await createRoom(name.trim() || 'EstiMeow', deck.deckId, cards);
       window.location.hash = `#/r/${id}`;
     } catch (err) {
       setError(errorMessage(err));
@@ -35,6 +35,7 @@ export function Home() {
             <span>5</span>
             <span>8</span>
           </div>
+          <p className="hero-tagline">purrfect estimates for agile teams</p>
           <h1>
             Schätzen im Team.
             <br />

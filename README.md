@@ -11,7 +11,11 @@ Planning Poker für agile Teams: Raum erstellen, Link teilen, gemeinsam schätze
 - Auswertung mit Verteilung, Durchschnitt, nächster Karte und Einigkeit (inkl. Konfetti bei 100 %)
 - Kartendecks: Fibonacci, modifizierte Fibonacci, T-Shirt-Größen, Potenzen von 2 oder ein eigenes Deck
 - Zuschauer-Modus (dabei sein, ohne abzustimmen)
+- Meme-Avatare per GIPHY-Suche (mit Emoji-Avataren als Ausweichlösung)
 - Emojis und Meme-Sticker auf Mitspieler werfen 🍅
+- Trommelwirbel beim Aufdecken, Ausreißer-Spotlight mit Sprechblasen
+- Awards-Zeremonie für alle: Scharfschütze, Ewiger Optimist, Kaffee-Junkie, Wurfmaschine …
+- Soundeffekte (synthetisiert, mit Stumm-Schalter)
 - Hell-, Dunkel- und System-Modus
 
 ## Technik

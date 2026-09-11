@@ -1,5 +1,16 @@
 import type { Player, ThrowKind } from '../sync/room';
+import { AvatarImage } from './AvatarImage';
 import { ThrowPicker } from './ThrowPicker';
+
+const LOW_LINES = ['Warum so optimistisch? 🌈', 'Weißt du was, das wir nicht wissen? 🤔', 'Nur ein Zweizeiler, oder? 😏'];
+const HIGH_LINES = ['Erklär dich! 🎤', 'Was hast du gesehen?! 😱', 'Angst vor dem Legacy-Code? 👻'];
+
+/** Stabile Auswahl pro Spieler und Runde, damit die Sprechblase bei allen gleich lautet. */
+function pickLine(lines: string[], playerId: string, round: number): string {
+  let hash = round;
+  for (const char of playerId) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  return lines[hash % lines.length];
+}
 
 interface SeatProps {
   player: Player;
@@ -7,6 +18,8 @@ interface SeatProps {
   revealed: boolean;
   isMe: boolean;
   placement: 'above' | 'below';
+  spotlight: 'low' | 'high' | null;
+  round: number;
   canThrow: boolean;
   pickerOpen: boolean;
   onTogglePicker: () => void;
@@ -15,24 +28,29 @@ interface SeatProps {
 }
 
 export function Seat(props: SeatProps) {
-  const { player, vote, revealed, isMe, placement, canThrow, pickerOpen } = props;
+  const { player, vote, revealed, isMe, placement, spotlight, round, canThrow, pickerOpen } = props;
   const hasVote = vote !== undefined;
   const state = hasVote ? (revealed ? 'revealed' : 'voted') : 'empty';
 
-  const card = (
-    <span className="seat-card">
-      <span className={`card-slot ${state}`}>
-        <span className="card-inner">
-          <span className="face back" />
-          {/* Wert erst nach dem Aufdecken ins DOM, damit niemand vorher spicken kann. */}
-          <span className="face front">{hasVote && revealed ? vote : ''}</span>
+  const body = (
+    <>
+      <span className="seat-avatar">
+        <AvatarImage avatar={player.avatar} name={player.name} size="lg" />
+      </span>
+      <span className="seat-card">
+        <span className={`card-slot ${state}`}>
+          <span className="card-inner">
+            <span className="face back" />
+            {/* Wert erst nach dem Aufdecken ins DOM, damit niemand vorher spicken kann. */}
+            <span className="face front">{hasVote && revealed ? vote : ''}</span>
+          </span>
         </span>
       </span>
-    </span>
+    </>
   );
 
   return (
-    <div className={`seat${isMe ? ' me' : ''}`} data-player-id={player.id}>
+    <div className={`seat${isMe ? ' me' : ''}${spotlight ? ' spot' : ''}`} data-player-id={player.id}>
       {canThrow ? (
         <button
           type="button"
@@ -41,15 +59,20 @@ export function Seat(props: SeatProps) {
           title={`Etwas auf ${player.name} werfen`}
           onClick={props.onTogglePicker}
         >
-          {card}
+          {body}
         </button>
       ) : (
-        card
+        <span className="seat-body">{body}</span>
       )}
       <span className="seat-name" title={player.name}>
         {player.name}
         {isMe && <span className="you"> (du)</span>}
       </span>
+      {spotlight && !pickerOpen && (
+        <span className={`speech-bubble ${placement}`}>
+          {pickLine(spotlight === 'low' ? LOW_LINES : HIGH_LINES, player.id, round)}
+        </span>
+      )}
       {pickerOpen && (
         <ThrowPicker
           targetName={player.name}

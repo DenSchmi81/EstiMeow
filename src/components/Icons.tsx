@@ -58,3 +58,24 @@ export const EyeIcon = () => (
     <circle cx="12" cy="12" r="3" />
   </svg>
 );
+
+export const SpeakerIcon = () => (
+  <svg {...base}>
+    <path d="M11 5 6 9H2v6h4l5 4V5z" />
+    <path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14" />
+  </svg>
+);
+
+export const SpeakerOffIcon = () => (
+  <svg {...base}>
+    <path d="M11 5 6 9H2v6h4l5 4V5z" />
+    <path d="m23 9-6 6M17 9l6 6" />
+  </svg>
+);
+
+export const TrophyIcon = () => (
+  <svg {...base}>
+    <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z" />
+    <path d="M17 5h3v2a4 4 0 0 1-4 4M7 5H4v2a4 4 0 0 0 4 4" />
+  </svg>
+);

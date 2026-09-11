@@ -15,6 +15,7 @@
           "revealed": { ".validate": "newData.isBoolean()" },
           "round": { ".validate": "newData.isNumber()" },
           "createdAt": { ".validate": "newData.isNumber()" },
+          "awardsAt": { ".validate": "newData.isNumber()" },
           "$other": { ".validate": false }
         },
         "players": {
@@ -23,6 +24,7 @@
             ".validate": "newData.hasChildren(['name', 'spectator'])",
             "name": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 30" },
             "spectator": { ".validate": "newData.isBoolean()" },
+            "avatar": { ".validate": "newData.isString() && newData.val().matches(/^(giphy:[A-Za-z0-9]{1,40}|emoji:.{1,16})$/)" },
             "joinedAt": { ".validate": "newData.isNumber()" },
             "$other": { ".validate": false }
           }
@@ -34,6 +36,34 @@
               ".write": "auth != null && auth.uid === $uid",
               ".validate": "newData.isString() && newData.val().length <= 12"
             }
+          }
+        },
+        "rounds": {
+          "$round": {
+            ".write": "auth != null && !data.exists() && newData.exists()",
+            ".validate": "newData.hasChildren(['votes', 'deck', 'at'])",
+            "votes": {
+              "$uid": { ".validate": "newData.isString() && newData.val().length <= 12" }
+            },
+            "names": {
+              "$uid": { ".validate": "newData.isString() && newData.val().length <= 30" }
+            },
+            "avatars": {
+              "$uid": { ".validate": "newData.isString() && newData.val().length <= 60" }
+            },
+            "deck": {
+              "$index": { ".validate": "newData.isString() && newData.val().length <= 12" }
+            },
+            "at": { ".validate": "newData.isNumber() && newData.val() <= now" },
+            "$other": { ".validate": false }
+          }
+        },
+        "stats": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid",
+            "thrown": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+            "hit": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+            "$other": { ".validate": false }
           }
         },
         "throws": {

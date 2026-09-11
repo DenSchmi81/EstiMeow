@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import type { ThrowKind } from '../sync/room';
-import { EMOJIS, MEMES } from '../throwables';
+import { EMOJIS, MEME_GROUPS } from '../throwables';
 
 interface ThrowPickerProps {
   targetName: string;
@@ -55,17 +55,22 @@ export function ThrowPicker({ targetName, placement, onThrow, onClose }: ThrowPi
         </div>
       ) : (
         <div className="meme-list">
-          {MEMES.map((meme) => (
-            <button
-              key={meme.id}
-              type="button"
-              className="meme-btn"
-              style={{ '--meme': meme.color } as CSSProperties}
-              onClick={() => onThrow('meme', meme.id)}
-            >
-              <span aria-hidden="true">{meme.emoji}</span>
-              {meme.text}
-            </button>
+          {MEME_GROUPS.map((group) => (
+            <section key={group.title} aria-label={group.title}>
+              <h4 className="meme-group-title">{group.title}</h4>
+              {group.memes.map((meme) => (
+                <button
+                  key={meme.id}
+                  type="button"
+                  className="meme-btn"
+                  style={{ '--meme': meme.color } as CSSProperties}
+                  onClick={() => onThrow('meme', meme.id)}
+                >
+                  <span aria-hidden="true">{meme.emoji}</span>
+                  {meme.text}
+                </button>
+              ))}
+            </section>
           ))}
         </div>
       )}

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { sfx } from '../sounds';
 import type { ThrowEvent } from '../sync/room';
 import { EMOJIS, MEMES } from '../throwables';
 
@@ -21,11 +22,13 @@ export function ThrowLayer({ subscribe }: ThrowLayerProps) {
   return <div ref={layerRef} className="throw-layer" aria-hidden="true" />;
 }
 
+/** Zielpunkt: am liebsten das Avatar-Gesicht, sonst die Karte bzw. der Zuschauer-Chip. */
 function locate(playerId: string) {
-  const seat = document.querySelector<HTMLElement>(`[data-player-id="${CSS.escape(playerId)}"]`);
-  if (!seat) return null;
-  const rect = (seat.querySelector<HTMLElement>('.card-slot') ?? seat).getBoundingClientRect();
-  return { seat, x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+  const holder = document.querySelector<HTMLElement>(`[data-player-id="${CSS.escape(playerId)}"]`);
+  if (!holder) return null;
+  const anchor = holder.querySelector<HTMLElement>('.seat-avatar, .card-slot, .avatar') ?? holder;
+  const rect = anchor.getBoundingClientRect();
+  return { holder, x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
 }
 
 function createProjectile(event: ThrowEvent): HTMLElement | null {
@@ -71,6 +74,7 @@ function launch(layer: HTMLElement, event: ThrowEvent) {
   middle.appendChild(projectile);
   outer.appendChild(middle);
   layer.appendChild(outer);
+  sfx.whoosh();
 
   const spin = (Math.random() < 0.5 ? -1 : 1) * (event.kind === 'emoji' ? 540 : 20);
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -99,12 +103,13 @@ function launch(layer: HTMLElement, event: ThrowEvent) {
   );
 
   flight.onfinish = () => {
-    target.seat.classList.remove('hit');
-    void target.seat.offsetWidth; // Animation neu starten, falls kurz hintereinander getroffen
-    target.seat.classList.add('hit');
-    window.setTimeout(() => target.seat.classList.remove('hit'), 600);
+    target.holder.classList.remove('hit');
+    void target.holder.offsetWidth; // Animation neu starten, falls kurz hintereinander getroffen
+    target.holder.classList.add('hit');
+    window.setTimeout(() => target.holder.classList.remove('hit'), 600);
 
     if (event.kind === 'emoji') {
+      sfx.splat();
       splash(layer, event.item, to.x, to.y);
       projectile.animate(
         [
@@ -114,6 +119,7 @@ function launch(layer: HTMLElement, event: ThrowEvent) {
         { duration: 500, easing: 'ease-out', fill: 'forwards' },
       ).onfinish = () => outer.remove();
     } else {
+      sfx.boing();
       const tilt = spin;
       projectile.animate(
         [

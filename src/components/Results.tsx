@@ -76,7 +76,7 @@ export function Results({ deck, players, votes }: ResultsProps) {
   );
 }
 
-function Confetti() {
+export function Confetti() {
   const pieces = useMemo(
     () =>
       Array.from({ length: 28 }, (_, i) => ({

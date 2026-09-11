@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { isLocalMode } from '../sync/backend';
+import { MuteToggle } from './MuteToggle';
 import { ThemeToggle } from './ThemeToggle';
 
 export function Header({ children }: { children?: ReactNode }) {
@@ -14,6 +15,7 @@ export function Header({ children }: { children?: ReactNode }) {
           <span className="brand-name">Schätzrunde</span>
         </a>
         <div className="header-slot">{children}</div>
+        <MuteToggle />
         <ThemeToggle />
       </header>
       {isLocalMode && (

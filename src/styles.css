@@ -287,17 +287,439 @@ a {
   white-space: nowrap;
 }
 
+.icon-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- Avatare ---------- */
+
 .avatar {
+  position: relative;
   display: grid;
   place-items: center;
   flex-shrink: 0;
   width: 30px;
   height: 30px;
+  overflow: hidden;
   border-radius: 50%;
   background: var(--accent);
   color: var(--accent-contrast);
   font-size: 14px;
   font-weight: 700;
+}
+
+.avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar.is-emoji {
+  background: var(--accent-soft);
+}
+
+.avatar.is-gif {
+  background: var(--surface-2);
+}
+
+.avatar-emoji {
+  font-size: 1.35em;
+  line-height: 1;
+}
+
+.avatar-sm {
+  width: 22px;
+  height: 22px;
+  font-size: 11px;
+}
+
+.avatar-lg {
+  width: 56px;
+  height: 56px;
+  border: 3px solid var(--surface);
+  box-shadow: var(--shadow-sm);
+  font-size: 22px;
+}
+
+.avatar-xl {
+  width: 88px;
+  height: 88px;
+  border: 4px solid var(--surface);
+  box-shadow: var(--shadow-lg);
+  font-size: 34px;
+}
+
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-head .field {
+  flex: 1;
+}
+
+.avatar-picker {
+  display: grid;
+  gap: 10px;
+}
+
+.avatar-search {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.avatar-search:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip:hover,
+.chip.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.gif-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  gap: 6px;
+  max-height: 250px;
+  padding: 2px;
+  overflow-y: auto;
+}
+
+.gif-tile,
+.emoji-avatar {
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 3px solid transparent;
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+
+.gif-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gif-tile:hover,
+.emoji-avatar:hover {
+  transform: scale(1.05);
+}
+
+.gif-tile.selected,
+.emoji-avatar.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.emoji-avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+}
+
+.emoji-avatar {
+  font-size: 26px;
+}
+
+.giphy-attribution {
+  justify-self: end;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.dialog.wide {
+  width: min(560px, 100%);
+}
+
+/* ---------- Plätze mit Avatar, Spotlight & Trommelwirbel ---------- */
+
+.table-area .seat-row {
+  min-height: 150px;
+}
+
+.seat-button,
+.seat-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.seat-avatar {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin-bottom: -12px;
+}
+
+.seat.hit .seat-avatar,
+.spectator-chip.hit {
+  animation: shake 0.5s;
+}
+
+.spectators .spectator-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 3px;
+}
+
+.seat.spot {
+  isolation: isolate;
+}
+
+.seat.spot::before {
+  content: '';
+  position: absolute;
+  inset: -22px -16px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(250 204 21 / 0.4), transparent);
+  pointer-events: none;
+  animation: spot-pulse 1.6s ease-in-out infinite;
+}
+
+.seat.spot .face,
+.seat.spot .avatar {
+  box-shadow: 0 0 0 3px #facc15, 0 0 22px 6px rgb(250 204 21 / 0.5);
+}
+
+.speech-bubble {
+  position: absolute;
+  left: 50%;
+  z-index: 25;
+  width: max-content;
+  max-width: 190px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: #facc15;
+  color: #1c1400;
+  box-shadow: var(--shadow-lg);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  translate: -50% 0;
+  pointer-events: none;
+  animation: bubble-in 0.45s cubic-bezier(0.3, 0.7, 0.4, 1.4) both;
+}
+
+.speech-bubble.above {
+  bottom: calc(100% + 8px);
+}
+
+.speech-bubble.below {
+  top: calc(100% + 8px);
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  border: 7px solid transparent;
+  translate: -50% 0;
+}
+
+.speech-bubble.above::after {
+  top: 100%;
+  border-top-color: #facc15;
+}
+
+.speech-bubble.below::after {
+  bottom: 100%;
+  border-bottom-color: #facc15;
+}
+
+.drumroll {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  animation: wobble 0.18s ease-in-out infinite alternate;
+}
+
+.table-area.suspense .card-slot.voted {
+  animation: jitter 0.12s ease-in-out infinite alternate;
+}
+
+/* ---------- Awards ---------- */
+
+.awards-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  overflow-y: auto;
+  background: rgb(8 12 24 / 0.72);
+  backdrop-filter: blur(4px);
+  animation: fade 0.2s ease-out;
+}
+
+.awards {
+  width: min(780px, 100%);
+  color: #fff;
+  text-align: center;
+}
+
+.awards h2 {
+  margin: 0 0 6px;
+  font-size: clamp(26px, 5vw, 40px);
+}
+
+.awards > p {
+  margin: 0 0 22px;
+  color: rgb(255 255 255 / 0.78);
+}
+
+.award-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.award-card {
+  padding: 18px 14px;
+  border-radius: 18px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+  animation: award-in 0.5s cubic-bezier(0.3, 0.7, 0.4, 1.4) both;
+}
+
+.award-emoji {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.award-title {
+  margin: 8px 0 12px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.award-winners {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.award-winner {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.award-reason {
+  margin: 12px 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.awards .btn.big {
+  width: auto;
+  min-width: 220px;
+}
+
+@keyframes spot-pulse {
+  50% {
+    opacity: 0.55;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translateY(8px);
+  }
+}
+
+@keyframes wobble {
+  from {
+    transform: rotate(-3deg) scale(1);
+  }
+  to {
+    transform: rotate(3deg) scale(1.06);
+  }
+}
+
+@keyframes jitter {
+  from {
+    transform: translateY(-2px) rotate(-3deg);
+  }
+  to {
+    transform: translateY(1px) rotate(3deg);
+  }
+}
+
+@keyframes award-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+}
+
+@media (max-width: 640px) {
+  .app-header .theme-toggle .opt-system {
+    display: none;
+  }
+
+  .app-header .icon-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .app-header .header-actions {
+    gap: 6px;
+  }
+
+  .emoji-avatar-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .avatar-xl {
+    width: 64px;
+    height: 64px;
+    font-size: 26px;
+  }
 }
 
 .theme-toggle {
@@ -858,16 +1280,18 @@ a {
 
 .emoji-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .emoji-btn {
-  height: 44px;
+  height: 40px;
   border: 0;
   border-radius: 10px;
   background: transparent;
-  font-size: 24px;
+  font-size: 22px;
   cursor: pointer;
   transition: transform 0.1s, background-color 0.1s;
 }
@@ -880,8 +1304,26 @@ a {
 .meme-list {
   display: grid;
   gap: 2px;
-  max-height: 250px;
+  max-height: 290px;
   overflow: auto;
+}
+
+.meme-list section {
+  display: grid;
+  gap: 2px;
+}
+
+.meme-group-title {
+  margin: 8px 8px 2px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.meme-list section:first-child .meme-group-title {
+  margin-top: 2px;
 }
 
 .meme-btn {

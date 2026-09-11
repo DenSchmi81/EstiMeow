@@ -3,11 +3,13 @@ import { useEffect, useId, type ReactNode } from 'react';
 interface DialogProps {
   title: string;
   children: ReactNode;
+  /** Breitere Variante, z. B. für die Avatar-Auswahl. */
+  wide?: boolean;
   /** Ohne onClose lässt sich der Dialog nicht wegklicken (z. B. Namensabfrage beim Beitritt). */
   onClose?: () => void;
 }
 
-export function Dialog({ title, children, onClose }: DialogProps) {
+export function Dialog({ title, children, wide, onClose }: DialogProps) {
   const titleId = useId();
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export function Dialog({ title, children, onClose }: DialogProps) {
         if (e.target === e.currentTarget) onClose?.();
       }}
     >
-      <div className="dialog" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+      <div className={`dialog${wide ? ' wide' : ''}`} role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <h2 id={titleId}>{title}</h2>
         {children}
       </div>

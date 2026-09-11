@@ -20,7 +20,7 @@ export function ThemeToggle() {
           aria-checked={pref === option.value}
           aria-label={option.label}
           title={option.label}
-          className={pref === option.value ? 'active' : undefined}
+          className={`opt-${option.value}${pref === option.value ? ' active' : ''}`}
           onClick={() => setPref(option.value)}
         >
           {option.icon}

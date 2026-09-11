@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import type { Spotlight } from '../fun';
 import type { Player, ThrowKind } from '../sync/room';
 import { Seat } from './Seat';
 
@@ -6,6 +7,9 @@ interface TableProps {
   players: Player[];
   votes: Record<string, string>;
   revealed: boolean;
+  suspense: boolean;
+  spotlight: Spotlight | null;
+  round: number;
   meId: string | null;
   canThrow: boolean;
   onReveal: () => void;
@@ -25,7 +29,8 @@ function arrangeSeats(players: Player[]) {
   };
 }
 
-export function Table({ players, votes, revealed, meId, canThrow, onReveal, onNewRound, onThrow }: TableProps) {
+export function Table(props: TableProps) {
+  const { players, votes, revealed, suspense, spotlight, round, meId, canThrow, onReveal, onNewRound, onThrow } = props;
   const [pickerFor, setPickerFor] = useState<string | null>(null);
   const closePicker = useCallback(() => setPickerFor(null), []);
   const { top, left, right, bottom } = arrangeSeats(players);
@@ -39,6 +44,8 @@ export function Table({ players, votes, revealed, meId, canThrow, onReveal, onNe
       revealed={revealed}
       isMe={player.id === meId}
       placement={placement}
+      spotlight={spotlight?.low.includes(player.id) ? 'low' : spotlight?.high.includes(player.id) ? 'high' : null}
+      round={round}
       canThrow={canThrow && player.id !== meId}
       pickerOpen={pickerFor === player.id}
       onTogglePicker={() => setPickerFor((current) => (current === player.id ? null : player.id))}
@@ -49,6 +56,7 @@ export function Table({ players, votes, revealed, meId, canThrow, onReveal, onNe
 
   let center;
   if (players.length === 0) center = <p className="table-hint">Noch niemand am Tisch</p>;
+  else if (suspense) center = <p className="drumroll">🥁 Trommelwirbel …</p>;
   else if (revealed)
     center = (
       <button type="button" className="btn primary" onClick={onNewRound}>
@@ -64,12 +72,12 @@ export function Table({ players, votes, revealed, meId, canThrow, onReveal, onNe
   else center = <p className="table-hint">Wählt eure Karten!</p>;
 
   return (
-    <div className="table-area">
+    <div className={`table-area${suspense ? ' suspense' : ''}`}>
       <div className="seat-row top">{top.map((p) => seat(p, 'below'))}</div>
       <div className="seat-col left">{left.map((p) => seat(p, 'below'))}</div>
       <div className="table">
         {center}
-        {!revealed && players.length > 0 && (
+        {!revealed && !suspense && players.length > 0 && (
           <p className="table-count">
             {votedCount} von {players.length} haben gewählt
           </p>

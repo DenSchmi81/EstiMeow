@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { PlayerStats, RoundSnapshot } from '../fun';
 import { errorMessage, randomId } from '../util';
 import { getBackend, type Backend } from './backend';
 
 // Datenmodell unter rooms/<roomId>:
-//   meta               { name, deckId, deck[], revealed, round, createdAt }
-//   players/<uid>      { name, spectator, joinedAt }   – nur vom Spieler selbst beschreibbar
-//   votes/<round>/<uid> "5"                             – neue Runde = round + 1, keine fremden Schreibzugriffe nötig
-//   throws/<pushId>    { from, to, kind, item, at }     – kurzlebige Emoji-/Meme-Würfe
+//   meta                { name, deckId, deck[], revealed, round, createdAt, awardsAt }
+//   players/<uid>       { name, spectator, avatar, joinedAt }  – nur vom Spieler selbst beschreibbar
+//   votes/<round>/<uid> "5"                                   – neue Runde = round + 1, keine fremden Schreibzugriffe nötig
+//   rounds/<round>      { votes, names, avatars, deck, at }   – Schnappschuss beim Aufdecken, Grundlage der Awards
+//   stats/<uid>         { thrown, hit }                       – Wurf-Statistik, nur vom Spieler selbst beschreibbar
+//   throws/<pushId>     { from, to, kind, item, at }          – kurzlebige Emoji-/Meme-Würfe
 
 export interface RoomMeta {
   name: string;
@@ -14,18 +17,21 @@ export interface RoomMeta {
   deck: string[];
   revealed: boolean;
   round: number;
+  awardsAt: number | null;
 }
 
 export interface Player {
   id: string;
   name: string;
   spectator: boolean;
+  avatar: string | null;
   joinedAt: number;
 }
 
 export interface Profile {
   name: string;
   spectator: boolean;
+  avatar: string | null;
 }
 
 export type ThrowKind = 'emoji' | 'meme';
@@ -43,6 +49,7 @@ export type RoomStatus = 'connecting' | 'ready' | 'missing' | 'error';
 interface PlayerRecord {
   name?: unknown;
   spectator?: unknown;
+  avatar?: unknown;
   joinedAt?: unknown;
 }
 
@@ -56,19 +63,48 @@ interface ThrowRecord {
 
 const roomPath = (roomId: string) => `rooms/${roomId}`;
 
+const asRecord = (value: unknown): Record<string, unknown> =>
+  typeof value === 'object' && value !== null ? (value as Record<string, unknown>) : {};
+
+// Firebase liefert Objekte mit numerischen Schlüsseln teils als Array – beides wird akzeptiert.
+function stringList(value: unknown): string[] {
+  const list = Array.isArray(value) ? value : Object.values(asRecord(value));
+  return list.filter((item): item is string => typeof item === 'string');
+}
+
+function stringMap(value: unknown): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(asRecord(value)).filter((entry): entry is [string, string] => typeof entry[1] === 'string'),
+  );
+}
+
 function normalizeMeta(raw: Record<string, unknown>): RoomMeta {
-  const deck = Array.isArray(raw.deck)
-    ? raw.deck
-    : typeof raw.deck === 'object' && raw.deck !== null
-      ? Object.values(raw.deck)
-      : [];
   return {
     name: typeof raw.name === 'string' ? raw.name : 'Schätzrunde',
     deckId: typeof raw.deckId === 'string' ? raw.deckId : 'custom',
-    deck: deck.filter((card): card is string => typeof card === 'string'),
+    deck: stringList(raw.deck),
     revealed: raw.revealed === true,
     round: typeof raw.round === 'number' ? raw.round : 1,
+    awardsAt: typeof raw.awardsAt === 'number' ? raw.awardsAt : null,
   };
+}
+
+function normalizeRounds(value: unknown): RoundSnapshot[] {
+  return Object.values(asRecord(value)).flatMap((raw) => {
+    const round = asRecord(raw);
+    const votes = stringMap(round.votes);
+    if (Object.keys(votes).length === 0) return [];
+    return [{ votes, names: stringMap(round.names), avatars: stringMap(round.avatars), deck: stringList(round.deck) }];
+  });
+}
+
+function normalizeStats(value: unknown): Record<string, PlayerStats> {
+  return Object.fromEntries(
+    Object.entries(asRecord(value)).map(([id, raw]) => {
+      const s = asRecord(raw);
+      return [id, { thrown: typeof s.thrown === 'number' ? s.thrown : 0, hit: typeof s.hit === 'number' ? s.hit : 0 }];
+    }),
+  );
 }
 
 function toThrowEvent(id: string, t: ThrowRecord): ThrowEvent | null {
@@ -94,18 +130,26 @@ export function useRoom(roomId: string, profile: Profile | null) {
   const [meta, setMeta] = useState<RoomMeta | null | undefined>(undefined);
   const [playersRaw, setPlayersRaw] = useState<Record<string, PlayerRecord | null>>({});
   const [votesState, setVotesState] = useState<{ round: number; votes: Record<string, unknown> } | null>(null);
+  const [rounds, setRounds] = useState<RoundSnapshot[]>([]);
+  const [stats, setStats] = useState<Record<string, PlayerStats>>({});
   const throwListeners = useRef(new Set<(event: ThrowEvent) => void>());
   const profileRef = useRef(profile);
+  const statsRef = useRef(stats);
 
   const base = roomPath(roomId);
   const round = meta?.round;
   const joined = profile !== null && !!meta;
   const profileName = profile?.name;
   const profileSpectator = profile?.spectator ?? false;
+  const profileAvatar = profile?.avatar ?? null;
 
   useEffect(() => {
     profileRef.current = profile;
   }, [profile]);
+
+  useEffect(() => {
+    statsRef.current = stats;
+  }, [stats]);
 
   useEffect(() => {
     let cancelled = false;
@@ -147,6 +191,16 @@ export function useRoom(roomId: string, profile: Profile | null) {
     );
   }, [backend, uid, base, round]);
 
+  useEffect(() => {
+    if (!backend || !uid) return;
+    return backend.onValue<unknown>(`${base}/rounds`, (value) => setRounds(normalizeRounds(value)));
+  }, [backend, uid, base]);
+
+  useEffect(() => {
+    if (!backend || !uid) return;
+    return backend.onValue<unknown>(`${base}/stats`, (value) => setStats(normalizeStats(value)));
+  }, [backend, uid, base]);
+
   // Anwesenheit: Spielereintrag anlegen und beim Verbindungsabbruch automatisch entfernen.
   useEffect(() => {
     if (!backend || !uid || !joined) return;
@@ -154,7 +208,14 @@ export function useRoom(roomId: string, profile: Profile | null) {
     const joinedAt = backend.serverTimestamp();
     const unsubscribe = backend.onConnected(playerPath, () => {
       const current = profileRef.current;
-      if (current) void backend.update(playerPath, { name: current.name, spectator: current.spectator, joinedAt });
+      if (current) {
+        void backend.update(playerPath, {
+          name: current.name,
+          spectator: current.spectator,
+          avatar: current.avatar,
+          joinedAt,
+        });
+      }
     });
     return () => {
       unsubscribe();
@@ -164,8 +225,12 @@ export function useRoom(roomId: string, profile: Profile | null) {
 
   useEffect(() => {
     if (!backend || !uid || !joined || !profileName) return;
-    void backend.update(`${base}/players/${uid}`, { name: profileName, spectator: profileSpectator });
-  }, [backend, uid, base, joined, profileName, profileSpectator]);
+    void backend.update(`${base}/players/${uid}`, {
+      name: profileName,
+      spectator: profileSpectator,
+      avatar: profileAvatar,
+    });
+  }, [backend, uid, base, joined, profileName, profileSpectator, profileAvatar]);
 
   useEffect(() => {
     if (!backend || !uid || !joined || !profileSpectator || round === undefined) return;
@@ -188,7 +253,14 @@ export function useRoom(roomId: string, profile: Profile | null) {
           continue;
         }
         const event = toThrowEvent(id, record);
-        if (event) throwListeners.current.forEach((listener) => listener(event));
+        if (!event) continue;
+        if (event.to === uid) {
+          const own = statsRef.current[uid];
+          const hit = (own?.hit ?? 0) + 1;
+          statsRef.current = { ...statsRef.current, [uid]: { thrown: own?.thrown ?? 0, hit } };
+          backend.update(`${base}/stats/${uid}`, { hit }).catch(() => {});
+        }
+        throwListeners.current.forEach((listener) => listener(event));
       }
     });
   }, [backend, uid, base]);
@@ -202,6 +274,7 @@ export function useRoom(roomId: string, profile: Profile | null) {
                 id,
                 name: p.name,
                 spectator: p.spectator === true,
+                avatar: typeof p.avatar === 'string' ? p.avatar : null,
                 joinedAt: typeof p.joinedAt === 'number' ? p.joinedAt : Number.MAX_SAFE_INTEGER,
               }]
             : [],
@@ -212,16 +285,33 @@ export function useRoom(roomId: string, profile: Profile | null) {
 
   const votes = useMemo<Record<string, string>>(() => {
     if (!votesState || votesState.round !== round) return {};
-    return Object.fromEntries(
-      Object.entries(votesState.votes).filter((entry): entry is [string, string] => typeof entry[1] === 'string'),
-    );
+    return stringMap(votesState.votes);
   }, [votesState, round]);
+
+  const snapshotRef = useRef({ players, votes, deck: meta?.deck ?? [] });
+  useEffect(() => {
+    snapshotRef.current = { players, votes, deck: meta?.deck ?? [] };
+  }, [players, votes, meta]);
 
   const actions = useMemo(() => {
     if (!backend || !uid || round === undefined) return null;
     return {
       vote: (card: string | null) => backend.update(`${base}/votes/${round}`, { [uid]: card }),
-      reveal: () => backend.update(`${base}/meta`, { revealed: true }),
+      reveal: () => {
+        const snapshot = snapshotRef.current;
+        const voters = snapshot.players.filter((p) => !p.spectator && snapshot.votes[p.id] !== undefined);
+        if (voters.length === 0) return backend.update(`${base}/meta`, { revealed: true });
+        return backend.update(base, {
+          'meta/revealed': true,
+          [`rounds/${round}`]: {
+            votes: Object.fromEntries(voters.map((p) => [p.id, snapshot.votes[p.id]])),
+            names: Object.fromEntries(voters.map((p) => [p.id, p.name])),
+            avatars: Object.fromEntries(voters.flatMap((p) => (p.avatar ? [[p.id, p.avatar]] : []))),
+            deck: snapshot.deck,
+            at: backend.serverTimestamp(),
+          },
+        });
+      },
       newRound: () =>
         backend.update(base, { 'meta/revealed': false, 'meta/round': round + 1, [`votes/${round}`]: null }),
       saveSettings: (name: string, deck: { deckId: string; cards: string[] } | null) =>
@@ -238,8 +328,13 @@ export function useRoom(roomId: string, profile: Profile | null) {
               }
             : { 'meta/name': name },
         ),
+      startAwards: () => backend.update(`${base}/meta`, { awardsAt: backend.serverTimestamp() }),
       throwAt: async (to: string, kind: ThrowKind, item: string) => {
         const id = await backend.push(`${base}/throws`, { from: uid, to, kind, item, at: backend.serverTimestamp() });
+        const own = statsRef.current[uid];
+        const thrown = (own?.thrown ?? 0) + 1;
+        statsRef.current = { ...statsRef.current, [uid]: { thrown, hit: own?.hit ?? 0 } };
+        backend.update(`${base}/stats/${uid}`, { thrown }).catch(() => {});
         window.setTimeout(() => {
           backend.remove(`${base}/throws/${id}`).catch(() => {});
         }, 8000);
@@ -256,5 +351,5 @@ export function useRoom(roomId: string, profile: Profile | null) {
 
   const status: RoomStatus = error ? 'error' : meta === undefined ? 'connecting' : meta === null ? 'missing' : 'ready';
 
-  return { status, error, uid, meta, players, votes, actions, onThrow };
+  return { status, error, uid, meta, players, votes, rounds, stats, actions, onThrow };
 }

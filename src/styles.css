@@ -212,31 +212,331 @@ a {
   text-decoration: none;
 }
 
-.brand-mark {
+/* ---------- Maskottchen, Logo & Pokertisch: Theme-Tokens ---------- */
+
+:root {
+  --logo-line: #ffffff;
+  --cat-black-line: #101014;
+  --wood: #9a6a42;
+  --wood-line: #b98556;
+  --felt: #3f68d6;
+  --felt-text: rgb(255 255 255 / 0.9);
+  --felt-btn-bg: #ffffff;
+  --felt-btn-fg: var(--accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --logo-line: #141b33;
+    --cat-black-line: #b9c1d6;
+    --wood: #6b4226;
+    --wood-line: #8a5a35;
+    --felt: #1c3470;
+    --felt-btn-bg: var(--accent);
+    --felt-btn-fg: var(--accent-contrast);
+  }
+}
+
+:root[data-theme='dark'] {
+  --logo-line: #141b33;
+  --cat-black-line: #b9c1d6;
+  --wood: #6b4226;
+  --wood-line: #8a5a35;
+  --felt: #1c3470;
+  --felt-btn-bg: var(--accent);
+  --felt-btn-fg: var(--accent-contrast);
+}
+
+/* Logo: zufriedene Katze mit Fibonacci-Kartenfächer */
+.logo {
+  display: block;
+  overflow: visible;
+}
+
+.brand-logo {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.logo-cat {
+  fill: var(--accent);
+}
+
+.logo-tail {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.logo-ears {
+  fill: var(--accent);
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.logo-pink {
+  fill: #f5a3bd;
+}
+
+.logo-inner-ears {
+  opacity: 0.85;
+}
+
+.logo-blush {
+  opacity: 0.55;
+}
+
+.logo-line {
+  fill: none;
+  stroke: var(--logo-line);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.logo-mouth {
+  stroke-width: 1.1;
+}
+
+.logo-whiskers {
+  stroke: #ffffff;
+  stroke-width: 0.9;
+  stroke-linecap: round;
+}
+
+.logo-card {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 1.8;
+}
+
+.logo-card-num {
+  font: 800 7px system-ui, sans-serif;
+  fill: var(--accent);
+}
+
+/* Maskottchen-Katzen */
+.mascot {
+  display: block;
+  overflow: visible;
+}
+
+.hero .hero-cat {
+  width: 190px;
+  height: auto;
+  margin-left: -8px;
+}
+
+.mascot-card {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 3;
+}
+
+.mascot-card.accent {
+  fill: var(--accent);
+}
+
+.mascot-card-num {
+  font: 800 26px system-ui, sans-serif;
+  fill: var(--accent);
+  text-anchor: middle;
+}
+
+.mascot-card-num.on-accent {
+  fill: var(--surface);
+}
+
+.mascot .cat-tail {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: cat-sway 7s ease-in-out infinite;
+}
+
+.mascot .cat-ear-l,
+.mascot .cat-ear-r {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.mascot .cat-ear-l {
+  animation: cat-twitch 11s ease-in-out infinite;
+}
+
+.mascot .cat-breathe {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: cat-breathe 5s ease-in-out infinite;
+}
+
+.mascot .cat-zzz text {
+  font: 700 14px system-ui, sans-serif;
+  fill: var(--felt-text);
+  opacity: 0;
+  animation: cat-zzz 5s ease-in-out infinite;
+}
+
+.mascot .cat-zzz text:nth-child(2) {
+  animation-delay: 1.4s;
+}
+
+.mascot .cat-poke {
+  transform-box: fill-box;
+  animation: cat-poke 2.6s ease-in-out infinite;
+}
+
+/* Pokertisch: Holzrand, blauer Filz, gestrichelte Innenlinie */
+.table-area .table {
   position: relative;
-  width: 28px;
-  height: 28px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--felt);
+  box-shadow: inset 0 0 0 12px var(--wood), inset 0 0 0 15px var(--wood-line), 0 8px 24px rgb(0 0 0 / 0.18);
+  color: var(--felt-text);
+  padding: 28px 40px;
 }
 
-.brand-mark span {
+.table-area .table::after {
+  content: '';
   position: absolute;
-  bottom: 1px;
-  width: 17px;
-  height: 24px;
-  border-radius: 4px;
+  inset: 22px;
+  border: 2px dashed rgb(255 255 255 / 0.14);
+  border-radius: 999px;
+  pointer-events: none;
 }
 
-.brand-mark span:first-child {
-  left: 0;
-  background: var(--accent-soft);
-  border: 2px solid var(--accent);
-  transform: rotate(-12deg);
+.table-area .table .table-hint,
+.table-area .table .table-count {
+  position: relative;
+  z-index: 1;
+  color: var(--felt-text);
 }
 
-.brand-mark span:last-child {
-  right: 0;
-  background: var(--accent);
-  transform: rotate(10deg);
+.table-area .table .btn.primary {
+  position: relative;
+  z-index: 1;
+  background: var(--felt-btn-bg);
+  color: var(--felt-btn-fg);
+}
+
+.table-cat {
+  position: absolute;
+  left: 9%;
+  bottom: 16%;
+  width: 52px;
+  height: auto;
+  pointer-events: none;
+  animation: fade 0.6s ease-out;
+}
+
+/* Anstups-Katze neben der Karte der fehlenden Person */
+.nudge-cat {
+  position: absolute;
+  top: 56px;
+  left: calc(50% + 4px);
+  z-index: 4;
+  width: 46px;
+  height: auto;
+  pointer-events: none;
+  animation: cat-arrive 0.5s ease-out both;
+}
+
+.seat.nudged .seat-card {
+  animation: cat-nudge-shake 2.6s ease-in-out infinite;
+}
+
+.hand-title.nudged {
+  color: var(--accent);
+}
+
+@keyframes cat-sway {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes cat-twitch {
+  0%,
+  90%,
+  100% {
+    transform: none;
+  }
+  93% {
+    transform: rotate(-14deg);
+  }
+  96% {
+    transform: rotate(4deg);
+  }
+}
+
+@keyframes cat-breathe {
+  50% {
+    transform: scale(1.015, 1.035);
+  }
+}
+
+@keyframes cat-zzz {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  30% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes cat-poke {
+  0%,
+  60%,
+  100% {
+    transform: none;
+  }
+  72% {
+    transform: translateX(-14px);
+  }
+  84% {
+    transform: none;
+  }
+}
+
+@keyframes cat-nudge-shake {
+  0%,
+  70%,
+  100% {
+    transform: none;
+  }
+  74% {
+    transform: translateX(-3px) rotate(-5deg);
+  }
+  78% {
+    transform: translateX(2px) rotate(4deg);
+  }
+  82% {
+    transform: none;
+  }
+}
+
+@keyframes cat-arrive {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+@media (max-width: 420px) {
+  .table-cat {
+    display: none;
+  }
 }
 
 .header-slot {
@@ -869,42 +1169,6 @@ a {
   padding: 0;
   list-style: none;
   font-size: 16px;
-}
-
-.hero-cards {
-  display: flex;
-  height: 110px;
-  padding-left: 6px;
-}
-
-.hero-cards span {
-  display: grid;
-  place-items: center;
-  width: 64px;
-  height: 92px;
-  margin-right: -14px;
-  border-radius: 10px;
-  border: 2px solid var(--accent);
-  background: var(--surface);
-  color: var(--accent);
-  box-shadow: var(--shadow-lg);
-  font-size: 28px;
-  font-weight: 800;
-}
-
-.hero-cards span:nth-child(1) {
-  transform: rotate(-10deg) translateY(10px);
-}
-
-.hero-cards span:nth-child(2) {
-  z-index: 1;
-  background: var(--accent);
-  color: var(--accent-contrast);
-  transform: rotate(-1deg);
-}
-
-.hero-cards span:nth-child(3) {
-  transform: rotate(9deg) translateY(10px);
 }
 
 .card-panel {

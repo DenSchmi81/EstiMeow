@@ -19,6 +19,7 @@ const NAME_KEY = 'sr-name';
 const AVATAR_KEY = 'sr-avatar';
 const DEFAULT_TITLE = 'EstiMeow – purrfect estimates for agile teams';
 const DRUMROLL_MS = 1100;
+const NUDGE_DELAY_MS = 10_000;
 
 function loadStored(key: string): string | null {
   try {
@@ -88,6 +89,23 @@ export function RoomPage({ roomId }: { roomId: string }) {
     () => (shownRevealed ? computeSpotlight(votes, seated.map((p) => p.id), deck ?? []) : null),
     [shownRevealed, votes, seated, deck],
   );
+
+  // Anstups-Katze: Haben alle Mitspielenden bis auf eine Person gewählt, stupst sie diese nach 10 s an.
+  // Zuschauer zählen nicht mit, weil nur die sitzenden Spieler betrachtet werden.
+  const laggard =
+    revealed === false && !suspense && seated.length >= 2 && castVotes.length === seated.length - 1
+      ? (seated.find((p) => votes[p.id] === undefined)?.id ?? null)
+      : null;
+  const [nudgeTarget, setNudgeTarget] = useState<string | null>(null);
+  useEffect(() => {
+    setNudgeTarget(null);
+    if (!laggard) return;
+    const timer = window.setTimeout(() => {
+      setNudgeTarget(laggard);
+      sfx.meow();
+    }, NUDGE_DELAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [laggard]);
 
   useEffect(() => {
     if (!roomName) return;
@@ -178,6 +196,7 @@ export function RoomPage({ roomId }: { roomId: string }) {
           revealed={shownRevealed}
           suspense={suspense}
           spotlight={spotlight}
+          nudgeTarget={nudgeTarget}
           round={meta.round}
           meId={uid}
           canThrow={profile !== null}
@@ -205,6 +224,7 @@ export function RoomPage({ roomId }: { roomId: string }) {
           <Hand
             deck={meta.deck}
             selected={myVote}
+            nudged={nudgeTarget !== null && nudgeTarget === uid}
             onSelect={(card) => {
               if (card) sfx.pop();
               void actions?.vote(card);

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { Spotlight } from '../fun';
 import type { Player, ThrowKind } from '../sync/room';
+import { Mascot } from './Mascot';
 import { Seat } from './Seat';
 
 interface TableProps {
@@ -9,6 +10,7 @@ interface TableProps {
   revealed: boolean;
   suspense: boolean;
   spotlight: Spotlight | null;
+  nudgeTarget: string | null;
   round: number;
   meId: string | null;
   canThrow: boolean;
@@ -30,11 +32,14 @@ function arrangeSeats(players: Player[]) {
 }
 
 export function Table(props: TableProps) {
-  const { players, votes, revealed, suspense, spotlight, round, meId, canThrow, onReveal, onNewRound, onThrow } = props;
+  const { players, votes, revealed, suspense, spotlight, nudgeTarget, round, meId, canThrow, onReveal, onNewRound, onThrow } =
+    props;
   const [pickerFor, setPickerFor] = useState<string | null>(null);
   const closePicker = useCallback(() => setPickerFor(null), []);
   const { top, left, right, bottom } = arrangeSeats(players);
   const votedCount = players.filter((p) => votes[p.id] !== undefined).length;
+  // Die Katze döst auf dem Tisch, solange in dieser Runde noch niemand gewählt hat.
+  const catNapping = players.length > 0 && !revealed && !suspense && votedCount === 0;
 
   const seat = (player: Player, placement: 'above' | 'below') => (
     <Seat
@@ -45,6 +50,7 @@ export function Table(props: TableProps) {
       isMe={player.id === meId}
       placement={placement}
       spotlight={spotlight?.low.includes(player.id) ? 'low' : spotlight?.high.includes(player.id) ? 'high' : null}
+      nudged={nudgeTarget === player.id}
       round={round}
       canThrow={canThrow && player.id !== meId}
       pickerOpen={pickerFor === player.id}
@@ -76,6 +82,7 @@ export function Table(props: TableProps) {
       <div className="seat-row top">{top.map((p) => seat(p, 'below'))}</div>
       <div className="seat-col left">{left.map((p) => seat(p, 'below'))}</div>
       <div className="table">
+        {catNapping && <Mascot pose="doze" variant="grey" className="table-cat" />}
         {center}
         {!revealed && !suspense && players.length > 0 && (
           <p className="table-count">

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { isLocalMode } from '../sync/backend';
+import { Logo } from './Logo';
 import { MuteToggle } from './MuteToggle';
 import { ThemeToggle } from './ThemeToggle';
 
@@ -8,10 +9,7 @@ export function Header({ children }: { children?: ReactNode }) {
     <>
       <header className="app-header">
         <a className="brand" href="#/" aria-label="EstiMeow – Startseite">
-          <span className="brand-mark" aria-hidden="true">
-            <span />
-            <span />
-          </span>
+          <Logo className="brand-logo" />
           <span className="brand-name">EstiMeow</span>
         </a>
         <div className="header-slot">{children}</div>

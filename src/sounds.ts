@@ -159,4 +159,27 @@ export const sfx = {
       tone(ctx, { type: 'triangle', freq, start: i * 0.09, duration: 0.25, gain: 0.15 }),
     );
   },
+  /** Leises Miau, wenn die Anstups-Katze kommt */
+  meow() {
+    const ctx = audio();
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const filter = ctx.createBiquadFilter();
+    const amp = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(520, t);
+    osc.frequency.linearRampToValueAtTime(820, t + 0.12);
+    osc.frequency.linearRampToValueAtTime(560, t + 0.45);
+    filter.type = 'bandpass';
+    filter.Q.value = 3;
+    filter.frequency.setValueAtTime(1200, t);
+    filter.frequency.linearRampToValueAtTime(900, t + 0.45);
+    amp.gain.setValueAtTime(0.0001, t);
+    amp.gain.exponentialRampToValueAtTime(0.12, t + 0.05);
+    amp.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+    osc.connect(filter).connect(amp).connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.55);
+  },
 };

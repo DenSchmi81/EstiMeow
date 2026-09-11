@@ -1,5 +1,6 @@
 import type { Player, ThrowKind } from '../sync/room';
 import { AvatarImage } from './AvatarImage';
+import { Mascot } from './Mascot';
 import { ThrowPicker } from './ThrowPicker';
 
 const LOW_LINES = ['Warum so optimistisch? 🌈', 'Weißt du was, das wir nicht wissen? 🤔', 'Nur ein Zweizeiler, oder? 😏'];
@@ -19,6 +20,8 @@ interface SeatProps {
   isMe: boolean;
   placement: 'above' | 'below';
   spotlight: 'low' | 'high' | null;
+  /** Die Anstups-Katze wartet auf diese Person. */
+  nudged: boolean;
   round: number;
   canThrow: boolean;
   pickerOpen: boolean;
@@ -28,7 +31,7 @@ interface SeatProps {
 }
 
 export function Seat(props: SeatProps) {
-  const { player, vote, revealed, isMe, placement, spotlight, round, canThrow, pickerOpen } = props;
+  const { player, vote, revealed, isMe, placement, spotlight, nudged, round, canThrow, pickerOpen } = props;
   const hasVote = vote !== undefined;
   const state = hasVote ? (revealed ? 'revealed' : 'voted') : 'empty';
 
@@ -50,7 +53,10 @@ export function Seat(props: SeatProps) {
   );
 
   return (
-    <div className={`seat${isMe ? ' me' : ''}${spotlight ? ' spot' : ''}`} data-player-id={player.id}>
+    <div
+      className={`seat${isMe ? ' me' : ''}${spotlight ? ' spot' : ''}${nudged ? ' nudged' : ''}`}
+      data-player-id={player.id}
+    >
       {canThrow ? (
         <button
           type="button"
@@ -72,6 +78,14 @@ export function Seat(props: SeatProps) {
         <span className={`speech-bubble ${placement}`}>
           {pickLine(spotlight === 'low' ? LOW_LINES : HIGH_LINES, player.id, round)}
         </span>
+      )}
+      {nudged && !pickerOpen && (
+        <>
+          <Mascot pose="nudge" variant="black" className="nudge-cat" />
+          <span className={`speech-bubble ${placement}`} role="status">
+            Miau? Du fehlst noch 🐾
+          </span>
+        </>
       )}
       {pickerOpen && (
         <ThrowPicker

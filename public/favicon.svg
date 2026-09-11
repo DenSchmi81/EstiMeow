@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .cat { fill: #3563f0; }
+    .tail { fill: none; stroke: #3563f0; stroke-width: 5; stroke-linecap: round; }
+    .ears { fill: #3563f0; stroke: #3563f0; stroke-width: 2; stroke-linejoin: round; }
+    .line { fill: none; stroke: #ffffff; stroke-width: 1.6; stroke-linecap: round; }
+    .card { fill: #ffffff; stroke: #3563f0; stroke-width: 1.8; }
+    .num { font: 800 7px system-ui, sans-serif; fill: #3563f0; }
+    .pink { fill: #f5a3bd; }
+    @media (prefers-color-scheme: dark) {
+      .cat { fill: #7196ff; }
+      .tail { stroke: #7196ff; }
+      .ears { fill: #7196ff; stroke: #7196ff; }
+      .line { stroke: #141b33; }
+      .card { fill: #161d2e; stroke: #7196ff; }
+      .num { fill: #7196ff; }
+    }
+  </style>
+  <path class="tail" d="M46 58 C60 58 62 42 54 35"/>
+  <path class="cat" d="M17 62 C13 46 21 35 32 35 C43 35 51 46 47 62 Z"/>
+  <path class="ears" d="M20 22 L18 5 L31 13 Z M44 22 L46 5 L33 13 Z"/>
+  <path class="pink" opacity=".85" d="M21.6 17 L20.6 9 L27 13.4 Z M42.4 17 L43.4 9 L37 13.4 Z"/>
+  <circle class="cat" cx="32" cy="23" r="13.5"/>
+  <path class="line" d="M24.3 22.2 Q26.8 19.4 29.3 22.2 M34.7 22.2 Q37.2 19.4 39.7 22.2"/>
+  <path class="pink" d="M30.6 26.6 L33.4 26.6 L32 28.2 Z"/>
+  <g transform="rotate(-32 32 74) translate(32 45)"><rect class="card" x="-5.5" y="-8" width="11" height="16" rx="2.2"/><text class="num" x="0" y="2.52" text-anchor="middle">1</text></g>
+  <g transform="rotate(-16 32 74) translate(32 45)"><rect class="card" x="-5.5" y="-8" width="11" height="16" rx="2.2"/><text class="num" x="0" y="2.52" text-anchor="middle">2</text></g>
+  <g transform="translate(32 45)"><rect class="card" x="-5.5" y="-8" width="11" height="16" rx="2.2"/><text class="num" x="0" y="2.52" text-anchor="middle">3</text></g>
+  <g transform="rotate(16 32 74) translate(32 45)"><rect class="card" x="-5.5" y="-8" width="11" height="16" rx="2.2"/><text class="num" x="0" y="2.52" text-anchor="middle">5</text></g>
+  <g transform="rotate(32 32 74) translate(32 45)"><rect class="card" x="-5.5" y="-8" width="11" height="16" rx="2.2"/><text class="num" x="0" y="2.52" text-anchor="middle">8</text></g>
+  <ellipse class="cat" cx="24.5" cy="38.5" rx="4.2" ry="3"/>
+  <ellipse class="cat" cx="39.5" cy="38.5" rx="4.2" ry="3"/>
+</svg>

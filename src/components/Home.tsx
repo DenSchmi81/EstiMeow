@@ -4,6 +4,7 @@ import { createRoom } from '../sync/room';
 import { errorMessage } from '../util';
 import { DeckPicker, resolveDeck, type DeckChoice } from './DeckPicker';
 import { Header } from './Header';
+import { Mascot } from './Mascot';
 
 export function Home() {
   const [name, setName] = useState('Sprint-Schätzung');
@@ -30,11 +31,7 @@ export function Home() {
       <Header />
       <main className="home">
         <section className="hero">
-          <div className="hero-cards" aria-hidden="true">
-            <span>3</span>
-            <span>5</span>
-            <span>8</span>
-          </div>
+          <Mascot pose="hold" variant="ginger" className="hero-cat" title="EstiMeow-Katze mit den Karten 3, 5 und 8" />
           <p className="hero-tagline">purrfect estimates for agile teams</p>
           <h1>
             Schätzen im Team.

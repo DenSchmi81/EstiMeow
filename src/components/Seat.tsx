@@ -3,26 +3,16 @@ import { AvatarImage } from './AvatarImage';
 import { Mascot } from './Mascot';
 import { ThrowPicker } from './ThrowPicker';
 
-const LOW_LINES = ['Warum so optimistisch? 🌈', 'Weißt du was, das wir nicht wissen? 🤔', 'Nur ein Zweizeiler, oder? 😏'];
-const HIGH_LINES = ['Erklär dich! 🎤', 'Was hast du gesehen?! 😱', 'Angst vor dem Legacy-Code? 👻'];
-
-/** Stabile Auswahl pro Spieler und Runde, damit die Sprechblase bei allen gleich lautet. */
-function pickLine(lines: string[], playerId: string, round: number): string {
-  let hash = round;
-  for (const char of playerId) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
-  return lines[hash % lines.length];
-}
-
 interface SeatProps {
   player: Player;
   vote: string | undefined;
   revealed: boolean;
   isMe: boolean;
   placement: 'above' | 'below';
+  /** Höchste bzw. niedrigste Schätzung – nur ein Leuchten, bewusst ohne Kommentar, damit sich niemand rechtfertigen muss. */
   spotlight: 'low' | 'high' | null;
   /** Die Anstups-Katze wartet auf diese Person. */
   nudged: boolean;
-  round: number;
   canThrow: boolean;
   pickerOpen: boolean;
   onTogglePicker: () => void;
@@ -31,7 +21,7 @@ interface SeatProps {
 }
 
 export function Seat(props: SeatProps) {
-  const { player, vote, revealed, isMe, placement, spotlight, nudged, round, canThrow, pickerOpen } = props;
+  const { player, vote, revealed, isMe, placement, spotlight, nudged, canThrow, pickerOpen } = props;
   const hasVote = vote !== undefined;
   const state = hasVote ? (revealed ? 'revealed' : 'voted') : 'empty';
 
@@ -74,11 +64,6 @@ export function Seat(props: SeatProps) {
         {player.name}
         {isMe && <span className="you"> (du)</span>}
       </span>
-      {spotlight && !pickerOpen && (
-        <span className={`speech-bubble ${placement}`}>
-          {pickLine(spotlight === 'low' ? LOW_LINES : HIGH_LINES, player.id, round)}
-        </span>
-      )}
       {nudged && !pickerOpen && (
         <>
           <Mascot pose="nudge" variant="black" className="nudge-cat" />

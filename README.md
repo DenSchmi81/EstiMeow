@@ -17,7 +17,7 @@ Planning-Poker-Schätzungen für agile Teams: Raum erstellen, Link teilen, gemei
 - Katzen-Maskottchen: jede Runde eine andere Tischkatze, die Katze stupst die letzte fehlende Stimme an, und streicheln lassen sich alle
 - Avatar-Baukasten: rund 175 3D-Emojis, dazu Accessoires und Hintergrundfarben – oder einfach 🎲 Zufall
 - Emojis und Meme-Sticker auf Mitspieler werfen 🍅
-- Trommelwirbel beim Aufdecken, Ausreißer-Spotlight mit Sprechblasen
+- Trommelwirbel beim Aufdecken, Spotlight auf höchste und niedrigste Schätzung
 - Awards-Zeremonie für alle: Scharfschütze, Ewiger Optimist, Kaffee-Junkie, Wurfmaschine …
 - Soundeffekte (synthetisiert, mit Stumm-Schalter)
 - Hell-, Dunkel- und System-Modus

@@ -60,7 +60,6 @@ export function CatGallery() {
             placement="above"
             spotlight={null}
             nudged
-            round={1}
             canThrow={false}
             pickerOpen={false}
             onTogglePicker={noop}

@@ -1444,51 +1444,6 @@ a {
   box-shadow: 0 0 0 3px #facc15, 0 0 22px 6px rgb(250 204 21 / 0.5);
 }
 
-.speech-bubble {
-  position: absolute;
-  left: 50%;
-  z-index: 25;
-  width: max-content;
-  max-width: 190px;
-  padding: 6px 10px;
-  border-radius: 12px;
-  background: #facc15;
-  color: #1c1400;
-  box-shadow: var(--shadow-lg);
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
-  translate: -50% 0;
-  pointer-events: none;
-  animation: bubble-in 0.45s cubic-bezier(0.3, 0.7, 0.4, 1.4) both;
-}
-
-.speech-bubble.above {
-  bottom: calc(100% + 8px);
-}
-
-.speech-bubble.below {
-  top: calc(100% + 8px);
-}
-
-.speech-bubble::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  border: 7px solid transparent;
-  translate: -50% 0;
-}
-
-.speech-bubble.above::after {
-  top: 100%;
-  border-top-color: #facc15;
-}
-
-.speech-bubble.below::after {
-  bottom: 100%;
-  border-bottom-color: #facc15;
-}
-
 .drumroll {
   margin: 0;
   font-size: 20px;
@@ -1588,13 +1543,6 @@ a {
   50% {
     opacity: 0.55;
     transform: scale(1.08);
-  }
-}
-
-@keyframes bubble-in {
-  from {
-    opacity: 0;
-    transform: scale(0.5) translateY(8px);
   }
 }
 
@@ -1926,7 +1874,7 @@ a {
   margin: auto 0;
 }
 
-/* Plätze liegen über dem Tisch: Sprechblasen und Wurf-Fenster der oberen Reihe dürfen nicht vom Tisch verdeckt werden. */
+/* Plätze liegen über dem Tisch: Das Wurf-Fenster der oberen Reihe darf nicht vom Tisch verdeckt werden. */
 .seat-row,
 .seat-col {
   position: relative;

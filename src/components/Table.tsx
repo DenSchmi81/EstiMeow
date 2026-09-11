@@ -51,7 +51,6 @@ export function Table(props: TableProps) {
       placement={placement}
       spotlight={spotlight?.low.includes(player.id) ? 'low' : spotlight?.high.includes(player.id) ? 'high' : null}
       nudged={nudgeTarget === player.id}
-      round={round}
       canThrow={canThrow && player.id !== meId}
       pickerOpen={pickerFor === player.id}
       onTogglePicker={() => setPickerFor((current) => (current === player.id ? null : player.id))}

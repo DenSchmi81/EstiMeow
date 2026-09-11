@@ -2,6 +2,8 @@
 
 Planning Poker für agile Teams: Raum erstellen, Link teilen, gemeinsam schätzen – in Echtzeit, ohne Anmeldung und ohne Limit.
 
+👉 **Live: [denschmi81.github.io/Planning-Poker](https://denschmi81.github.io/Planning-Poker/)**
+
 ## Funktionen
 
 - Räume per Link, Anzeigename ohne Konto

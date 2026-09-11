@@ -82,8 +82,9 @@ export function Seat(props: SeatProps) {
       {nudged && !pickerOpen && (
         <>
           <Mascot pose="nudge" variant="black" className="nudge-cat" />
-          <span className={`speech-bubble ${placement}`} role="status">
-            Miau? Du fehlst noch 🐾
+          {/* Das „Miau?“ kommt von der Katze selbst – keine Sprechblase über dem Avatar. */}
+          <span className="nudge-meow" aria-hidden="true">
+            Miau?
           </span>
         </>
       )}

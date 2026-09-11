@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import type { Spotlight } from '../fun';
 import type { Player, ThrowKind } from '../sync/room';
-import { Mascot } from './Mascot';
 import { Seat } from './Seat';
+import { TableCat } from './TableCat';
 
 interface TableProps {
   players: Player[];
@@ -38,8 +38,6 @@ export function Table(props: TableProps) {
   const closePicker = useCallback(() => setPickerFor(null), []);
   const { top, left, right, bottom } = arrangeSeats(players);
   const votedCount = players.filter((p) => votes[p.id] !== undefined).length;
-  // Die Katze döst auf dem Tisch, solange in dieser Runde noch niemand gewählt hat.
-  const catNapping = players.length > 0 && !revealed && !suspense && votedCount === 0;
 
   const seat = (player: Player, placement: 'above' | 'below') => (
     <Seat
@@ -82,7 +80,8 @@ export function Table(props: TableProps) {
       <div className="seat-row top">{top.map((p) => seat(p, 'below'))}</div>
       <div className="seat-col left">{left.map((p) => seat(p, 'below'))}</div>
       <div className="table">
-        {catNapping && <Mascot pose="doze" variant="grey" className="table-cat" />}
+        {/* Die Katze der Runde bleibt die ganze Runde am Tisch; jede Runde kommt eine andere. */}
+        {players.length > 0 && <TableCat round={round} />}
         {center}
         {!revealed && !suspense && players.length > 0 && (
           <p className="table-count">

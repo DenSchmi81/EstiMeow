@@ -405,16 +405,21 @@ a {
 
 .gif-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  /* Feste Zeilenhöhe: aspect-ratio allein lässt die Zeilen im scrollbaren Raster zusammenfallen. */
+  grid-auto-rows: 88px;
   gap: 6px;
-  max-height: 250px;
+  max-height: 290px;
   padding: 2px;
   overflow-y: auto;
 }
 
-.gif-tile,
 .emoji-avatar {
   aspect-ratio: 1;
+}
+
+.gif-tile,
+.emoji-avatar {
   padding: 0;
   overflow: hidden;
   border-radius: 12px;

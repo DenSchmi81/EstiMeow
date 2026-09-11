@@ -1,0 +1,54 @@
+{
+  "rules": {
+    "rooms": {
+      "$roomId": {
+        ".read": "auth != null",
+        ".validate": "$roomId.matches(/^[A-Za-z0-9]{8,32}$/)",
+        "meta": {
+          ".write": "auth != null && newData.exists()",
+          ".validate": "newData.hasChildren(['name', 'deck', 'revealed', 'round'])",
+          "name": { ".validate": "newData.isString() && newData.val().length <= 60" },
+          "deckId": { ".validate": "newData.isString() && newData.val().length <= 20" },
+          "deck": {
+            "$index": { ".validate": "newData.isString() && newData.val().length <= 12" }
+          },
+          "revealed": { ".validate": "newData.isBoolean()" },
+          "round": { ".validate": "newData.isNumber()" },
+          "createdAt": { ".validate": "newData.isNumber()" },
+          "$other": { ".validate": false }
+        },
+        "players": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid",
+            ".validate": "newData.hasChildren(['name', 'spectator'])",
+            "name": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 30" },
+            "spectator": { ".validate": "newData.isBoolean()" },
+            "joinedAt": { ".validate": "newData.isNumber()" },
+            "$other": { ".validate": false }
+          }
+        },
+        "votes": {
+          "$round": {
+            ".write": "auth != null && !newData.exists()",
+            "$uid": {
+              ".write": "auth != null && auth.uid === $uid",
+              ".validate": "newData.isString() && newData.val().length <= 12"
+            }
+          }
+        },
+        "throws": {
+          "$throwId": {
+            ".write": "auth != null && ((!data.exists() && newData.child('from').val() === auth.uid) || (data.exists() && !newData.exists() && (data.child('from').val() === auth.uid || data.child('at').val() < now - 60000)))",
+            ".validate": "newData.hasChildren(['from', 'to', 'kind', 'item', 'at'])",
+            "from": { ".validate": "newData.isString()" },
+            "to": { ".validate": "newData.isString()" },
+            "kind": { ".validate": "newData.val() === 'emoji' || newData.val() === 'meme'" },
+            "item": { ".validate": "newData.isString() && newData.val().length <= 20" },
+            "at": { ".validate": "newData.isNumber() && newData.val() <= now" },
+            "$other": { ".validate": false }
+          }
+        }
+      }
+    }
+  }
+}

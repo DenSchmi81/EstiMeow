@@ -4,7 +4,7 @@
 
 Planning-Poker-Schätzungen für agile Teams: Raum erstellen, Link teilen, gemeinsam schätzen – in Echtzeit, ohne Anmeldung und ohne Limit.
 
-👉 **Live: [denschmi81.github.io/Planning-Poker](https://denschmi81.github.io/Planning-Poker/)**
+👉 **Live: [denschmi81.github.io/EstiMeow](https://denschmi81.github.io/EstiMeow/)**
 
 ## Funktionen
 

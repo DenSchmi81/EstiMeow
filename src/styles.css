@@ -1926,6 +1926,13 @@ a {
   margin: auto 0;
 }
 
+/* Plätze liegen über dem Tisch: Sprechblasen und Wurf-Fenster der oberen Reihe dürfen nicht vom Tisch verdeckt werden. */
+.seat-row,
+.seat-col {
+  position: relative;
+  z-index: 2;
+}
+
 .seat-row {
   display: flex;
   flex-wrap: wrap;

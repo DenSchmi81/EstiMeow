@@ -182,4 +182,32 @@ export const sfx = {
     osc.start(t);
     osc.stop(t + 0.55);
   },
+  /** Leises Schnurren beim Streicheln: tiefes Rauschen, rhythmisch moduliert */
+  purr() {
+    const ctx = audio();
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    const duration = 1.8;
+    const src = ctx.createBufferSource();
+    src.buffer = noiseBuffer(ctx);
+    src.loop = true;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 180;
+    const amp = ctx.createGain();
+    amp.gain.setValueAtTime(0.0001, t);
+    amp.gain.linearRampToValueAtTime(0.14, t + 0.2);
+    amp.gain.linearRampToValueAtTime(0.14, t + duration - 0.3);
+    amp.gain.linearRampToValueAtTime(0.0001, t + duration);
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = 26;
+    const lfoDepth = ctx.createGain();
+    lfoDepth.gain.value = 0.1;
+    lfo.connect(lfoDepth).connect(amp.gain);
+    src.connect(filter).connect(amp).connect(ctx.destination);
+    src.start(t);
+    lfo.start(t);
+    src.stop(t + duration);
+    lfo.stop(t + duration);
+  },
 };

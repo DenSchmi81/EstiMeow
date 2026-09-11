@@ -83,14 +83,18 @@ function Head({ v, closed = false, look = [0, 0], tongue = false }: HeadProps) {
         <path d="M54 71 Q62 78 70 71 M90 71 Q98 78 106 71" style={{ fill: 'none', ...outline(v) }} />
       ) : (
         <>
-          <ellipse cx="62" cy="70" rx="8" ry="9" style={{ fill: v.eye, ...outline(v, 2) }} />
-          <ellipse cx="98" cy="70" rx="8" ry="9" style={{ fill: v.eye, ...outline(v, 2) }} />
-          <g className="cat-pupils">
-            <ellipse cx={62 + lx} cy={71 + ly} rx="3" ry="6" fill="#141414" />
-            <ellipse cx={98 + lx} cy={71 + ly} rx="3" ry="6" fill="#141414" />
+          <g className="cat-eyes-open">
+            <ellipse cx="62" cy="70" rx="8" ry="9" style={{ fill: v.eye, ...outline(v, 2) }} />
+            <ellipse cx="98" cy="70" rx="8" ry="9" style={{ fill: v.eye, ...outline(v, 2) }} />
+            <g className="cat-pupils">
+              <ellipse cx={62 + lx} cy={71 + ly} rx="3" ry="6" fill="#141414" />
+              <ellipse cx={98 + lx} cy={71 + ly} rx="3" ry="6" fill="#141414" />
+            </g>
+            <circle cx="64.5" cy="66.5" r="1.8" fill="#fff" />
+            <circle cx="100.5" cy="66.5" r="1.8" fill="#fff" />
           </g>
-          <circle cx="64.5" cy="66.5" r="1.8" fill="#fff" />
-          <circle cx="100.5" cy="66.5" r="1.8" fill="#fff" />
+          {/* Glückliche Lächel-Augen – nur beim Streicheln sichtbar */}
+          <path className="cat-eyes-happy" d="M54 73 Q62 64 70 73 M90 73 Q98 64 106 73" style={{ fill: 'none', ...outline(v) }} />
         </>
       )}
       <path d="M75 83 L85 83 L80 88 Z" style={{ fill: '#E98B9C', ...outline(v, 1.5) }} />

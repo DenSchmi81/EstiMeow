@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Mascot, type CatPose, type CatVariant } from './Mascot';
+import { usePetting } from './usePetting';
 
 type Trigger = { className: string; durationMs: number } | 'fly' | null;
 
@@ -52,6 +53,7 @@ function flyPast(cat: HTMLElement, fly: HTMLElement | null): () => void {
     const x = width * 0.92 + (cx - width * 0.92) * t;
     const y = height * 0.3 + (cy - 6 - height * 0.3) * t + Math.sin(t * Math.PI * 3) * height * 0.14 * (1 - t);
     fly.style.transform = `translate(${x}px, ${y}px)`;
+
     const dx = x - cx;
     const dy = y - cy;
     const dist = Math.hypot(dx, dy) || 1;
@@ -83,8 +85,9 @@ interface TableCatProps {
 
 export function TableCat({ round, interval = [20_000, 35_000] }: TableCatProps) {
   const act = tableCatAct(round);
-  const catRef = useRef<HTMLDivElement>(null);
+  const catRef = useRef<HTMLButtonElement>(null);
   const flyRef = useRef<HTMLSpanElement>(null);
+  const { pet, label } = usePetting(catRef);
   const [minPause, maxPause] = interval;
 
   useEffect(() => {
@@ -124,9 +127,22 @@ export function TableCat({ round, interval = [20_000, 35_000] }: TableCatProps) 
 
   return (
     <>
-      <div key={act.id} ref={catRef} className={`table-cat cat-act act-${act.id}`} aria-hidden="true">
+      <button
+        key={act.id}
+        ref={catRef}
+        type="button"
+        className={`table-cat cat-act act-${act.id}`}
+        aria-label="Katze streicheln"
+        title="Streicheln"
+        onClick={pet}
+      >
         <Mascot pose={act.pose} variant={act.variant} />
-      </div>
+        {label && (
+          <span key={label.key} className={`pet-label ${label.kind}`} aria-hidden="true">
+            {label.text}
+          </span>
+        )}
+      </button>
       {act.trigger === 'fly' && (
         <span ref={flyRef} className="table-fly" aria-hidden="true">
           <svg viewBox="0 0 16 12">

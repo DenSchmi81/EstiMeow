@@ -1,10 +1,27 @@
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
 import { DECK_PRESETS } from '../decks';
 import { createRoom } from '../sync/room';
 import { errorMessage } from '../util';
 import { DeckPicker, resolveDeck, type DeckChoice } from './DeckPicker';
 import { Header } from './Header';
 import { Mascot } from './Mascot';
+import { usePetting } from './usePetting';
+
+/** Startseiten-Katze mit den Karten 3 · 5 · 8 – lässt sich streicheln. */
+function HeroCat() {
+  const ref = useRef<HTMLButtonElement>(null);
+  const { pet, label } = usePetting(ref);
+  return (
+    <button ref={ref} type="button" className="hero-cat-button" aria-label="Katze streicheln" title="Streicheln" onClick={pet}>
+      <Mascot pose="hold" variant="ginger" className="hero-cat" />
+      {label && (
+        <span key={label.key} className={`pet-label ${label.kind}`} aria-hidden="true">
+          {label.text}
+        </span>
+      )}
+    </button>
+  );
+}
 
 export function Home() {
   const [name, setName] = useState('Sprint-Schätzung');
@@ -31,7 +48,7 @@ export function Home() {
       <Header />
       <main className="home">
         <section className="hero">
-          <Mascot pose="hold" variant="ginger" className="hero-cat" title="EstiMeow-Katze mit den Karten 3, 5 und 8" />
+          <HeroCat />
           <p className="hero-tagline">purrfect estimates for agile teams</p>
           <h1>
             Schätzen im Team.

@@ -647,6 +647,170 @@ a {
   animation: cat-meow 2.6s ease-in-out infinite;
 }
 
+/* Katzen streicheln: Ein Klick löst eine kleine, zufällige Reaktion aus */
+.table .table-cat,
+.hero-cat-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero-cat-button {
+  position: relative;
+  display: block;
+  margin-left: -8px;
+}
+
+.hero-cat-button .hero-cat {
+  margin-left: 0;
+}
+
+.table-cat .mascot,
+.hero-cat-button .mascot {
+  transition: transform 0.2s ease-out;
+}
+
+.table-cat:hover .mascot,
+.hero-cat-button:hover .mascot {
+  transform: translateY(-2px);
+}
+
+.mascot .cat-eyes-open,
+.mascot .cat-eyes-happy {
+  transition: opacity 0.2s;
+}
+
+.mascot .cat-eyes-happy {
+  opacity: 0;
+}
+
+.pet-purr .cat-eyes-open,
+.pet-heart .cat-eyes-open {
+  opacity: 0;
+}
+
+.pet-purr .cat-eyes-happy,
+.pet-heart .cat-eyes-happy {
+  opacity: 1;
+}
+
+.pet-blink .cat-eyes-open {
+  animation: pet-blink-open 1.4s ease-in-out;
+}
+
+.pet-blink .cat-eyes-happy {
+  animation: pet-blink-closed 1.4s ease-in-out;
+}
+
+.pet-purr .mascot {
+  animation: pet-purr 0.12s linear infinite;
+}
+
+.pet-hop .mascot {
+  animation: pet-hop 0.9s ease-out;
+}
+
+.pet-label {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  z-index: 3;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  pointer-events: none;
+  translate: -50% 0;
+  animation: pet-label 1.5s ease-out forwards;
+}
+
+.table-cat .pet-label {
+  color: var(--felt-text);
+}
+
+.pet-label.heart {
+  color: #f472b6;
+  font-size: 20px;
+}
+
+@keyframes pet-purr {
+  from {
+    transform: translateX(-0.6px);
+  }
+  to {
+    transform: translateX(0.6px);
+  }
+}
+
+@keyframes pet-hop {
+  20% {
+    transform: translateY(-9px);
+  }
+  40% {
+    transform: none;
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+  80% {
+    transform: none;
+  }
+}
+
+@keyframes pet-label {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes pet-blink-open {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  20%,
+  38% {
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  68%,
+  84% {
+    opacity: 0;
+  }
+}
+
+@keyframes pet-blink-closed {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  20%,
+  38% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0;
+  }
+  68%,
+  84% {
+    opacity: 1;
+  }
+}
+
 /* Entwickler-Galerie (#/katzen) */
 .cat-gallery {
   width: 100%;

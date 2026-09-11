@@ -11,12 +11,16 @@ Planning Poker für agile Teams: Raum erstellen, Link teilen, gemeinsam schätze
 - Auswertung mit Verteilung, Durchschnitt, nächster Karte und Einigkeit (inkl. Konfetti bei 100 %)
 - Kartendecks: Fibonacci, modifizierte Fibonacci, T-Shirt-Größen, Potenzen von 2 oder ein eigenes Deck
 - Zuschauer-Modus (dabei sein, ohne abzustimmen)
-- Meme-Avatare per GIPHY-Suche (mit Emoji-Avataren als Ausweichlösung)
+- Avatar-Baukasten: rund 175 3D-Emojis, dazu Accessoires und Hintergrundfarben – oder einfach 🎲 Zufall
 - Emojis und Meme-Sticker auf Mitspieler werfen 🍅
 - Trommelwirbel beim Aufdecken, Ausreißer-Spotlight mit Sprechblasen
 - Awards-Zeremonie für alle: Scharfschütze, Ewiger Optimist, Kaffee-Junkie, Wurfmaschine …
 - Soundeffekte (synthetisiert, mit Stumm-Schalter)
 - Hell-, Dunkel- und System-Modus
+
+## Grafiken
+
+Die Avatar-Grafiken stammen aus [Microsoft Fluent Emoji](https://github.com/microsoft/fluentui-emoji) (MIT-Lizenz) und liegen verkleinert unter `public/avatars/` – Lizenztext siehe [`public/avatars/LICENSE-fluentui-emoji.txt`](public/avatars/LICENSE-fluentui-emoji.txt).
 
 ## Technik
 

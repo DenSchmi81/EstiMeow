@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { parseAvatar } from '../avatars';
-import { giphyAvatarUrl } from '../giphy';
+import type { CSSProperties } from 'react';
+import { avatarImageUrl, getAccessory, getBackground, parseAvatar } from '../avatars';
 
 interface AvatarImageProps {
   avatar: string | null | undefined;
@@ -8,36 +7,33 @@ interface AvatarImageProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
-/** Rundes Avatar-Bild: Meme-GIF, Emoji oder – als Rückfall – der Anfangsbuchstabe. */
+/** Rundes Avatar-Bild aus dem Baukasten – oder als Rückfall der Anfangsbuchstabe. */
 export function AvatarImage({ avatar, name, size = 'md' }: AvatarImageProps) {
   const parsed = parseAvatar(avatar);
-  const [failedId, setFailedId] = useState<string | null>(null);
-  const initial = Array.from(name.trim())[0]?.toUpperCase() ?? '?';
 
-  let content;
-  let variant = '';
-  if (parsed?.kind === 'giphy' && failedId !== parsed.id) {
-    content = (
-      <img
-        src={giphyAvatarUrl(parsed.id)}
-        alt=""
-        loading="lazy"
-        draggable={false}
-        referrerPolicy="no-referrer"
-        onError={() => setFailedId(parsed.id)}
-      />
+  if (!parsed) {
+    return (
+      <span className={`avatar avatar-${size}`} aria-hidden="true">
+        {Array.from(name.trim())[0]?.toUpperCase() ?? '?'}
+      </span>
     );
-    variant = ' is-gif';
-  } else if (parsed?.kind === 'emoji') {
-    content = <span className="avatar-emoji">{parsed.emoji}</span>;
-    variant = ' is-emoji';
-  } else {
-    content = initial;
   }
 
+  const accessory = getAccessory(parsed.accessory);
+  const background = getBackground(parsed.background);
+  const style = background ? ({ '--avatar-bg': background.color } as CSSProperties) : undefined;
+
   return (
-    <span className={`avatar avatar-${size}${variant}`} aria-hidden="true">
-      {content}
+    <span className={`avatar avatar-${size} is-fx`} style={style} aria-hidden="true">
+      <img className="avatar-base" src={avatarImageUrl(parsed.base)} alt="" draggable={false} />
+      {accessory && (
+        <img
+          className={`avatar-acc acc-${accessory.placement}`}
+          src={avatarImageUrl(accessory.slug)}
+          alt=""
+          draggable={false}
+        />
+      )}
     </span>
   );
 }

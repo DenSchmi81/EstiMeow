@@ -24,7 +24,7 @@
             ".validate": "newData.hasChildren(['name', 'spectator'])",
             "name": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 30" },
             "spectator": { ".validate": "newData.isBoolean()" },
-            "avatar": { ".validate": "newData.isString() && newData.val().matches(/^(giphy:[A-Za-z0-9]{1,40}|emoji:.{1,16})$/)" },
+            "avatar": { ".validate": "newData.isString() && newData.val().matches(/^(fx:[a-z0-9-]{1,40}:[a-z0-9-]{0,40}:[a-z0-9-]{0,16}|giphy:[A-Za-z0-9]{1,40}|emoji:.{1,16})$/)" },
             "joinedAt": { ".validate": "newData.isNumber()" },
             "$other": { ".validate": false }
           }
@@ -49,7 +49,7 @@
               "$uid": { ".validate": "newData.isString() && newData.val().length <= 30" }
             },
             "avatars": {
-              "$uid": { ".validate": "newData.isString() && newData.val().length <= 60" }
+              "$uid": { ".validate": "newData.isString() && newData.val().length <= 120" }
             },
             "deck": {
               "$index": { ".validate": "newData.isString() && newData.val().length <= 12" }

@@ -316,17 +316,69 @@ a {
   object-fit: cover;
 }
 
-.avatar.is-emoji {
-  background: var(--accent-soft);
+/* Baukasten-Avatar: 3D-Emoji auf Farbkreis, Accessoire darf über den Rand ragen. */
+.avatar.is-fx {
+  overflow: visible;
+  background: var(--avatar-bg, var(--surface-2));
 }
 
-.avatar.is-gif {
-  background: var(--surface-2);
+.avatar.is-fx .avatar-base {
+  position: absolute;
+  inset: 12%;
+  width: 76%;
+  height: 76%;
+  object-fit: contain;
 }
 
-.avatar-emoji {
-  font-size: 1.35em;
-  line-height: 1;
+.avatar .avatar-acc {
+  position: absolute;
+  z-index: 1;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.25));
+}
+
+.avatar .acc-hat {
+  top: -34%;
+  left: 50%;
+  width: 64%;
+  translate: -50% 0;
+  rotate: -10deg;
+}
+
+.avatar .acc-eyes {
+  top: 24%;
+  left: 50%;
+  width: 62%;
+  translate: -50% 0;
+}
+
+.avatar .acc-ears {
+  top: -4%;
+  left: 50%;
+  width: 100%;
+  translate: -50% 0;
+}
+
+.avatar .acc-neck {
+  bottom: -16%;
+  left: 50%;
+  width: 36%;
+  translate: -50% 0;
+}
+
+.avatar .acc-side {
+  top: -10%;
+  left: -12%;
+  width: 44%;
+  rotate: -18deg;
+}
+
+.avatar .acc-corner {
+  right: -12%;
+  bottom: -10%;
+  width: 46%;
 }
 
 .avatar-sm {
@@ -366,21 +418,6 @@ a {
   gap: 10px;
 }
 
-.avatar-search {
-  width: 100%;
-  padding: 9px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-}
-
-.avatar-search:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
-}
-
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -403,68 +440,94 @@ a {
   color: var(--accent);
 }
 
-.gif-grid {
+.avatar-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
   /* Feste Zeilenhöhe: aspect-ratio allein lässt die Zeilen im scrollbaren Raster zusammenfallen. */
-  grid-auto-rows: 88px;
+  grid-auto-rows: 56px;
   gap: 6px;
-  max-height: 290px;
+  max-height: 248px;
   padding: 2px;
   overflow-y: auto;
 }
 
-.emoji-avatar {
-  aspect-ratio: 1;
-}
-
-.gif-tile,
-.emoji-avatar {
-  padding: 0;
-  overflow: hidden;
+.avatar-tile,
+.option-tile {
+  display: grid;
+  place-items: center;
+  padding: 4px;
   border-radius: 12px;
-  border: 3px solid transparent;
+  border: 2px solid transparent;
   background: var(--surface-2);
   cursor: pointer;
   transition: transform 0.1s, border-color 0.1s;
 }
 
-.gif-tile img {
-  display: block;
+.avatar-tile img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
-.gif-tile:hover,
-.emoji-avatar:hover {
-  transform: scale(1.05);
+.avatar-tile:hover,
+.option-tile:hover,
+.swatch:hover {
+  transform: scale(1.08);
 }
 
-.gif-tile.selected,
-.emoji-avatar.selected {
+.avatar-tile.selected,
+.option-tile.selected,
+.swatch.selected {
   border-color: var(--accent);
   box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
-.emoji-avatar-grid {
+.avatar-options {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
   gap: 6px;
 }
 
-.emoji-avatar {
-  font-size: 26px;
-}
-
-.giphy-attribution {
-  justify-self: end;
+.option-label {
   color: var(--text-muted);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  text-decoration: none;
   text-transform: uppercase;
+}
+
+.option-row {
+  display: flex;
+  gap: 6px;
+  padding: 2px 2px 6px;
+  overflow-x: auto;
+}
+
+.option-tile {
+  flex: 0 0 40px;
+  height: 40px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.option-tile img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.swatch {
+  flex: 0 0 32px;
+  height: 32px;
+  margin: 4px 0;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--swatch, var(--surface-2));
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s;
+}
+
+.swatch.none {
+  background: repeating-linear-gradient(45deg, var(--surface-2) 0 5px, var(--border) 5px 7px);
 }
 
 .dialog.wide {
@@ -714,10 +777,6 @@ a {
 
   .app-header .header-actions {
     gap: 6px;
-  }
-
-  .emoji-avatar-grid {
-    grid-template-columns: repeat(4, 1fr);
   }
 
   .avatar-xl {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatAvatar, randomAvatar } from '../avatars';
 import type { Profile } from '../sync/room';
 import { AvatarImage } from './AvatarImage';
 import { AvatarPicker } from './AvatarPicker';
@@ -14,7 +15,8 @@ interface ProfileDialogProps {
 export function ProfileDialog({ mode, initial, onSubmit, onClose }: ProfileDialogProps) {
   const [name, setName] = useState(initial.name);
   const [spectator, setSpectator] = useState(initial.spectator);
-  const [avatar, setAvatar] = useState(initial.avatar);
+  // Ohne gespeicherten Avatar gibt es direkt einen zufälligen – niemand muss etwas auswählen.
+  const [avatar, setAvatar] = useState(() => initial.avatar ?? formatAvatar(randomAvatar()));
   const trimmed = name.trim();
 
   return (
@@ -40,7 +42,7 @@ export function ProfileDialog({ mode, initial, onSubmit, onClose }: ProfileDialo
           </label>
         </div>
         <div className="field">
-          <span>Such dir einen Meme-Avatar aus</span>
+          <span>Bau dir deinen Avatar</span>
           <AvatarPicker value={avatar} onChange={setAvatar} />
         </div>
         <label className="switch-row">

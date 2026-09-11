@@ -1,144 +1,118 @@
-import { useEffect, useState } from 'react';
-import { EMOJI_AVATARS, formatAvatar } from '../avatars';
-import { GiphyLimitError, isGiphyEnabled, searchGifs, type GifResult } from '../giphy';
-
-const DEFAULT_QUERY = 'meme';
-const SUGGESTIONS = ['doge', 'this is fine', 'facepalm', 'mind blown', 'deal with it', 'shrug', 'success kid', 'coffee'];
-
-interface SearchState {
-  status: 'loading' | 'done' | 'limit' | 'error';
-  results: GifResult[];
-}
+import { useState, type CSSProperties } from 'react';
+import {
+  ACCESSORIES,
+  AVATAR_CATEGORIES,
+  BACKGROUNDS,
+  avatarImageUrl,
+  formatAvatar,
+  parseAvatar,
+  randomAvatar,
+  type Avatar,
+} from '../avatars';
 
 interface AvatarPickerProps {
   value: string | null;
-  onChange: (value: string | null) => void;
+  onChange: (value: string) => void;
 }
 
 export function AvatarPicker({ value, onChange }: AvatarPickerProps) {
-  const [tab, setTab] = useState<'giphy' | 'emoji'>(isGiphyEnabled ? 'giphy' : 'emoji');
-  const [query, setQuery] = useState('');
-  const [term, setTerm] = useState('');
-  const [search, setSearch] = useState<SearchState>({ status: 'loading', results: [] });
+  const current = parseAvatar(value);
+  const [categoryId, setCategoryId] = useState(
+    () => AVATAR_CATEGORIES.find((c) => c.items.some((item) => item.slug === current?.base))?.id ?? AVATAR_CATEGORIES[0].id,
+  );
+  const category = AVATAR_CATEGORIES.find((c) => c.id === categoryId) ?? AVATAR_CATEGORIES[0];
 
-  // Erst nach kurzer Tipp-Pause suchen, damit nicht jeder Buchstabe einen API-Aufruf kostet.
-  useEffect(() => {
-    const timer = window.setTimeout(() => setTerm(query.trim()), 500);
-    return () => window.clearTimeout(timer);
-  }, [query]);
-
-  useEffect(() => {
-    if (!isGiphyEnabled || tab !== 'giphy') return;
-    const controller = new AbortController();
-    setSearch((current) => ({ status: 'loading', results: current.results }));
-    searchGifs(term.length >= 2 ? term : DEFAULT_QUERY, controller.signal)
-      .then((results) => setSearch({ status: 'done', results }))
-      .catch((err: unknown) => {
-        if (controller.signal.aborted) return;
-        setSearch({ status: err instanceof GiphyLimitError ? 'limit' : 'error', results: [] });
-      });
-    return () => controller.abort();
-  }, [tab, term]);
-
-  const pick = (next: string) => onChange(value === next ? null : next);
+  // Accessoire oder Hintergrund ohne gewähltes Emoji: dann erst ein zufälliges Emoji als Basis.
+  const update = (patch: Partial<Avatar>) => onChange(formatAvatar({ ...(current ?? randomAvatar()), ...patch }));
 
   return (
     <div className="avatar-picker">
-      {isGiphyEnabled && (
-        <div className="picker-tabs" role="tablist">
-          <button type="button" role="tab" aria-selected={tab === 'giphy'} onClick={() => setTab('giphy')}>
-            Memes
+      <div className="chips" role="tablist" aria-label="Kategorie">
+        {AVATAR_CATEGORIES.map((c) => (
+          <button
+            key={c.id}
+            type="button"
+            role="tab"
+            aria-selected={c.id === category.id}
+            className={`chip${c.id === category.id ? ' active' : ''}`}
+            onClick={() => setCategoryId(c.id)}
+          >
+            {c.label}
           </button>
-          <button type="button" role="tab" aria-selected={tab === 'emoji'} onClick={() => setTab('emoji')}>
-            Emojis
-          </button>
-        </div>
-      )}
+        ))}
+        <button type="button" className="chip" onClick={() => onChange(formatAvatar(randomAvatar()))}>
+          🎲 Zufall
+        </button>
+      </div>
 
-      {tab === 'giphy' ? (
-        <>
-          <input
-            type="search"
-            className="avatar-search"
-            value={query}
-            placeholder="Meme suchen, z. B. doge"
-            aria-label="Meme suchen"
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key !== 'Enter') return;
-              e.preventDefault(); // nicht das Profil-Formular abschicken
-              setTerm(query.trim());
-            }}
-          />
-          <div className="chips">
-            {SUGGESTIONS.map((suggestion) => (
-              <button
-                key={suggestion}
-                type="button"
-                className={`chip${term === suggestion ? ' active' : ''}`}
-                onClick={() => {
-                  setQuery(suggestion);
-                  setTerm(suggestion);
-                }}
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
-          <div className="gif-grid" aria-busy={search.status === 'loading'}>
-            {search.results.map((gif) => {
-              const avatar = formatAvatar({ kind: 'giphy', id: gif.id });
-              return (
-                <button
-                  key={gif.id}
-                  type="button"
-                  className={`gif-tile${value === avatar ? ' selected' : ''}`}
-                  aria-pressed={value === avatar}
-                  title={gif.title}
-                  onClick={() => pick(avatar)}
-                >
-                  <img src={gif.previewUrl} alt={gif.title} loading="lazy" referrerPolicy="no-referrer" />
-                </button>
-              );
-            })}
-          </div>
-          {search.status === 'loading' && search.results.length === 0 && <p className="hint">Suche Memes …</p>}
-          {search.status === 'done' && search.results.length === 0 && (
-            <p className="hint">Nichts gefunden – probier einen anderen Begriff.</p>
-          )}
-          {(search.status === 'limit' || search.status === 'error') && (
-            <p className="hint">
-              {search.status === 'limit'
-                ? 'Das GIPHY-Limit für diese Stunde ist erreicht.'
-                : 'GIPHY ist gerade nicht erreichbar.'}{' '}
-              <button type="button" className="link-btn" onClick={() => setTab('emoji')}>
-                Nimm solange ein Emoji
-              </button>
-            </p>
-          )}
-          <a className="giphy-attribution" href="https://giphy.com" target="_blank" rel="noreferrer">
-            Powered by GIPHY
-          </a>
-        </>
-      ) : (
-        <div className="emoji-avatar-grid">
-          {EMOJI_AVATARS.map((emoji) => {
-            const avatar = formatAvatar({ kind: 'emoji', emoji });
-            return (
-              <button
-                key={emoji}
-                type="button"
-                className={`emoji-avatar${value === avatar ? ' selected' : ''}`}
-                aria-pressed={value === avatar}
-                aria-label={`Avatar ${emoji}`}
-                onClick={() => pick(avatar)}
-              >
-                {emoji}
-              </button>
-            );
-          })}
+      <div className="avatar-grid">
+        {category.items.map((item) => (
+          <button
+            key={item.slug}
+            type="button"
+            className={`avatar-tile${current?.base === item.slug ? ' selected' : ''}`}
+            aria-pressed={current?.base === item.slug}
+            aria-label={item.label}
+            title={item.label}
+            onClick={() => update({ base: item.slug })}
+          >
+            <img src={avatarImageUrl(item.slug)} alt="" loading="lazy" draggable={false} />
+          </button>
+        ))}
+      </div>
+
+      <div className="avatar-options">
+        <span className="option-label">Accessoire</span>
+        <div className="option-row">
+          <button
+            type="button"
+            className={`option-tile${current && !current.accessory ? ' selected' : ''}`}
+            aria-pressed={!current?.accessory}
+            aria-label="Ohne Accessoire"
+            title="Ohne"
+            onClick={() => update({ accessory: null })}
+          >
+            –
+          </button>
+          {ACCESSORIES.map((accessory) => (
+            <button
+              key={accessory.slug}
+              type="button"
+              className={`option-tile${current?.accessory === accessory.slug ? ' selected' : ''}`}
+              aria-pressed={current?.accessory === accessory.slug}
+              aria-label={accessory.label}
+              title={accessory.label}
+              onClick={() => update({ accessory: accessory.slug })}
+            >
+              <img src={avatarImageUrl(accessory.slug)} alt="" loading="lazy" draggable={false} />
+            </button>
+          ))}
         </div>
-      )}
+
+        <span className="option-label">Hintergrund</span>
+        <div className="option-row">
+          <button
+            type="button"
+            className={`swatch none${current && !current.background ? ' selected' : ''}`}
+            aria-pressed={!current?.background}
+            aria-label="Ohne Hintergrundfarbe"
+            title="Ohne"
+            onClick={() => update({ background: null })}
+          />
+          {BACKGROUNDS.map((background) => (
+            <button
+              key={background.slug}
+              type="button"
+              className={`swatch${current?.background === background.slug ? ' selected' : ''}`}
+              style={{ '--swatch': background.color } as CSSProperties}
+              aria-pressed={current?.background === background.slug}
+              aria-label={background.label}
+              title={background.label}
+              onClick={() => update({ background: background.slug })}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

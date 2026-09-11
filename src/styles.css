@@ -1933,6 +1933,13 @@ a {
   z-index: 2;
 }
 
+/* Ein offenes Wurf-Fenster liegt zusätzlich über den anderen Reihen und Nachbarplätzen. */
+.seat-row:has(.throw-picker),
+.seat-col:has(.throw-picker),
+.seat:has(.throw-picker) {
+  z-index: 3;
+}
+
 .seat-row {
   display: flex;
   flex-wrap: wrap;

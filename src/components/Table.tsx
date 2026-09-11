@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type ReactNode } from 'react';
 import type { Spotlight } from '../fun';
 import type { Player, ThrowKind } from '../sync/room';
 import { Seat } from './Seat';
@@ -14,6 +14,8 @@ interface TableProps {
   round: number;
   meId: string | null;
   canThrow: boolean;
+  /** Timebox-Timer, erscheint nach dem Aufdecken unter „Neue Runde starten“ */
+  timer?: ReactNode;
   onReveal: () => void;
   onNewRound: () => void;
   onThrow: (to: string, kind: ThrowKind, item: string) => void;
@@ -32,7 +34,7 @@ function arrangeSeats(players: Player[]) {
 }
 
 export function Table(props: TableProps) {
-  const { players, votes, revealed, suspense, spotlight, nudgeTarget, round, meId, canThrow, onReveal, onNewRound, onThrow } =
+  const { players, votes, revealed, suspense, spotlight, nudgeTarget, round, meId, canThrow, timer, onReveal, onNewRound, onThrow } =
     props;
   const [pickerFor, setPickerFor] = useState<string | null>(null);
   const closePicker = useCallback(() => setPickerFor(null), []);
@@ -83,6 +85,7 @@ export function Table(props: TableProps) {
         {/* Die Katze der Runde bleibt die ganze Runde am Tisch; jede Runde kommt eine andere. */}
         {players.length > 0 && <TableCat round={round} />}
         {center}
+        {revealed && !suspense && timer}
         {!revealed && !suspense && players.length > 0 && (
           <p className="table-count">
             {votedCount} von {players.length} haben gewählt

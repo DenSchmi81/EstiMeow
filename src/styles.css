@@ -421,6 +421,122 @@ a {
   color: var(--felt-btn-fg);
 }
 
+/* Timebox-Timer nach dem Aufdecken: dezent auf dem Filz */
+.timebox,
+.timebox-start,
+.timebox-hint {
+  position: relative;
+  z-index: 1;
+}
+
+.timebox {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 5px 4px 12px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.14);
+  color: var(--felt-text);
+  transition: background-color 0.3s;
+}
+
+.timebox svg,
+.timebox-start svg {
+  width: 15px;
+  height: 15px;
+}
+
+.timebox-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 62px;
+  margin-right: 2px;
+  font-size: 15px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.timebox.warn .timebox-time {
+  color: #fde68a;
+}
+
+.timebox.expired {
+  background: rgb(251 191 36 / 0.3);
+  animation: timebox-ping 1.4s ease-out 2;
+}
+
+.timebox-btn {
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.18);
+  color: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.timebox-btn:hover {
+  background: rgb(255 255 255 / 0.3);
+}
+
+.timebox-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 1px dashed rgb(255 255 255 / 0.4);
+  border-radius: 999px;
+  background: none;
+  color: var(--felt-text);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.timebox-start:hover {
+  background: rgb(255 255 255 / 0.12);
+}
+
+/* Schmal halten, damit der Hinweis nicht über die Tischkatze läuft */
+.timebox-hint {
+  max-width: 60%;
+  margin: 0;
+  color: var(--felt-text);
+  font-size: 12.5px;
+  opacity: 0.9;
+}
+
+.timebox-hint:empty {
+  display: none;
+}
+
+.timebox-settings {
+  display: grid;
+  gap: 10px;
+}
+
+.timebox-settings .chip {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+@keyframes timebox-ping {
+  0% {
+    box-shadow: 0 0 0 0 rgb(251 191 36 / 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 12px rgb(251 191 36 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timebox.expired {
+    animation: none;
+  }
+}
+
 .table-cat {
   position: absolute;
   left: 9%;

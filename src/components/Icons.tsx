@@ -73,6 +73,13 @@ export const SpeakerOffIcon = () => (
   </svg>
 );
 
+export const TimerIcon = () => (
+  <svg {...base}>
+    <circle cx="12" cy="13" r="8" />
+    <path d="M12 9v4l2.5 2.5M9.5 2h5" />
+  </svg>
+);
+
 export const TrophyIcon = () => (
   <svg {...base}>
     <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z" />

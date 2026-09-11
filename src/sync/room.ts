@@ -4,7 +4,8 @@ import { errorMessage, randomId } from '../util';
 import { getBackend, type Backend } from './backend';
 
 // Datenmodell unter rooms/<roomId>:
-//   meta                { name, deckId, deck[], revealed, round, createdAt, awardsAt }
+//   meta                { name, deckId, deck[], revealed, round, createdAt, awardsAt, timebox, timerEndsAt }
+//                       timebox = Minuten (0 = aus), timerEndsAt = Server-Zeit, zu der die laufende Timebox endet
 //   players/<uid>       { name, spectator, avatar, joinedAt }  – nur vom Spieler selbst beschreibbar
 //   votes/<round>/<uid> "5"                                   – neue Runde = round + 1, keine fremden Schreibzugriffe nötig
 //   rounds/<round>      { votes, names, avatars, deck, at }   – Schnappschuss beim Aufdecken, Grundlage der Awards
@@ -18,7 +19,11 @@ export interface RoomMeta {
   revealed: boolean;
   round: number;
   awardsAt: number | null;
+  timebox: number;
+  timerEndsAt: number | null;
 }
+
+const MINUTE_MS = 60_000;
 
 export interface Player {
   id: string;
@@ -86,6 +91,8 @@ function normalizeMeta(raw: Record<string, unknown>): RoomMeta {
     revealed: raw.revealed === true,
     round: typeof raw.round === 'number' ? raw.round : 1,
     awardsAt: typeof raw.awardsAt === 'number' ? raw.awardsAt : null,
+    timebox: typeof raw.timebox === 'number' && raw.timebox > 0 ? raw.timebox : 0,
+    timerEndsAt: typeof raw.timerEndsAt === 'number' ? raw.timerEndsAt : null,
   };
 }
 
@@ -288,21 +295,31 @@ export function useRoom(roomId: string, profile: Profile | null) {
     return stringMap(votesState.votes);
   }, [votesState, round]);
 
-  const snapshotRef = useRef({ players, votes, deck: meta?.deck ?? [] });
+  const snapshotRef = useRef({ players, votes, deck: meta?.deck ?? [], timebox: 0, timerEndsAt: null as number | null });
   useEffect(() => {
-    snapshotRef.current = { players, votes, deck: meta?.deck ?? [] };
+    snapshotRef.current = {
+      players,
+      votes,
+      deck: meta?.deck ?? [],
+      timebox: meta?.timebox ?? 0,
+      timerEndsAt: meta?.timerEndsAt ?? null,
+    };
   }, [players, votes, meta]);
 
   const actions = useMemo(() => {
     if (!backend || !uid || round === undefined) return null;
+    const timeboxEnd = () => backend.serverNow() + snapshotRef.current.timebox * MINUTE_MS;
     return {
       vote: (card: string | null) => backend.update(`${base}/votes/${round}`, { [uid]: card }),
       reveal: () => {
         const snapshot = snapshotRef.current;
         const voters = snapshot.players.filter((p) => !p.spectator && snapshot.votes[p.id] !== undefined);
-        if (voters.length === 0) return backend.update(`${base}/meta`, { revealed: true });
+        // Ist die Timebox eingeschaltet, startet der gemeinsame Countdown mit dem Aufdecken.
+        const timer = snapshot.timebox > 0 ? { 'meta/timerEndsAt': timeboxEnd() } : {};
+        if (voters.length === 0) return backend.update(base, { 'meta/revealed': true, ...timer });
         return backend.update(base, {
           'meta/revealed': true,
+          ...timer,
           [`rounds/${round}`]: {
             votes: Object.fromEntries(voters.map((p) => [p.id, snapshot.votes[p.id]])),
             names: Object.fromEntries(voters.map((p) => [p.id, p.name])),
@@ -313,21 +330,34 @@ export function useRoom(roomId: string, profile: Profile | null) {
         });
       },
       newRound: () =>
-        backend.update(base, { 'meta/revealed': false, 'meta/round': round + 1, [`votes/${round}`]: null }),
-      saveSettings: (name: string, deck: { deckId: string; cards: string[] } | null) =>
-        backend.update(
-          base,
-          deck
-            ? {
-                'meta/name': name,
-                'meta/deckId': deck.deckId,
-                'meta/deck': deck.cards,
-                'meta/revealed': false,
-                'meta/round': round + 1,
-                [`votes/${round}`]: null,
-              }
-            : { 'meta/name': name },
-        ),
+        backend.update(base, {
+          'meta/revealed': false,
+          'meta/round': round + 1,
+          'meta/timerEndsAt': null,
+          [`votes/${round}`]: null,
+        }),
+      // timebox wird nur mitgeschrieben, wenn sie sich geändert hat (null = unverändert).
+      saveSettings: (name: string, deck: { deckId: string; cards: string[] } | null, timebox: number | null) =>
+        backend.update(base, {
+          'meta/name': name,
+          ...(timebox !== null && { 'meta/timebox': timebox }),
+          ...(timebox === 0 && { 'meta/timerEndsAt': null }),
+          ...(deck && {
+            'meta/deckId': deck.deckId,
+            'meta/deck': deck.cards,
+            'meta/revealed': false,
+            'meta/round': round + 1,
+            'meta/timerEndsAt': null,
+            [`votes/${round}`]: null,
+          }),
+        }),
+      serverNow: () => backend.serverNow(),
+      startTimer: () => backend.update(`${base}/meta`, { timerEndsAt: timeboxEnd() }),
+      extendTimer: () =>
+        backend.update(`${base}/meta`, {
+          timerEndsAt: Math.max(snapshotRef.current.timerEndsAt ?? 0, backend.serverNow()) + MINUTE_MS,
+        }),
+      stopTimer: () => backend.update(`${base}/meta`, { timerEndsAt: null }),
       startAwards: () => backend.update(`${base}/meta`, { awardsAt: backend.serverTimestamp() }),
       throwAt: async (to: string, kind: ThrowKind, item: string) => {
         const id = await backend.push(`${base}/throws`, { from: uid, to, kind, item, at: backend.serverTimestamp() });

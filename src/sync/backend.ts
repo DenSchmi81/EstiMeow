@@ -21,12 +21,16 @@ export interface Backend {
   serverTimestamp(): unknown;
 }
 
-export const isLocalMode = firebaseConfig === null;
+// Nur im Dev-Server: „?local“ in der URL erzwingt den lokalen Testmodus –
+// praktisch, um neue Datenfelder zu testen, bevor die Firebase-Regeln veröffentlicht sind.
+const forceLocal = import.meta.env.DEV && new URLSearchParams(window.location.search).has('local');
+
+export const isLocalMode = firebaseConfig === null || forceLocal;
 
 let backendPromise: Promise<Backend> | undefined;
 
 export function getBackend(): Promise<Backend> {
-  const config = firebaseConfig;
+  const config = forceLocal ? null : firebaseConfig;
   backendPromise ??= config
     ? import('./firebaseBackend').then((m) => m.createFirebaseBackend(config))
     : import('./localBackend').then((m) => m.createLocalBackend());

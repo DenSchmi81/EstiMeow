@@ -13,6 +13,8 @@ Planning-Poker-Schätzungen für agile Teams: Raum erstellen, Link teilen, gemei
 - Auswertung mit Verteilung, Durchschnitt, nächster Karte und Einigkeit (inkl. Konfetti bei 100 %)
 - Kartendecks: Fibonacci, modifizierte Fibonacci, T-Shirt-Größen, Potenzen von 2 oder ein eigenes Deck
 - Zuschauer-Modus (dabei sein, ohne abzustimmen)
+- Timebox-Timer (im Raum ein- und ausschaltbar, 1–5 Minuten): startet beim Aufdecken, für alle sichtbar, mit „+1 Min“ und Stopp – gegen ausufernde Diskussionen
+- Katzen-Maskottchen: jede Runde eine andere Tischkatze, die Katze stupst die letzte fehlende Stimme an, und streicheln lassen sich alle
 - Avatar-Baukasten: rund 175 3D-Emojis, dazu Accessoires und Hintergrundfarben – oder einfach 🎲 Zufall
 - Emojis und Meme-Sticker auf Mitspieler werfen 🍅
 - Trommelwirbel beim Aufdecken, Ausreißer-Spotlight mit Sprechblasen

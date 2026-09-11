@@ -14,6 +14,7 @@ import { Results } from './Results';
 import { SettingsDialog } from './SettingsDialog';
 import { Table } from './Table';
 import { ThrowLayer } from './ThrowLayer';
+import { TimeboxTimer } from './TimeboxTimer';
 
 const NAME_KEY = 'sr-name';
 const AVATAR_KEY = 'sr-avatar';
@@ -200,6 +201,16 @@ export function RoomPage({ roomId }: { roomId: string }) {
           round={meta.round}
           meId={uid}
           canThrow={profile !== null}
+          timer={
+            <TimeboxTimer
+              endsAt={meta.timerEndsAt}
+              minutes={meta.timebox}
+              now={actions?.serverNow ?? Date.now}
+              onStart={() => void actions?.startTimer()}
+              onExtend={() => void actions?.extendTimer()}
+              onStop={() => void actions?.stopTimer()}
+            />
+          }
           onReveal={() => void actions?.reveal()}
           onNewRound={() => void actions?.newRound()}
           onThrow={handleThrow}
@@ -298,8 +309,8 @@ export function RoomPage({ roomId }: { roomId: string }) {
         <SettingsDialog
           meta={meta}
           onClose={() => setDialog(null)}
-          onSave={(name, deck) => {
-            void actions?.saveSettings(name, deck);
+          onSave={(name, deck, timebox) => {
+            void actions?.saveSettings(name, deck, timebox);
             setDialog(null);
           }}
         />

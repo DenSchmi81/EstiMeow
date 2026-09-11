@@ -182,6 +182,13 @@ export const sfx = {
     osc.start(t);
     osc.stop(t + 0.55);
   },
+  /** Sanfter Gong, wenn die Timebox abgelaufen ist */
+  timeUp() {
+    const ctx = audio();
+    if (!ctx) return;
+    tone(ctx, { freq: 880, duration: 0.7, gain: 0.12 });
+    tone(ctx, { freq: 659.25, start: 0.3, duration: 1.1, gain: 0.1 });
+  },
   /** Leises Schnurren beim Streicheln: tiefes Rauschen, rhythmisch moduliert */
   purr() {
     const ctx = audio();

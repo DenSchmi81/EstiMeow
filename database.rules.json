@@ -16,6 +16,8 @@
           "round": { ".validate": "newData.isNumber()" },
           "createdAt": { ".validate": "newData.isNumber()" },
           "awardsAt": { ".validate": "newData.isNumber()" },
+          "timebox": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10" },
+          "timerEndsAt": { ".validate": "newData.isNumber()" },
           "$other": { ".validate": false }
         },
         "players": {

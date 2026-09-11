@@ -497,9 +497,9 @@ a {
 
 .option-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
-  padding: 2px 2px 6px;
-  overflow-x: auto;
+  padding: 2px;
 }
 
 .option-tile {
@@ -1294,17 +1294,25 @@ a {
 /* ---------- Werfen ---------- */
 
 .throw-picker {
+  /* Inhaltsbreite = 8 Emoji-Spalten à 40 px + 7 × 4 px Abstand – so passt alles ohne Scrollbalken. */
+  --picker-content: 348px;
   position: absolute;
   left: 50%;
   z-index: 30;
-  width: 260px;
   padding: 10px;
   border-radius: 14px;
   border: 1px solid var(--border);
   background: var(--surface);
   box-shadow: var(--shadow-lg);
-  translate: -50% 0;
+  /* --shift schiebt das Popover zurück in den sichtbaren Bereich, falls es am Bildschirmrand anstößt. */
+  translate: calc(-50% + var(--shift, 0px)) 0;
   animation: pop 0.15s ease-out;
+}
+
+@media (max-width: 640px) {
+  .throw-picker {
+    --picker-content: 304px;
+  }
 }
 
 .throw-picker.below {
@@ -1344,18 +1352,19 @@ a {
 
 .emoji-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 2px;
-  max-height: 200px;
-  overflow-y: auto;
+  grid-template-columns: repeat(auto-fill, 40px);
+  grid-auto-rows: 40px;
+  gap: 4px;
+  width: var(--picker-content);
 }
 
 .emoji-btn {
-  height: 40px;
+  padding: 0;
   border: 0;
   border-radius: 10px;
   background: transparent;
-  font-size: 22px;
+  font-size: 24px;
+  line-height: 1;
   cursor: pointer;
   transition: transform 0.1s, background-color 0.1s;
 }
@@ -1365,29 +1374,16 @@ a {
   transform: scale(1.15);
 }
 
-.meme-list {
+.meme-panel {
   display: grid;
-  gap: 2px;
-  max-height: 290px;
-  overflow: auto;
+  gap: 8px;
+  width: var(--picker-content);
 }
 
-.meme-list section {
+.meme-grid {
   display: grid;
-  gap: 2px;
-}
-
-.meme-group-title {
-  margin: 8px 8px 2px;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.meme-list section:first-child .meme-group-title {
-  margin-top: 2px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 6px;
 }
 
 .meme-btn {

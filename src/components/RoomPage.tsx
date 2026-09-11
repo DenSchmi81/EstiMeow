@@ -83,9 +83,10 @@ export function RoomPage({ roomId }: { roomId: string }) {
     consensusRef.current = consensus;
   }, [consensus]);
 
+  const deck = meta?.deck;
   const spotlight = useMemo(
-    () => (shownRevealed ? computeSpotlight(votes, seated.map((p) => p.id)) : null),
-    [shownRevealed, votes, seated],
+    () => (shownRevealed ? computeSpotlight(votes, seated.map((p) => p.id), deck ?? []) : null),
+    [shownRevealed, votes, seated, deck],
   );
 
   useEffect(() => {

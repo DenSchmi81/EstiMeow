@@ -31,13 +31,25 @@ function numericVotes(votes: Record<string, string>, playerIds?: string[]) {
  * Niedrigste und höchste Schätzung – aber nur, wenn sie eine Minderheit sind
  * (bei 1, 1, 1, 8 steht nur die 8 im Scheinwerferlicht).
  */
-export function computeSpotlight(votes: Record<string, string>, playerIds: string[]): Spotlight | null {
+export function computeSpotlight(
+  votes: Record<string, string>,
+  playerIds: string[],
+  deck: string[],
+): Spotlight | null {
   const numeric = numericVotes(votes, playerIds);
-  if (numeric.length < 3) return null;
+  if (numeric.length < 2) return null;
   const values = numeric.map((v) => v.value);
   const min = Math.min(...values);
   const max = Math.max(...values);
   if (min === max) return null;
+
+  // Zu zweit gibt es keinen echten Ausreißer – dann nur bei großem Abstand (mehr als 2 Kartenstufen) beide ins Licht.
+  if (numeric.length === 2) {
+    const low = numeric.find((v) => v.value === min)!;
+    const high = numeric.find((v) => v.value === max)!;
+    const steps = Math.abs(deck.indexOf(votes[high.id]) - deck.indexOf(votes[low.id]));
+    return steps > 2 ? { low: [low.id], high: [high.id] } : null;
+  }
 
   const half = numeric.length / 2;
   const low = numeric.filter((v) => v.value === min).map((v) => v.id);

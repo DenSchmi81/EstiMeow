@@ -10,18 +10,19 @@ export class GiphyLimitError extends Error {}
 
 export const isGiphyEnabled = GIPHY_API_KEY !== null;
 
-const CACHE_PREFIX = 'sr-giphy:';
+// Nur Standbilder: animierte Avatare lenken beim Schätzen zu sehr ab.
+const CACHE_PREFIX = 'sr-giphy-still:';
+const LEGACY_CACHE_PREFIX = 'sr-giphy:';
 const CACHE_TTL_MS = 60 * 60 * 1000;
 const memoryCache = new Map<string, GifResult[]>();
 
-/** Avatar-Bild aus der GIF-ID (Rendition fixed_width als animiertes WebP, 200 px breit). */
+/** Avatar-Bild aus der GIF-ID (Rendition fixed_width_still: Standbild, 200 px breit). */
 export function giphyAvatarUrl(id: string): string {
-  return `https://media.giphy.com/media/${id}/200w.webp`;
+  return `https://media.giphy.com/media/${id}/200w_s.gif`;
 }
 
 interface RawImage {
   url?: unknown;
-  webp?: unknown;
 }
 
 interface RawGif {
@@ -32,8 +33,8 @@ interface RawGif {
 
 function toResult(raw: RawGif): GifResult[] {
   if (typeof raw.id !== 'string' || !/^[A-Za-z0-9]{1,40}$/.test(raw.id)) return [];
-  const image = raw.images?.fixed_width_small ?? raw.images?.fixed_width;
-  const url = typeof image?.webp === 'string' ? image.webp : typeof image?.url === 'string' ? image.url : null;
+  const image = raw.images?.fixed_width_small_still ?? raw.images?.fixed_width_still;
+  const url = typeof image?.url === 'string' ? image.url : null;
   if (!url?.startsWith('https://')) return [];
   return [{ id: raw.id, title: typeof raw.title === 'string' ? raw.title : '', previewUrl: url }];
 }
@@ -59,7 +60,12 @@ function writeCache(term: string, results: GifResult[]) {
   try {
     for (let i = localStorage.length - 1; i >= 0; i--) {
       const key = localStorage.key(i);
-      if (!key?.startsWith(CACHE_PREFIX)) continue;
+      if (!key) continue;
+      if (key.startsWith(LEGACY_CACHE_PREFIX)) {
+        localStorage.removeItem(key); // alte Einträge mit animierten Vorschaubildern
+        continue;
+      }
+      if (!key.startsWith(CACHE_PREFIX)) continue;
       const entry = JSON.parse(localStorage.getItem(key) ?? '{}') as { at?: number };
       if (Date.now() - (entry.at ?? 0) > CACHE_TTL_MS) localStorage.removeItem(key);
     }

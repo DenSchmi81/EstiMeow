@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { AvatarGallery } from './components/AvatarGallery';
 import { CatGallery } from './components/CatGallery';
 import { Home } from './components/Home';
 import { RoomPage } from './components/RoomPage';
@@ -17,6 +18,7 @@ function useHash(): string {
 export function App() {
   const hash = useHash();
   if (import.meta.env.DEV && hash === '#/katzen') return <CatGallery />;
+  if (import.meta.env.DEV && hash === '#/avatare') return <AvatarGallery />;
   const match = /^#\/r\/([A-Za-z0-9]{8,32})\/?$/.exec(hash);
   return match ? <RoomPage key={match[1]} roomId={match[1]} /> : <Home />;
 }

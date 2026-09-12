@@ -1197,48 +1197,6 @@ a {
   filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.25));
 }
 
-.avatar .acc-hat {
-  top: -34%;
-  left: 50%;
-  width: 64%;
-  translate: -50% 0;
-  rotate: -10deg;
-}
-
-.avatar .acc-eyes {
-  top: 24%;
-  left: 50%;
-  width: 62%;
-  translate: -50% 0;
-}
-
-.avatar .acc-ears {
-  top: -4%;
-  left: 50%;
-  width: 100%;
-  translate: -50% 0;
-}
-
-.avatar .acc-neck {
-  bottom: -16%;
-  left: 50%;
-  width: 36%;
-  translate: -50% 0;
-}
-
-.avatar .acc-side {
-  top: -10%;
-  left: -12%;
-  width: 44%;
-  rotate: -18deg;
-}
-
-.avatar .acc-corner {
-  right: -12%;
-  bottom: -10%;
-  width: 46%;
-}
-
 .avatar-sm {
   width: 22px;
   height: 22px;
@@ -3127,4 +3085,23 @@ a {
 .ki-slider input[type='range']:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+/* Entwickler-Galerie (#/avatare) */
+.avatar-gallery-table {
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.avatar-gallery-table th,
+.avatar-gallery-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.avatar-gallery-table small {
+  color: var(--text-muted);
 }

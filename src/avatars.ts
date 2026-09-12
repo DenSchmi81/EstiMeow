@@ -19,6 +19,44 @@ export interface AvatarCategory {
 
 export interface Accessory extends AvatarItem {
   placement: Placement;
+  /** Gemessene Inhaltsfläche im PNG als [x, y, Breite, Höhe] (0..1) – die Bilder haben sehr
+   *  unterschiedlich viel leeren Rand, der beim Platzieren ausgeglichen werden muss. */
+  box: [number, number, number, number];
+}
+
+/** Wohin die Inhaltsfläche gehört (Prozent der Avatar-Fläche) und wie groß sie werden darf. */
+const PLACEMENTS: Record<Placement, { x: number; y: number; width: number; maxHeight: number; rotate?: number }> = {
+  hat: { x: 50, y: 13, width: 58, maxHeight: 52 },
+  eyes: { x: 50, y: 44, width: 56, maxHeight: 30 },
+  ears: { x: 50, y: 47, width: 78, maxHeight: 72 },
+  neck: { x: 50, y: 84, width: 34, maxHeight: 40 },
+  side: { x: 23, y: 21, width: 34, maxHeight: 34, rotate: -12 },
+  corner: { x: 82, y: 83, width: 38, maxHeight: 38 },
+};
+
+export interface AccessoryLayout {
+  /** Bildbreite in Prozent der Avatar-Fläche (die Bilder sind quadratisch) */
+  width: number;
+  left: number;
+  top: number;
+  rotate: number;
+}
+
+/**
+ * Rechnet aus der gemessenen Inhaltsfläche die Bildgröße und -position, sodass der sichtbare Teil
+ * am gewünschten Anker sitzt. Ohne diesen Ausgleich sitzt z. B. eine Brille (schmaler Streifen im
+ * Bild) ganz anders als eine Schutzbrille (füllt das Bild), obwohl beide „auf die Augen“ gehören.
+ */
+export function accessoryLayout(accessory: Accessory): AccessoryLayout {
+  const place = PLACEMENTS[accessory.placement];
+  const [x, y, width, height] = accessory.box;
+  const size = Math.min(place.width / width, place.maxHeight / height);
+  return {
+    width: size,
+    left: place.x - (x + width / 2) * size,
+    top: place.y - (y + height / 2) * size,
+    rotate: place.rotate ?? 0,
+  };
 }
 
 export interface Background {
@@ -50,6 +88,7 @@ export const ACCESSORIES: Accessory[] = catalog.accessories.map((accessory) => (
   slug: slugify(accessory.name),
   label: accessory.label,
   placement: accessory.placement as Placement,
+  box: accessory.box as [number, number, number, number],
 }));
 
 export const BACKGROUNDS: Background[] = [

@@ -4,237 +4,978 @@
       "id": "tiere",
       "label": "Tiere",
       "items": [
-        { "name": "Dog face", "label": "Hund" },
-        { "name": "Cat face", "label": "Katze" },
-        { "name": "Fox", "label": "Fuchs" },
-        { "name": "Frog", "label": "Frosch" },
-        { "name": "Panda", "label": "Panda" },
-        { "name": "Unicorn", "label": "Einhorn" },
-        { "name": "Octopus", "label": "Krake" },
-        { "name": "Sloth", "label": "Faultier" },
-        { "name": "Penguin", "label": "Pinguin" },
-        { "name": "Owl", "label": "Eule" },
-        { "name": "Monkey face", "label": "Affe" },
-        { "name": "Lion", "label": "Löwe" },
-        { "name": "Tiger face", "label": "Tiger" },
-        { "name": "Bear", "label": "Bär" },
-        { "name": "Koala", "label": "Koala" },
-        { "name": "Pig face", "label": "Schwein" },
-        { "name": "Mouse face", "label": "Maus" },
-        { "name": "Rabbit face", "label": "Hase" },
-        { "name": "Hamster", "label": "Hamster" },
-        { "name": "Cow face", "label": "Kuh" },
-        { "name": "Chicken", "label": "Huhn" },
-        { "name": "Duck", "label": "Ente" },
-        { "name": "Parrot", "label": "Papagei" },
-        { "name": "Flamingo", "label": "Flamingo" },
-        { "name": "Turtle", "label": "Schildkröte" },
-        { "name": "Snail", "label": "Schnecke" },
-        { "name": "Hedgehog", "label": "Igel" },
-        { "name": "Otter", "label": "Otter" },
-        { "name": "Raccoon", "label": "Waschbär" },
-        { "name": "Wolf", "label": "Wolf" },
-        { "name": "Horse face", "label": "Pferd" },
-        { "name": "Zebra", "label": "Zebra" },
-        { "name": "Giraffe", "label": "Giraffe" },
-        { "name": "Elephant", "label": "Elefant" },
-        { "name": "Hippopotamus", "label": "Nilpferd" },
-        { "name": "Crocodile", "label": "Krokodil" },
-        { "name": "Shark", "label": "Hai" },
-        { "name": "Spouting whale", "label": "Wal" },
-        { "name": "Dolphin", "label": "Delfin" },
-        { "name": "Crab", "label": "Krabbe" },
-        { "name": "Lady beetle", "label": "Marienkäfer" },
-        { "name": "Honeybee", "label": "Biene" },
-        { "name": "Butterfly", "label": "Schmetterling" },
-        { "name": "Llama", "label": "Lama" },
-        { "name": "Bat", "label": "Fledermaus" },
-        { "name": "Dragon face", "label": "Drache" },
-        { "name": "Sauropod", "label": "Dino" },
-        { "name": "Beaver", "label": "Biber" },
-        { "name": "Skunk", "label": "Stinktier" },
-        { "name": "Kangaroo", "label": "Känguru" },
-        { "name": "Orangutan", "label": "Orang-Utan" },
-        { "name": "Gorilla", "label": "Gorilla" },
-        { "name": "Polar bear", "label": "Eisbär" },
-        { "name": "Seal", "label": "Robbe" },
-        { "name": "Peacock", "label": "Pfau" },
-        { "name": "Swan", "label": "Schwan" },
-        { "name": "Dodo", "label": "Dodo" },
-        { "name": "Jellyfish", "label": "Qualle" },
-        { "name": "Moose", "label": "Elch" },
-        { "name": "Goose", "label": "Gans" },
-        { "name": "Blowfish", "label": "Kugelfisch" },
-        { "name": "Tropical fish", "label": "Tropenfisch" },
-        { "name": "Squid", "label": "Tintenfisch" },
-        { "name": "Lobster", "label": "Hummer" },
-        { "name": "Mammoth", "label": "Mammut" },
-        { "name": "Bison", "label": "Bison" },
-        { "name": "Goat", "label": "Ziege" }
+        {
+          "name": "Dog face",
+          "label": "Hund"
+        },
+        {
+          "name": "Cat face",
+          "label": "Katze"
+        },
+        {
+          "name": "Fox",
+          "label": "Fuchs"
+        },
+        {
+          "name": "Frog",
+          "label": "Frosch"
+        },
+        {
+          "name": "Panda",
+          "label": "Panda"
+        },
+        {
+          "name": "Unicorn",
+          "label": "Einhorn"
+        },
+        {
+          "name": "Octopus",
+          "label": "Krake"
+        },
+        {
+          "name": "Sloth",
+          "label": "Faultier"
+        },
+        {
+          "name": "Penguin",
+          "label": "Pinguin"
+        },
+        {
+          "name": "Owl",
+          "label": "Eule"
+        },
+        {
+          "name": "Monkey face",
+          "label": "Affe"
+        },
+        {
+          "name": "Lion",
+          "label": "Löwe"
+        },
+        {
+          "name": "Tiger face",
+          "label": "Tiger"
+        },
+        {
+          "name": "Bear",
+          "label": "Bär"
+        },
+        {
+          "name": "Koala",
+          "label": "Koala"
+        },
+        {
+          "name": "Pig face",
+          "label": "Schwein"
+        },
+        {
+          "name": "Mouse face",
+          "label": "Maus"
+        },
+        {
+          "name": "Rabbit face",
+          "label": "Hase"
+        },
+        {
+          "name": "Hamster",
+          "label": "Hamster"
+        },
+        {
+          "name": "Cow face",
+          "label": "Kuh"
+        },
+        {
+          "name": "Chicken",
+          "label": "Huhn"
+        },
+        {
+          "name": "Duck",
+          "label": "Ente"
+        },
+        {
+          "name": "Parrot",
+          "label": "Papagei"
+        },
+        {
+          "name": "Flamingo",
+          "label": "Flamingo"
+        },
+        {
+          "name": "Turtle",
+          "label": "Schildkröte"
+        },
+        {
+          "name": "Snail",
+          "label": "Schnecke"
+        },
+        {
+          "name": "Hedgehog",
+          "label": "Igel"
+        },
+        {
+          "name": "Otter",
+          "label": "Otter"
+        },
+        {
+          "name": "Raccoon",
+          "label": "Waschbär"
+        },
+        {
+          "name": "Wolf",
+          "label": "Wolf"
+        },
+        {
+          "name": "Horse face",
+          "label": "Pferd"
+        },
+        {
+          "name": "Zebra",
+          "label": "Zebra"
+        },
+        {
+          "name": "Giraffe",
+          "label": "Giraffe"
+        },
+        {
+          "name": "Elephant",
+          "label": "Elefant"
+        },
+        {
+          "name": "Hippopotamus",
+          "label": "Nilpferd"
+        },
+        {
+          "name": "Crocodile",
+          "label": "Krokodil"
+        },
+        {
+          "name": "Shark",
+          "label": "Hai"
+        },
+        {
+          "name": "Spouting whale",
+          "label": "Wal"
+        },
+        {
+          "name": "Dolphin",
+          "label": "Delfin"
+        },
+        {
+          "name": "Crab",
+          "label": "Krabbe"
+        },
+        {
+          "name": "Lady beetle",
+          "label": "Marienkäfer"
+        },
+        {
+          "name": "Honeybee",
+          "label": "Biene"
+        },
+        {
+          "name": "Butterfly",
+          "label": "Schmetterling"
+        },
+        {
+          "name": "Llama",
+          "label": "Lama"
+        },
+        {
+          "name": "Bat",
+          "label": "Fledermaus"
+        },
+        {
+          "name": "Dragon face",
+          "label": "Drache"
+        },
+        {
+          "name": "Sauropod",
+          "label": "Dino"
+        },
+        {
+          "name": "Beaver",
+          "label": "Biber"
+        },
+        {
+          "name": "Skunk",
+          "label": "Stinktier"
+        },
+        {
+          "name": "Kangaroo",
+          "label": "Känguru"
+        },
+        {
+          "name": "Orangutan",
+          "label": "Orang-Utan"
+        },
+        {
+          "name": "Gorilla",
+          "label": "Gorilla"
+        },
+        {
+          "name": "Polar bear",
+          "label": "Eisbär"
+        },
+        {
+          "name": "Seal",
+          "label": "Robbe"
+        },
+        {
+          "name": "Peacock",
+          "label": "Pfau"
+        },
+        {
+          "name": "Swan",
+          "label": "Schwan"
+        },
+        {
+          "name": "Dodo",
+          "label": "Dodo"
+        },
+        {
+          "name": "Jellyfish",
+          "label": "Qualle"
+        },
+        {
+          "name": "Moose",
+          "label": "Elch"
+        },
+        {
+          "name": "Goose",
+          "label": "Gans"
+        },
+        {
+          "name": "Blowfish",
+          "label": "Kugelfisch"
+        },
+        {
+          "name": "Tropical fish",
+          "label": "Tropenfisch"
+        },
+        {
+          "name": "Squid",
+          "label": "Tintenfisch"
+        },
+        {
+          "name": "Lobster",
+          "label": "Hummer"
+        },
+        {
+          "name": "Mammoth",
+          "label": "Mammut"
+        },
+        {
+          "name": "Bison",
+          "label": "Bison"
+        },
+        {
+          "name": "Goat",
+          "label": "Ziege"
+        }
       ]
     },
     {
       "id": "fantasy",
       "label": "Fantasy",
       "items": [
-        { "name": "Robot", "label": "Roboter" },
-        { "name": "Alien", "label": "Alien" },
-        { "name": "Alien monster", "label": "Pixel-Monster" },
-        { "name": "Ghost", "label": "Gespenst" },
-        { "name": "Clown face", "label": "Clown" },
-        { "name": "Ogre", "label": "Oger" },
-        { "name": "Goblin", "label": "Kobold" },
-        { "name": "Troll", "label": "Troll" },
-        { "name": "Ninja", "label": "Ninja" },
-        { "name": "Skull", "label": "Totenkopf" },
-        { "name": "Pile of poo", "label": "Kackhaufen" },
-        { "name": "Jack-o-lantern", "label": "Kürbis" },
-        { "name": "Snowman", "label": "Schneemann" },
-        { "name": "Flying saucer", "label": "UFO" },
-        { "name": "Teddy bear", "label": "Teddy" },
-        { "name": "Sun with face", "label": "Sonne" },
-        { "name": "Full moon face", "label": "Vollmond" }
+        {
+          "name": "Robot",
+          "label": "Roboter"
+        },
+        {
+          "name": "Alien",
+          "label": "Alien"
+        },
+        {
+          "name": "Alien monster",
+          "label": "Pixel-Monster"
+        },
+        {
+          "name": "Ghost",
+          "label": "Gespenst"
+        },
+        {
+          "name": "Clown face",
+          "label": "Clown"
+        },
+        {
+          "name": "Ogre",
+          "label": "Oger"
+        },
+        {
+          "name": "Goblin",
+          "label": "Kobold"
+        },
+        {
+          "name": "Troll",
+          "label": "Troll"
+        },
+        {
+          "name": "Ninja",
+          "label": "Ninja"
+        },
+        {
+          "name": "Skull",
+          "label": "Totenkopf"
+        },
+        {
+          "name": "Pile of poo",
+          "label": "Kackhaufen"
+        },
+        {
+          "name": "Jack-o-lantern",
+          "label": "Kürbis"
+        },
+        {
+          "name": "Snowman",
+          "label": "Schneemann"
+        },
+        {
+          "name": "Flying saucer",
+          "label": "UFO"
+        },
+        {
+          "name": "Teddy bear",
+          "label": "Teddy"
+        },
+        {
+          "name": "Sun with face",
+          "label": "Sonne"
+        },
+        {
+          "name": "Full moon face",
+          "label": "Vollmond"
+        }
       ]
     },
     {
       "id": "gesichter",
       "label": "Gesichter",
       "items": [
-        { "name": "Nerd face", "label": "Nerd" },
-        { "name": "Smiling face with sunglasses", "label": "Cool" },
-        { "name": "Partying face", "label": "Party" },
-        { "name": "Face with monocle", "label": "Monokel" },
-        { "name": "Thinking face", "label": "Nachdenklich" },
-        { "name": "Cowboy hat face", "label": "Cowboy" },
-        { "name": "Exploding head", "label": "Kopf explodiert" },
-        { "name": "Hot face", "label": "Überhitzt" },
-        { "name": "Cold face", "label": "Eingefroren" },
-        { "name": "Woozy face", "label": "Beschwipst" },
-        { "name": "Zany face", "label": "Verrückt" },
-        { "name": "Shushing face", "label": "Psst" },
-        { "name": "Face with rolling eyes", "label": "Augenrollen" },
-        { "name": "Sleeping face", "label": "Schläfrig" },
-        { "name": "Nauseated face", "label": "Übel" },
-        { "name": "Money-mouth face", "label": "Geld" },
-        { "name": "Star-struck", "label": "Begeistert" },
-        { "name": "Upside-down face", "label": "Kopfüber" },
-        { "name": "Winking face with tongue", "label": "Frech" },
-        { "name": "Grimacing face", "label": "Ups" },
-        { "name": "Face screaming in fear", "label": "Schrei" },
-        { "name": "Face with head-bandage", "label": "Verletzt" },
-        { "name": "Disguised face", "label": "Verkleidet" },
-        { "name": "Saluting face", "label": "Salut" },
-        { "name": "Melting face", "label": "Schmelzend" },
-        { "name": "Face with spiral eyes", "label": "Schwindlig" },
-        { "name": "Yawning face", "label": "Gähnen" },
-        { "name": "Lying face", "label": "Pinocchio" },
-        { "name": "Smirking face", "label": "Grinsen" },
-        { "name": "Pleading face", "label": "Bitte bitte" },
-        { "name": "Face with steam from nose", "label": "Schnaubend" }
+        {
+          "name": "Nerd face",
+          "label": "Nerd"
+        },
+        {
+          "name": "Smiling face with sunglasses",
+          "label": "Cool"
+        },
+        {
+          "name": "Partying face",
+          "label": "Party"
+        },
+        {
+          "name": "Face with monocle",
+          "label": "Monokel"
+        },
+        {
+          "name": "Thinking face",
+          "label": "Nachdenklich"
+        },
+        {
+          "name": "Cowboy hat face",
+          "label": "Cowboy"
+        },
+        {
+          "name": "Exploding head",
+          "label": "Kopf explodiert"
+        },
+        {
+          "name": "Hot face",
+          "label": "Überhitzt"
+        },
+        {
+          "name": "Cold face",
+          "label": "Eingefroren"
+        },
+        {
+          "name": "Woozy face",
+          "label": "Beschwipst"
+        },
+        {
+          "name": "Zany face",
+          "label": "Verrückt"
+        },
+        {
+          "name": "Shushing face",
+          "label": "Psst"
+        },
+        {
+          "name": "Face with rolling eyes",
+          "label": "Augenrollen"
+        },
+        {
+          "name": "Sleeping face",
+          "label": "Schläfrig"
+        },
+        {
+          "name": "Nauseated face",
+          "label": "Übel"
+        },
+        {
+          "name": "Money-mouth face",
+          "label": "Geld"
+        },
+        {
+          "name": "Star-struck",
+          "label": "Begeistert"
+        },
+        {
+          "name": "Upside-down face",
+          "label": "Kopfüber"
+        },
+        {
+          "name": "Winking face with tongue",
+          "label": "Frech"
+        },
+        {
+          "name": "Grimacing face",
+          "label": "Ups"
+        },
+        {
+          "name": "Face screaming in fear",
+          "label": "Schrei"
+        },
+        {
+          "name": "Face with head-bandage",
+          "label": "Verletzt"
+        },
+        {
+          "name": "Disguised face",
+          "label": "Verkleidet"
+        },
+        {
+          "name": "Saluting face",
+          "label": "Salut"
+        },
+        {
+          "name": "Melting face",
+          "label": "Schmelzend"
+        },
+        {
+          "name": "Face with spiral eyes",
+          "label": "Schwindlig"
+        },
+        {
+          "name": "Yawning face",
+          "label": "Gähnen"
+        },
+        {
+          "name": "Lying face",
+          "label": "Pinocchio"
+        },
+        {
+          "name": "Smirking face",
+          "label": "Grinsen"
+        },
+        {
+          "name": "Pleading face",
+          "label": "Bitte bitte"
+        },
+        {
+          "name": "Face with steam from nose",
+          "label": "Schnaubend"
+        }
       ]
     },
     {
       "id": "berufe",
       "label": "Berufe",
       "items": [
-        { "name": "Technologist", "label": "Entwickler:in" },
-        { "name": "Scientist", "label": "Wissenschaftler:in" },
-        { "name": "Detective", "label": "Detektiv:in" },
-        { "name": "Astronaut", "label": "Astronaut:in" },
-        { "name": "Artist", "label": "Künstler:in" },
-        { "name": "Cook", "label": "Koch/Köchin" },
-        { "name": "Firefighter", "label": "Feuerwehr" },
-        { "name": "Pilot", "label": "Pilot:in" },
-        { "name": "Mechanic", "label": "Mechaniker:in" },
-        { "name": "Office worker", "label": "Büro" },
-        { "name": "Teacher", "label": "Lehrer:in" },
-        { "name": "Judge", "label": "Richter:in" },
-        { "name": "Farmer", "label": "Landwirt:in" },
-        { "name": "Singer", "label": "Sänger:in" },
-        { "name": "Construction worker", "label": "Bauarbeiter:in" },
-        { "name": "Guard", "label": "Wache" },
-        { "name": "Health worker", "label": "Ärzt:in" },
-        { "name": "Student", "label": "Student:in" }
+        {
+          "name": "Technologist",
+          "label": "Entwickler:in"
+        },
+        {
+          "name": "Scientist",
+          "label": "Wissenschaftler:in"
+        },
+        {
+          "name": "Detective",
+          "label": "Detektiv:in"
+        },
+        {
+          "name": "Astronaut",
+          "label": "Astronaut:in"
+        },
+        {
+          "name": "Artist",
+          "label": "Künstler:in"
+        },
+        {
+          "name": "Cook",
+          "label": "Koch/Köchin"
+        },
+        {
+          "name": "Firefighter",
+          "label": "Feuerwehr"
+        },
+        {
+          "name": "Pilot",
+          "label": "Pilot:in"
+        },
+        {
+          "name": "Mechanic",
+          "label": "Mechaniker:in"
+        },
+        {
+          "name": "Office worker",
+          "label": "Büro"
+        },
+        {
+          "name": "Teacher",
+          "label": "Lehrer:in"
+        },
+        {
+          "name": "Judge",
+          "label": "Richter:in"
+        },
+        {
+          "name": "Farmer",
+          "label": "Landwirt:in"
+        },
+        {
+          "name": "Singer",
+          "label": "Sänger:in"
+        },
+        {
+          "name": "Construction worker",
+          "label": "Bauarbeiter:in"
+        },
+        {
+          "name": "Guard",
+          "label": "Wache"
+        },
+        {
+          "name": "Health worker",
+          "label": "Ärzt:in"
+        },
+        {
+          "name": "Student",
+          "label": "Student:in"
+        }
       ]
     },
     {
       "id": "essen",
       "label": "Essen",
       "items": [
-        { "name": "Avocado", "label": "Avocado" },
-        { "name": "Pizza", "label": "Pizza" },
-        { "name": "Taco", "label": "Taco" },
-        { "name": "Doughnut", "label": "Donut" },
-        { "name": "Hot dog", "label": "Hotdog" },
-        { "name": "Hamburger", "label": "Burger" },
-        { "name": "Sushi", "label": "Sushi" },
-        { "name": "Pretzel", "label": "Brezel" },
-        { "name": "Croissant", "label": "Croissant" },
-        { "name": "Broccoli", "label": "Brokkoli" },
-        { "name": "Cheese wedge", "label": "Käse" },
-        { "name": "Watermelon", "label": "Wassermelone" },
-        { "name": "Pineapple", "label": "Ananas" },
-        { "name": "Banana", "label": "Banane" },
-        { "name": "Hot pepper", "label": "Chili" },
-        { "name": "Cupcake", "label": "Cupcake" },
-        { "name": "Popcorn", "label": "Popcorn" },
-        { "name": "Hot beverage", "label": "Kaffee" },
-        { "name": "Beer mug", "label": "Bier" },
-        { "name": "Bento box", "label": "Bento" },
-        { "name": "Peach", "label": "Pfirsich" },
-        { "name": "Strawberry", "label": "Erdbeere" },
-        { "name": "Coconut", "label": "Kokosnuss" },
-        { "name": "Waffle", "label": "Waffel" },
-        { "name": "Mushroom", "label": "Pilz" },
-        { "name": "Cactus", "label": "Kaktus" }
+        {
+          "name": "Avocado",
+          "label": "Avocado"
+        },
+        {
+          "name": "Pizza",
+          "label": "Pizza"
+        },
+        {
+          "name": "Taco",
+          "label": "Taco"
+        },
+        {
+          "name": "Doughnut",
+          "label": "Donut"
+        },
+        {
+          "name": "Hot dog",
+          "label": "Hotdog"
+        },
+        {
+          "name": "Hamburger",
+          "label": "Burger"
+        },
+        {
+          "name": "Sushi",
+          "label": "Sushi"
+        },
+        {
+          "name": "Pretzel",
+          "label": "Brezel"
+        },
+        {
+          "name": "Croissant",
+          "label": "Croissant"
+        },
+        {
+          "name": "Broccoli",
+          "label": "Brokkoli"
+        },
+        {
+          "name": "Cheese wedge",
+          "label": "Käse"
+        },
+        {
+          "name": "Watermelon",
+          "label": "Wassermelone"
+        },
+        {
+          "name": "Pineapple",
+          "label": "Ananas"
+        },
+        {
+          "name": "Banana",
+          "label": "Banane"
+        },
+        {
+          "name": "Hot pepper",
+          "label": "Chili"
+        },
+        {
+          "name": "Cupcake",
+          "label": "Cupcake"
+        },
+        {
+          "name": "Popcorn",
+          "label": "Popcorn"
+        },
+        {
+          "name": "Hot beverage",
+          "label": "Kaffee"
+        },
+        {
+          "name": "Beer mug",
+          "label": "Bier"
+        },
+        {
+          "name": "Bento box",
+          "label": "Bento"
+        },
+        {
+          "name": "Peach",
+          "label": "Pfirsich"
+        },
+        {
+          "name": "Strawberry",
+          "label": "Erdbeere"
+        },
+        {
+          "name": "Coconut",
+          "label": "Kokosnuss"
+        },
+        {
+          "name": "Waffle",
+          "label": "Waffel"
+        },
+        {
+          "name": "Mushroom",
+          "label": "Pilz"
+        },
+        {
+          "name": "Cactus",
+          "label": "Kaktus"
+        }
       ]
     },
     {
       "id": "dinge",
       "label": "Dinge",
       "items": [
-        { "name": "Rocket", "label": "Rakete" },
-        { "name": "Joystick", "label": "Joystick" },
-        { "name": "Video game", "label": "Gamepad" },
-        { "name": "Crystal ball", "label": "Glaskugel" },
-        { "name": "Magic wand", "label": "Zauberstab" },
-        { "name": "Game die", "label": "Würfel" },
-        { "name": "Trophy", "label": "Pokal" },
-        { "name": "Bomb", "label": "Bombe" },
-        { "name": "Fire", "label": "Feuer" },
-        { "name": "Rainbow", "label": "Regenbogen" },
-        { "name": "Four leaf clover", "label": "Kleeblatt" },
-        { "name": "Potted plant", "label": "Topfpflanze" },
-        { "name": "Floppy disk", "label": "Diskette" },
-        { "name": "Laptop", "label": "Laptop" },
-        { "name": "Light bulb", "label": "Glühbirne" },
-        { "name": "Puzzle piece", "label": "Puzzle" },
-        { "name": "Balloon", "label": "Ballon" },
-        { "name": "Hundred points", "label": "100 Punkte" }
+        {
+          "name": "Rocket",
+          "label": "Rakete"
+        },
+        {
+          "name": "Joystick",
+          "label": "Joystick"
+        },
+        {
+          "name": "Video game",
+          "label": "Gamepad"
+        },
+        {
+          "name": "Crystal ball",
+          "label": "Glaskugel"
+        },
+        {
+          "name": "Magic wand",
+          "label": "Zauberstab"
+        },
+        {
+          "name": "Game die",
+          "label": "Würfel"
+        },
+        {
+          "name": "Trophy",
+          "label": "Pokal"
+        },
+        {
+          "name": "Bomb",
+          "label": "Bombe"
+        },
+        {
+          "name": "Fire",
+          "label": "Feuer"
+        },
+        {
+          "name": "Rainbow",
+          "label": "Regenbogen"
+        },
+        {
+          "name": "Four leaf clover",
+          "label": "Kleeblatt"
+        },
+        {
+          "name": "Potted plant",
+          "label": "Topfpflanze"
+        },
+        {
+          "name": "Floppy disk",
+          "label": "Diskette"
+        },
+        {
+          "name": "Laptop",
+          "label": "Laptop"
+        },
+        {
+          "name": "Light bulb",
+          "label": "Glühbirne"
+        },
+        {
+          "name": "Puzzle piece",
+          "label": "Puzzle"
+        },
+        {
+          "name": "Balloon",
+          "label": "Ballon"
+        },
+        {
+          "name": "Hundred points",
+          "label": "100 Punkte"
+        }
       ]
     }
   ],
   "accessories": [
-    { "name": "Top hat", "label": "Zylinder", "placement": "hat" },
-    { "name": "Crown", "label": "Krone", "placement": "hat" },
-    { "name": "Billed cap", "label": "Basecap", "placement": "hat" },
-    { "name": "Graduation cap", "label": "Doktorhut", "placement": "hat" },
-    { "name": "Military helmet", "label": "Helm", "placement": "hat" },
-    { "name": "Sunglasses", "label": "Sonnenbrille", "placement": "eyes" },
-    { "name": "Glasses", "label": "Brille", "placement": "eyes" },
-    { "name": "Goggles", "label": "Schutzbrille", "placement": "eyes" },
-    { "name": "Headphone", "label": "Kopfhörer", "placement": "ears" },
-    { "name": "Necktie", "label": "Krawatte", "placement": "neck" },
-    { "name": "Ribbon", "label": "Schleife", "placement": "side" },
-    { "name": "Hibiscus", "label": "Blüte", "placement": "side" },
-    { "name": "Hot beverage", "label": "Kaffee", "placement": "corner" },
-    { "name": "Sparkles", "label": "Glitzer", "placement": "corner" },
-    { "name": "Fire", "label": "Feuer", "placement": "corner" },
-    { "name": "Zzz", "label": "Müde", "placement": "corner" },
-    { "name": "Speech balloon", "label": "Sprechblase", "placement": "corner" },
-    { "name": "Party popper", "label": "Konfetti", "placement": "corner" },
-    { "name": "Red heart", "label": "Herz", "placement": "corner" },
-    { "name": "Collision", "label": "Boom", "placement": "corner" },
-    { "name": "Hundred points", "label": "100", "placement": "corner" }
+    {
+      "name": "Top hat",
+      "label": "Zylinder",
+      "placement": "hat",
+      "box": [
+        0.063,
+        0.117,
+        0.875,
+        0.828
+      ]
+    },
+    {
+      "name": "Crown",
+      "label": "Krone",
+      "placement": "hat",
+      "box": [
+        0.063,
+        0.219,
+        0.875,
+        0.719
+      ]
+    },
+    {
+      "name": "Billed cap",
+      "label": "Basecap",
+      "placement": "hat",
+      "box": [
+        0.055,
+        0.195,
+        0.883,
+        0.594
+      ]
+    },
+    {
+      "name": "Graduation cap",
+      "label": "Doktorhut",
+      "placement": "hat",
+      "box": [
+        0.063,
+        0.156,
+        0.875,
+        0.789
+      ]
+    },
+    {
+      "name": "Military helmet",
+      "label": "Helm",
+      "placement": "hat",
+      "box": [
+        0.063,
+        0.063,
+        0.883,
+        0.875
+      ]
+    },
+    {
+      "name": "Sunglasses",
+      "label": "Sonnenbrille",
+      "placement": "eyes",
+      "box": [
+        0.055,
+        0.313,
+        0.883,
+        0.352
+      ]
+    },
+    {
+      "name": "Glasses",
+      "label": "Brille",
+      "placement": "eyes",
+      "box": [
+        0.063,
+        0.313,
+        0.875,
+        0.344
+      ]
+    },
+    {
+      "name": "Goggles",
+      "label": "Schutzbrille",
+      "placement": "eyes",
+      "box": [
+        0.063,
+        0.063,
+        0.875,
+        0.875
+      ]
+    },
+    {
+      "name": "Headphone",
+      "label": "Kopfhörer",
+      "placement": "ears",
+      "box": [
+        0.094,
+        0.063,
+        0.813,
+        0.875
+      ]
+    },
+    {
+      "name": "Necktie",
+      "label": "Krawatte",
+      "placement": "neck",
+      "box": [
+        0.063,
+        0.063,
+        0.875,
+        0.875
+      ]
+    },
+    {
+      "name": "Ribbon",
+      "label": "Schleife",
+      "placement": "side",
+      "box": [
+        0.055,
+        0.188,
+        0.883,
+        0.75
+      ]
+    },
+    {
+      "name": "Hibiscus",
+      "label": "Blüte",
+      "placement": "side",
+      "box": [
+        0.086,
+        0.063,
+        0.883,
+        0.852
+      ]
+    },
+    {
+      "name": "Hot beverage",
+      "label": "Kaffee",
+      "placement": "corner",
+      "box": [
+        0.078,
+        0.063,
+        0.844,
+        0.875
+      ]
+    },
+    {
+      "name": "Sparkles",
+      "label": "Glitzer",
+      "placement": "corner",
+      "box": [
+        0.063,
+        0.156,
+        0.875,
+        0.789
+      ]
+    },
+    {
+      "name": "Fire",
+      "label": "Feuer",
+      "placement": "corner",
+      "box": [
+        0.156,
+        0.063,
+        0.656,
+        0.875
+      ]
+    },
+    {
+      "name": "Zzz",
+      "label": "Müde",
+      "placement": "corner",
+      "box": [
+        0.063,
+        0.258,
+        0.875,
+        0.68
+      ]
+    },
+    {
+      "name": "Speech balloon",
+      "label": "Sprechblase",
+      "placement": "corner",
+      "box": [
+        0.063,
+        0.156,
+        0.875,
+        0.68
+      ]
+    },
+    {
+      "name": "Party popper",
+      "label": "Konfetti",
+      "placement": "corner",
+      "box": [
+        0.078,
+        0.063,
+        0.844,
+        0.875
+      ]
+    },
+    {
+      "name": "Red heart",
+      "label": "Herz",
+      "placement": "corner",
+      "box": [
+        0.063,
+        0.172,
+        0.875,
+        0.773
+      ]
+    },
+    {
+      "name": "Collision",
+      "label": "Boom",
+      "placement": "corner",
+      "box": [
+        0.086,
+        0.063,
+        0.836,
+        0.875
+      ]
+    },
+    {
+      "name": "Hundred points",
+      "label": "100",
+      "placement": "corner",
+      "box": [
+        0.063,
+        0.156,
+        0.875,
+        0.781
+      ]
+    }
   ]
 }

@@ -11,13 +11,26 @@ interface PinnedKnowledgeProps {
   onUnpin: () => void;
   /** Schließt das Overlay nur für die eigene Person. */
   onClose: () => void;
+  /** Von der Moderation vorgeführte Reglerwerte; null, wenn niemand vorführt. */
+  demoValues: Record<string, number> | null;
+  /** Nur die Moderation darf die Regler bewegen. */
+  canPresent: boolean;
+  onDemoChange: (values: Record<string, number>) => void;
 }
 
 /**
  * Von der Moderation eingeblendetes Wissenselement: erscheint bei allen im Raum als Overlay.
  * Wer es schließt, blendet es nur für sich aus; für alle beendet es die Moderation.
  */
-export function PinnedKnowledge({ topic, canUnpin, onUnpin, onClose }: PinnedKnowledgeProps) {
+export function PinnedKnowledge({
+  topic,
+  canUnpin,
+  onUnpin,
+  onClose,
+  demoValues,
+  canPresent,
+  onDemoChange,
+}: PinnedKnowledgeProps) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -42,7 +55,12 @@ export function PinnedKnowledge({ topic, canUnpin, onUnpin, onClose }: PinnedKno
         </h2>
         <p className="pinned-summary">{topic.summary}</p>
         <KnowledgeVisual visual={topic.visual} />
-        {topic.interactive && <KnowledgeInteractive interactive={topic.interactive} />}
+        {topic.interactive && (
+          <KnowledgeInteractive
+            interactive={topic.interactive}
+            sync={{ values: demoValues, readOnly: !canPresent, onChange: onDemoChange }}
+          />
+        )}
         <ul className="pinned-points">
           {topic.points.slice(0, 3).map((point) => (
             <li key={point}>{point}</li>

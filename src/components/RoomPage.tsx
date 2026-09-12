@@ -64,7 +64,7 @@ export function RoomPage({ roomId }: { roomId: string }) {
   // Wer das eingeblendete Wissenselement schließt, blendet es nur für sich aus.
   const [hiddenPin, setHiddenPin] = useState<string | null>(null);
   const room = useRoom(roomId, profile);
-  const { status, meta, players, votes, rounds, stats, uid, actions } = room;
+  const { status, meta, players, votes, rounds, stats, demo, uid, actions } = room;
   const lastThrowAt = useRef(0);
   const roomName = meta?.name;
   const revealed = meta ? meta.revealed : null;
@@ -245,6 +245,9 @@ export function RoomPage({ roomId }: { roomId: string }) {
             canUnpin={isHost}
             onUnpin={() => void actions?.pinTopic(null)}
             onClose={() => setHiddenPin(pinnedTopic.id)}
+            demoValues={demo && demo.topic === pinnedTopic.id ? demo.values : null}
+            canPresent={isHost}
+            onDemoChange={(values) => void actions?.showDemo(pinnedTopic.id, values)}
           />
         )}
         {pinnedTopic && hiddenPin === pinnedTopic.id && (

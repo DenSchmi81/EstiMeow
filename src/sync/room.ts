@@ -12,6 +12,7 @@ import { getBackend, type Backend } from './backend';
 //   rounds/<round>      { votes, names, avatars, deck, at }   – Schnappschuss beim Aufdecken, Grundlage der Awards
 //   stats/<uid>         { thrown, hit }                       – Wurf-Statistik, nur vom Spieler selbst beschreibbar
 //   throws/<pushId>     { from, to, kind, item, at }          – kurzlebige Emoji-/Meme-Würfe
+//   demo                { topic, values, at }                – Reglerwerte, die die Moderation allen vorfuehrt
 
 export interface RoomMeta {
   name: string;
@@ -29,6 +30,14 @@ export interface RoomMeta {
 }
 
 const MINUTE_MS = 60_000;
+/** Reglerwerte werden gebuendelt geschrieben, damit ein Ziehen nicht Dutzende Schreibvorgaenge ausloest. */
+const DEMO_THROTTLE_MS = 150;
+
+/** Von der Moderation vorgefuehrte Reglerwerte eines Wissenselements */
+export interface DemoState {
+  topic: string;
+  values: Record<string, number>;
+}
 
 export interface Player {
   id: string;
@@ -112,6 +121,16 @@ function normalizeRounds(value: unknown): RoundSnapshot[] {
   });
 }
 
+function normalizeDemo(value: unknown): DemoState | null {
+  const raw = asRecord(value);
+  if (typeof raw.topic !== 'string') return null;
+  const values: Record<string, number> = {};
+  for (const [key, entry] of Object.entries(asRecord(raw.values))) {
+    if (typeof entry === 'number') values[key] = entry;
+  }
+  return { topic: raw.topic, values };
+}
+
 function normalizeStats(value: unknown): Record<string, PlayerStats> {
   return Object.fromEntries(
     Object.entries(asRecord(value)).map(([id, raw]) => {
@@ -147,6 +166,8 @@ export function useRoom(roomId: string, profile: Profile | null) {
   const [votesState, setVotesState] = useState<{ round: number; votes: Record<string, unknown> } | null>(null);
   const [rounds, setRounds] = useState<RoundSnapshot[]>([]);
   const [stats, setStats] = useState<Record<string, PlayerStats>>({});
+  const [demo, setDemo] = useState<DemoState | null>(null);
+  const demoWrite = useRef({ timer: 0, pending: null as DemoState | null });
   const throwListeners = useRef(new Set<(event: ThrowEvent) => void>());
   const profileRef = useRef(profile);
   const statsRef = useRef(stats);
@@ -214,6 +235,11 @@ export function useRoom(roomId: string, profile: Profile | null) {
   useEffect(() => {
     if (!backend || !uid) return;
     return backend.onValue<unknown>(`${base}/stats`, (value) => setStats(normalizeStats(value)));
+  }, [backend, uid, base]);
+
+  useEffect(() => {
+    if (!backend || !uid) return;
+    return backend.onValue<unknown>(`${base}/demo`, (value) => setDemo(normalizeDemo(value)));
   }, [backend, uid, base]);
 
   // Anwesenheit: Spielereintrag anlegen und beim Verbindungsabbruch automatisch entfernen.
@@ -367,8 +393,33 @@ export function useRoom(roomId: string, profile: Profile | null) {
         }),
       stopTimer: () => backend.update(`${base}/meta`, { timerEndsAt: null }),
       claimHost: () => backend.update(`${base}/meta`, { host: uid }),
-      /** Wissenselement fuer alle einblenden; null blendet es wieder aus. */
-      pinTopic: (topicId: string | null) => backend.update(`${base}/meta`, { pinned: topicId }),
+      /** Wissenselement fuer alle einblenden; null blendet es wieder aus. Beendet auch eine Vorfuehrung. */
+      pinTopic: (topicId: string | null) => {
+        const done = backend.update(`${base}/meta`, { pinned: topicId });
+        // Vorfuehrung beenden. Getrennt geschrieben, damit das Einblenden auch dann funktioniert,
+        // wenn die Datenbank-Regeln den demo-Zweig noch nicht kennen.
+        backend.remove(`${base}/demo`).catch(() => {});
+        return done;
+      },
+      /** Reglerwerte fuer alle vorfuehren (nur Moderation); gebuendelt geschrieben. */
+      showDemo: (topicId: string, values: Record<string, number>) => {
+        demoWrite.current.pending = { topic: topicId, values };
+        if (demoWrite.current.timer) return;
+        const flush = () => {
+          const next = demoWrite.current.pending;
+          demoWrite.current.pending = null;
+          if (next) {
+            backend
+              .update(`${base}/demo`, { topic: next.topic, values: next.values, at: backend.serverTimestamp() })
+              .catch(() => {});
+          }
+          demoWrite.current.timer = window.setTimeout(() => {
+            demoWrite.current.timer = 0;
+            if (demoWrite.current.pending) flush();
+          }, DEMO_THROTTLE_MS);
+        };
+        flush();
+      },
       startAwards: () => backend.update(`${base}/meta`, { awardsAt: backend.serverTimestamp() }),
       throwAt: async (to: string, kind: ThrowKind, item: string) => {
         const id = await backend.push(`${base}/throws`, { from: uid, to, kind, item, at: backend.serverTimestamp() });
@@ -392,5 +443,5 @@ export function useRoom(roomId: string, profile: Profile | null) {
 
   const status: RoomStatus = error ? 'error' : meta === undefined ? 'connecting' : meta === null ? 'missing' : 'ready';
 
-  return { status, error, uid, meta, players, votes, rounds, stats, actions, onThrow };
+  return { status, error, uid, meta, players, votes, rounds, stats, demo, actions, onThrow };
 }

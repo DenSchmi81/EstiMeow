@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { parseAvatar } from '../avatars';
 import { findTopic } from '../knowledge';
+import { isUnlocked, markUnlocked } from '../unlock';
 import { computeAwards, computeSpotlight } from '../fun';
 import { sfx } from '../sounds';
 import { RETENTION_DAYS, useRoom, type Profile, type ThrowKind } from '../sync/room';
 import { AvatarImage } from './AvatarImage';
+import { CodeGate } from './CodeGate';
 import { AwardsOverlay } from './AwardsOverlay';
 import { Hand } from './Hand';
 import { Header } from './Header';
@@ -63,6 +65,7 @@ export function RoomPage({ roomId }: { roomId: string }) {
   const [awardsOpen, setAwardsOpen] = useState(false);
   // Wer das eingeblendete Wissenselement schließt, blendet es nur für sich aus.
   const [hiddenPin, setHiddenPin] = useState<string | null>(null);
+  const [unlocked, setUnlocked] = useState(() => isUnlocked(roomId));
   const room = useRoom(roomId, profile);
   const { status, meta, players, votes, rounds, stats, demo, uid, actions } = room;
   const lastThrowAt = useRef(0);
@@ -196,6 +199,13 @@ export function RoomPage({ roomId }: { roomId: string }) {
         <a className="btn primary" href="#/">
           Neuen Raum erstellen
         </a>
+      </CenterMessage>
+    );
+  } else if (meta && meta.codeHash && !unlocked) {
+    // Erst nach dem Code wird der Raum sichtbar – vorher weder Namen noch Karten.
+    body = (
+      <CenterMessage title="Geschützter Raum">
+        <p>Dieser Raum ist mit einem Zugangscode geschützt.</p>
       </CenterMessage>
     );
   } else if (status === 'missing' || !meta) {
@@ -346,7 +356,16 @@ export function RoomPage({ roomId }: { roomId: string }) {
         )}
       </Header>
       {body}
-      {status === 'ready' && !profile && (
+      {meta && meta.codeHash && !unlocked && (
+        <CodeGate
+          expected={meta.codeHash}
+          onUnlocked={() => {
+            markUnlocked(roomId);
+            setUnlocked(true);
+          }}
+        />
+      )}
+      {status === 'ready' && !profile && !(meta && meta.codeHash && !unlocked) && (
         <ProfileDialog mode="join" initial={initialProfile()} onSubmit={applyProfile} />
       )}
       {dialog === 'profile' && profile && (
@@ -356,8 +375,8 @@ export function RoomPage({ roomId }: { roomId: string }) {
         <SettingsDialog
           meta={meta}
           onClose={() => setDialog(null)}
-          onSave={(name, deck, timebox) => {
-            void actions?.saveSettings(name, deck, timebox);
+          onSave={(name, deck, timebox, codeHash) => {
+            void actions?.saveSettings(name, deck, timebox, codeHash);
             setDialog(null);
           }}
           onDelete={() => {

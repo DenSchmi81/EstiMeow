@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { CUSTOM_DECK_ID, DECK_PRESETS } from '../decks';
 import { RETENTION_DAYS, type RoomMeta } from '../sync/room';
+import { hashCode } from '../util';
 import { DeckPicker, resolveDeck, type DeckChoice } from './DeckPicker';
 import { Dialog } from './Dialog';
 
@@ -9,7 +10,12 @@ const TIMEBOX_MINUTES = [1, 2, 3, 5];
 interface SettingsDialogProps {
   meta: RoomMeta;
   /** `deck` bzw. `timebox` sind null, wenn sie unverändert bleiben. */
-  onSave: (name: string, deck: { deckId: string; cards: string[] } | null, timebox: number | null) => void;
+  onSave: (
+    name: string,
+    deck: { deckId: string; cards: string[] } | null,
+    timebox: number | null,
+    codeHash: string | null | undefined,
+  ) => void;
   onClose: () => void;
   /** Löscht den Raum mit allen Namen, Stimmen und Runden. */
   onDelete: () => void;
@@ -23,6 +29,8 @@ export function SettingsDialog({ meta, onSave, onClose, onDelete }: SettingsDial
     customText: isPreset ? '' : meta.deck.join(', '),
   });
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [codeMode, setCodeMode] = useState<'keep' | 'set' | 'remove'>('keep');
+  const [code, setCode] = useState('');
   const [timerOn, setTimerOn] = useState(meta.timebox > 0);
   const [minutes, setMinutes] = useState(meta.timebox > 0 ? meta.timebox : 2);
   const cards = resolveDeck(deck);
@@ -36,11 +44,16 @@ export function SettingsDialog({ meta, onSave, onClose, onDelete }: SettingsDial
         onSubmit={(e) => {
           e.preventDefault();
           if (cards.length === 0) return;
-          onSave(
-            name.trim() || meta.name,
-            deckChanged ? { deckId: deck.deckId, cards } : null,
-            timebox !== meta.timebox ? timebox : null,
-          );
+          if (codeMode === 'set' && code.trim().length === 0) return;
+          const save = (codeHash: string | null | undefined) =>
+            onSave(
+              name.trim() || meta.name,
+              deckChanged ? { deckId: deck.deckId, cards } : null,
+              timebox !== meta.timebox ? timebox : null,
+              codeHash,
+            );
+          if (codeMode === 'set') void hashCode(code).then(save);
+          else save(codeMode === 'remove' ? null : undefined);
         }}
       >
         <label className="field">
@@ -72,6 +85,49 @@ export function SettingsDialog({ meta, onSave, onClose, onDelete }: SettingsDial
               ))}
             </div>
           )}
+        </div>
+        <div className="code-settings">
+          <strong>Zugangscode</strong>
+          {codeMode === 'set' ? (
+            <label className="field">
+              <span>Neuer Code</span>
+              <input maxLength={60} value={code} autoComplete="off" autoFocus onChange={(e) => setCode(e.target.value)} />
+              <small>Gilt ab dem Speichern. Wer schon im Raum ist, bleibt drin.</small>
+            </label>
+          ) : (
+            <p className="hint">
+              {codeMode === 'remove'
+                ? 'Der Code wird beim Speichern entfernt.'
+                : meta.codeHash
+                  ? 'Dieser Raum ist mit einem Code geschützt.'
+                  : 'Kein Code gesetzt – wer den Link hat, kommt hinein.'}
+            </p>
+          )}
+          <div className="code-buttons">
+            {codeMode === 'keep' ? (
+              <>
+                <button type="button" className="btn ghost" onClick={() => setCodeMode('set')}>
+                  {meta.codeHash ? 'Code ändern' : 'Code setzen'}
+                </button>
+                {meta.codeHash && (
+                  <button type="button" className="btn ghost" onClick={() => setCodeMode('remove')}>
+                    Code entfernen
+                  </button>
+                )}
+              </>
+            ) : (
+              <button
+                type="button"
+                className="btn ghost"
+                onClick={() => {
+                  setCodeMode('keep');
+                  setCode('');
+                }}
+              >
+                Änderung verwerfen
+              </button>
+            )}
+          </div>
         </div>
         <div className="danger-zone">
           <p className="hint">

@@ -1,7 +1,8 @@
 import { useRef, useState, type FormEvent } from 'react';
 import { DECK_PRESETS } from '../decks';
 import { createRoom } from '../sync/room';
-import { errorMessage } from '../util';
+import { markUnlocked } from '../unlock';
+import { errorMessage, hashCode } from '../util';
 import { DeckPicker, resolveDeck, type DeckChoice } from './DeckPicker';
 import { Header } from './Header';
 import { Mascot } from './Mascot';
@@ -26,6 +27,7 @@ function HeroCat() {
 export function Home() {
   const [name, setName] = useState('Sprint-Schätzung');
   const [deck, setDeck] = useState<DeckChoice>({ deckId: DECK_PRESETS[0].id, customText: '' });
+  const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const cards = resolveDeck(deck);
@@ -35,7 +37,10 @@ export function Home() {
     setBusy(true);
     setError(null);
     try {
-      const id = await createRoom(name.trim() || 'EstiMeow', deck.deckId, cards);
+      const codeHash = code.trim() ? await hashCode(code) : null;
+      const id = await createRoom(name.trim() || 'EstiMeow', deck.deckId, cards, codeHash);
+      // Wer den Raum anlegt, kennt den Code – sonst sperrt man sich selbst aus.
+      if (codeHash) markUnlocked(id);
       window.location.hash = `#/r/${id}`;
     } catch (err) {
       setError(errorMessage(err));
@@ -69,6 +74,11 @@ export function Home() {
             <input maxLength={60} value={name} onChange={(e) => setName(e.target.value)} />
           </label>
           <DeckPicker value={deck} onChange={setDeck} />
+          <label className="field">
+            <span>Zugangscode (optional)</span>
+            <input maxLength={60} value={code} autoComplete="off" onChange={(e) => setCode(e.target.value)} />
+            <small>Ohne Code genügt der Link. Mit Code braucht jede Person zusätzlich dieses Wort.</small>
+          </label>
           {error && <p className="form-error">{error}</p>}
           <button type="submit" className="btn primary big" disabled={busy || cards.length === 0}>
             {busy ? 'Erstelle Raum …' : 'Raum erstellen'}

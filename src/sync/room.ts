@@ -30,6 +30,8 @@ export interface RoomMeta {
   host: string | null;
   /** Id des Wissenselements, das fuer alle eingeblendet ist */
   pinned: string | null;
+  /** Prüfsumme des Zugangscodes; null = kein Code nötig */
+  codeHash: string | null;
 }
 
 const MINUTE_MS = 60_000;
@@ -117,6 +119,7 @@ function normalizeMeta(raw: Record<string, unknown>): RoomMeta {
     touchedAt: typeof raw.touchedAt === 'number' ? raw.touchedAt : null,
     host: typeof raw.host === 'string' ? raw.host : null,
     pinned: typeof raw.pinned === 'string' ? raw.pinned : null,
+    codeHash: typeof raw.codeHash === 'string' ? raw.codeHash : null,
   };
 }
 
@@ -154,7 +157,12 @@ function toThrowEvent(id: string, t: ThrowRecord): ThrowEvent | null {
   return { id, from: t.from, to: t.to, kind: t.kind, item: t.item };
 }
 
-export async function createRoom(name: string, deckId: string, deck: string[]): Promise<string> {
+export async function createRoom(
+  name: string,
+  deckId: string,
+  deck: string[],
+  codeHash: string | null = null,
+): Promise<string> {
   const backend = await getBackend();
   // Wer den Raum erstellt, moderiert ihn zuerst; die Rolle kann spaeter uebernommen werden.
   const uid = await backend.signIn();
@@ -169,6 +177,7 @@ export async function createRoom(name: string, deckId: string, deck: string[]): 
       createdAt: backend.serverTimestamp(),
       touchedAt: backend.serverTimestamp(),
       host: uid,
+      ...(codeHash ? { codeHash } : {}),
     },
   });
   return id;
@@ -402,10 +411,17 @@ export function useRoom(roomId: string, profile: Profile | null) {
           'meta/touchedAt': backend.serverTimestamp(),
           [`votes/${round}`]: null,
         }),
-      // timebox wird nur mitgeschrieben, wenn sie sich geändert hat (null = unverändert).
-      saveSettings: (name: string, deck: { deckId: string; cards: string[] } | null, timebox: number | null) =>
+      // timebox und codeHash werden nur mitgeschrieben, wenn sie sich geändert haben
+      // (null bei timebox = unverändert; undefined bei code = unverändert, null = Code entfernen).
+      saveSettings: (
+        name: string,
+        deck: { deckId: string; cards: string[] } | null,
+        timebox: number | null,
+        codeHash: string | null | undefined = undefined,
+      ) =>
         backend.update(base, {
           'meta/name': name,
+          ...(codeHash !== undefined && { 'meta/codeHash': codeHash }),
           ...(timebox !== null && { 'meta/timebox': timebox }),
           ...(timebox === 0 && { 'meta/timerEndsAt': null }),
           ...(deck && {

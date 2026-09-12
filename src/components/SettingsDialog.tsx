@@ -76,7 +76,7 @@ export function SettingsDialog({ meta, onSave, onClose, onDelete }: SettingsDial
         <div className="danger-zone">
           <p className="hint">
             🧹 Räume löschen sich {RETENTION_DAYS} Tage nach der letzten Aktivität von selbst, mit allen Namen, Stimmen
-            und Runden.
+            und Runden. <a href="#/datenschutz">Datenschutz</a>
           </p>
           {confirmDelete ? (
             <div className="danger-confirm">

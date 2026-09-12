@@ -3,6 +3,8 @@ import { AvatarGallery } from './components/AvatarGallery';
 import { CatGallery } from './components/CatGallery';
 import { KnowledgeGallery } from './components/KnowledgeGallery';
 import { Home } from './components/Home';
+import { ImpressumPage } from './components/ImpressumPage';
+import { PrivacyPage } from './components/PrivacyPage';
 import { RoomPage } from './components/RoomPage';
 
 // Hash-Routing, damit GitHub Pages ohne 404-Fallback auskommt: #/ und #/r/<raum-id>
@@ -21,6 +23,8 @@ export function App() {
   if (import.meta.env.DEV && hash === '#/katzen') return <CatGallery />;
   if (import.meta.env.DEV && hash === '#/avatare') return <AvatarGallery />;
   if (import.meta.env.DEV && hash === '#/wissen') return <KnowledgeGallery />;
+  if (hash === '#/datenschutz') return <PrivacyPage />;
+  if (hash === '#/impressum') return <ImpressumPage />;
   const match = /^#\/r\/([A-Za-z0-9]{8,32})\/?$/.exec(hash);
   return match ? <RoomPage key={match[1]} roomId={match[1]} /> : <Home />;
 }

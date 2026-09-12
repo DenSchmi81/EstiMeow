@@ -75,6 +75,15 @@ export function Home() {
           </button>
         </form>
       </main>
+      <footer className="site-footer">
+        <a href="#/datenschutz">Datenschutz</a>
+        <span aria-hidden="true">·</span>
+        <a href="#/impressum">Impressum</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/DenSchmi81/EstiMeow" target="_blank" rel="noreferrer noopener">
+          Quellcode auf GitHub
+        </a>
+      </footer>
     </>
   );
 }

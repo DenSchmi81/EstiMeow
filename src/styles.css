@@ -3184,3 +3184,62 @@ a {
 .btn.danger:hover:not(:disabled) {
   filter: brightness(1.08);
 }
+
+/* ---------- Datenschutzseite ---------- */
+
+.legal {
+  width: min(760px, 100%);
+  margin: 0 auto;
+  padding: 28px 20px 48px;
+}
+
+.legal h1 {
+  margin: 0 0 10px;
+  font-size: 28px;
+}
+
+.legal h2 {
+  margin: 28px 0 8px;
+  font-size: 18px;
+}
+
+.legal p,
+.legal li {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.legal ul {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding-left: 22px;
+}
+
+.legal-lead {
+  color: var(--text-muted);
+}
+
+.legal-todo {
+  padding: 12px 14px;
+  border: 1px solid var(--warning-border);
+  border-radius: 12px;
+  background: var(--warning-bg);
+}
+
+.legal-todo code {
+  font-size: 13.5px;
+}
+
+.legal-back {
+  margin-top: 32px;
+}
+
+.site-footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+}

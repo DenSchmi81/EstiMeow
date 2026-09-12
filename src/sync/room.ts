@@ -23,6 +23,9 @@ export interface RoomMeta {
   awardsAt: number | null;
   timebox: number;
   timerEndsAt: number | null;
+  /** Server-Zeit der Erstellung und der letzten Aktivität – Grundlage für das Aufräumen */
+  createdAt: number | null;
+  touchedAt: number | null;
   /** uid der moderierenden Person (Scrum Master); null, solange niemand moderiert */
   host: string | null;
   /** Id des Wissenselements, das fuer alle eingeblendet ist */
@@ -32,6 +35,9 @@ export interface RoomMeta {
 const MINUTE_MS = 60_000;
 /** Reglerwerte werden gebuendelt geschrieben, damit ein Ziehen nicht Dutzende Schreibvorgaenge ausloest. */
 const DEMO_THROTTLE_MS = 150;
+/** Räume verschwinden nach dieser Zeit ohne Aktivität – Datensparsamkeit ohne eigenen Server. */
+export const RETENTION_DAYS = 30;
+const RETENTION_MS = RETENTION_DAYS * 24 * 60 * 60 * 1000;
 
 /** Von der Moderation vorgefuehrte Reglerwerte eines Wissenselements */
 export interface DemoState {
@@ -63,7 +69,7 @@ export interface ThrowEvent {
   item: string;
 }
 
-export type RoomStatus = 'connecting' | 'ready' | 'missing' | 'error';
+export type RoomStatus = 'connecting' | 'ready' | 'missing' | 'expired' | 'error';
 
 interface PlayerRecord {
   name?: unknown;
@@ -107,6 +113,8 @@ function normalizeMeta(raw: Record<string, unknown>): RoomMeta {
     awardsAt: typeof raw.awardsAt === 'number' ? raw.awardsAt : null,
     timebox: typeof raw.timebox === 'number' && raw.timebox > 0 ? raw.timebox : 0,
     timerEndsAt: typeof raw.timerEndsAt === 'number' ? raw.timerEndsAt : null,
+    createdAt: typeof raw.createdAt === 'number' ? raw.createdAt : null,
+    touchedAt: typeof raw.touchedAt === 'number' ? raw.touchedAt : null,
     host: typeof raw.host === 'string' ? raw.host : null,
     pinned: typeof raw.pinned === 'string' ? raw.pinned : null,
   };
@@ -152,7 +160,16 @@ export async function createRoom(name: string, deckId: string, deck: string[]): 
   const uid = await backend.signIn();
   const id = randomId(16);
   await backend.update(roomPath(id), {
-    meta: { name, deckId, deck, revealed: false, round: 1, createdAt: backend.serverTimestamp(), host: uid },
+    meta: {
+      name,
+      deckId,
+      deck,
+      revealed: false,
+      round: 1,
+      createdAt: backend.serverTimestamp(),
+      touchedAt: backend.serverTimestamp(),
+      host: uid,
+    },
   });
   return id;
 }
@@ -167,6 +184,7 @@ export function useRoom(roomId: string, profile: Profile | null) {
   const [rounds, setRounds] = useState<RoundSnapshot[]>([]);
   const [stats, setStats] = useState<Record<string, PlayerStats>>({});
   const [demo, setDemo] = useState<DemoState | null>(null);
+  const [expired, setExpired] = useState(false);
   const demoWrite = useRef({ timer: 0, pending: null as DemoState | null });
   const throwListeners = useRef(new Set<(event: ThrowEvent) => void>());
   const profileRef = useRef(profile);
@@ -242,6 +260,15 @@ export function useRoom(roomId: string, profile: Profile | null) {
     return backend.onValue<unknown>(`${base}/demo`, (value) => setDemo(normalizeDemo(value)));
   }, [backend, uid, base]);
 
+  // Aufräumen: Wird ein Raum geöffnet, der lange unbenutzt war, löscht ihn der erste Besuch komplett.
+  useEffect(() => {
+    if (!backend || !meta) return;
+    const last = meta.touchedAt ?? meta.createdAt;
+    if (last === null || backend.serverNow() - last <= RETENTION_MS) return;
+    setExpired(true);
+    backend.remove(base).catch(() => {});
+  }, [backend, meta, base]);
+
   // Anwesenheit: Spielereintrag anlegen und beim Verbindungsabbruch automatisch entfernen.
   useEffect(() => {
     if (!backend || !uid || !joined) return;
@@ -256,6 +283,8 @@ export function useRoom(roomId: string, profile: Profile | null) {
           avatar: current.avatar,
           joinedAt,
         });
+        // Beitritt zählt als Aktivität, damit ein genutzter Raum nicht abläuft.
+        backend.update(`${base}/meta`, { touchedAt: backend.serverTimestamp() }).catch(() => {});
       }
     });
     return () => {
@@ -350,10 +379,12 @@ export function useRoom(roomId: string, profile: Profile | null) {
         const voters = snapshot.players.filter((p) => !p.spectator && snapshot.votes[p.id] !== undefined);
         // Ist die Timebox eingeschaltet, startet der gemeinsame Countdown mit dem Aufdecken.
         const timer = snapshot.timebox > 0 ? { 'meta/timerEndsAt': timeboxEnd() } : {};
-        if (voters.length === 0) return backend.update(base, { 'meta/revealed': true, ...timer });
+        const touched = { 'meta/touchedAt': backend.serverTimestamp() };
+        if (voters.length === 0) return backend.update(base, { 'meta/revealed': true, ...timer, ...touched });
         return backend.update(base, {
           'meta/revealed': true,
           ...timer,
+          ...touched,
           [`rounds/${round}`]: {
             votes: Object.fromEntries(voters.map((p) => [p.id, snapshot.votes[p.id]])),
             names: Object.fromEntries(voters.map((p) => [p.id, p.name])),
@@ -368,6 +399,7 @@ export function useRoom(roomId: string, profile: Profile | null) {
           'meta/revealed': false,
           'meta/round': round + 1,
           'meta/timerEndsAt': null,
+          'meta/touchedAt': backend.serverTimestamp(),
           [`votes/${round}`]: null,
         }),
       // timebox wird nur mitgeschrieben, wenn sie sich geändert hat (null = unverändert).
@@ -392,6 +424,8 @@ export function useRoom(roomId: string, profile: Profile | null) {
           timerEndsAt: Math.max(snapshotRef.current.timerEndsAt ?? 0, backend.serverNow()) + MINUTE_MS,
         }),
       stopTimer: () => backend.update(`${base}/meta`, { timerEndsAt: null }),
+      /** Löscht den Raum mit allen Namen, Stimmen und Runden. */
+      deleteRoom: () => backend.remove(base),
       claimHost: () => backend.update(`${base}/meta`, { host: uid }),
       /** Wissenselement fuer alle einblenden; null blendet es wieder aus. Beendet auch eine Vorfuehrung. */
       pinTopic: (topicId: string | null) => {
@@ -441,7 +475,15 @@ export function useRoom(roomId: string, profile: Profile | null) {
     };
   }, []);
 
-  const status: RoomStatus = error ? 'error' : meta === undefined ? 'connecting' : meta === null ? 'missing' : 'ready';
+  const status: RoomStatus = error
+    ? 'error'
+    : expired
+      ? 'expired'
+      : meta === undefined
+        ? 'connecting'
+        : meta === null
+          ? 'missing'
+          : 'ready';
 
   return { status, error, uid, meta, players, votes, rounds, stats, demo, actions, onThrow };
 }

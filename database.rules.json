@@ -3,6 +3,7 @@
     "rooms": {
       "$roomId": {
         ".read": "auth != null",
+        ".write": "auth != null && data.exists() && !newData.exists()",
         ".validate": "$roomId.matches(/^[A-Za-z0-9]{8,32}$/)",
         "meta": {
           ".write": "auth != null && newData.exists()",
@@ -15,6 +16,7 @@
           "revealed": { ".validate": "newData.isBoolean()" },
           "round": { ".validate": "newData.isNumber()" },
           "createdAt": { ".validate": "newData.isNumber()" },
+          "touchedAt": { ".validate": "newData.isNumber()" },
           "awardsAt": { ".validate": "newData.isNumber()" },
           "timebox": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10" },
           "timerEndsAt": { ".validate": "newData.isNumber()" },

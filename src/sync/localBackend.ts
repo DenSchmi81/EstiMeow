@@ -30,15 +30,31 @@ function getAt(tree: Tree, path: string[]): unknown {
 }
 
 function setAt(tree: Tree, path: string[], value: unknown) {
-  let node = tree;
-  for (const key of path.slice(0, -1)) {
-    if (!isTree(node[key])) node[key] = {};
-    node = node[key] as Tree;
-  }
   const last = path[path.length - 1];
   if (last === undefined) return;
-  if (value === null || value === undefined) delete node[last];
-  else node[last] = JSON.parse(JSON.stringify(value));
+  const removing = value === null || value === undefined;
+  const chain: Tree[] = [tree];
+  let node = tree;
+  for (const key of path.slice(0, -1)) {
+    if (!isTree(node[key])) {
+      // Beim Löschen keine Zweige anlegen – sonst bleiben leere Hüllen zurück.
+      if (removing) return;
+      node[key] = {};
+    }
+    node = node[key] as Tree;
+    chain.push(node);
+  }
+  if (!removing) {
+    node[last] = JSON.parse(JSON.stringify(value));
+    return;
+  }
+  delete node[last];
+  // Leere Elternknoten aufräumen, damit sich der Testmodus wie Firebase verhält: dort gibt es keine leeren Knoten.
+  for (let i = chain.length - 1; i > 0; i--) {
+    const child = chain[i];
+    if (Object.keys(child).length > 0) break;
+    delete chain[i - 1][path[i - 1]];
+  }
 }
 
 export function createLocalBackend(): Backend {

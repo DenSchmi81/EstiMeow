@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CUSTOM_DECK_ID, DECK_PRESETS } from '../decks';
-import type { RoomMeta } from '../sync/room';
+import { RETENTION_DAYS, type RoomMeta } from '../sync/room';
 import { DeckPicker, resolveDeck, type DeckChoice } from './DeckPicker';
 import { Dialog } from './Dialog';
 
@@ -11,15 +11,18 @@ interface SettingsDialogProps {
   /** `deck` bzw. `timebox` sind null, wenn sie unverändert bleiben. */
   onSave: (name: string, deck: { deckId: string; cards: string[] } | null, timebox: number | null) => void;
   onClose: () => void;
+  /** Löscht den Raum mit allen Namen, Stimmen und Runden. */
+  onDelete: () => void;
 }
 
-export function SettingsDialog({ meta, onSave, onClose }: SettingsDialogProps) {
+export function SettingsDialog({ meta, onSave, onClose, onDelete }: SettingsDialogProps) {
   const isPreset = DECK_PRESETS.some((d) => d.id === meta.deckId);
   const [name, setName] = useState(meta.name);
   const [deck, setDeck] = useState<DeckChoice>({
     deckId: isPreset ? meta.deckId : CUSTOM_DECK_ID,
     customText: isPreset ? '' : meta.deck.join(', '),
   });
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [timerOn, setTimerOn] = useState(meta.timebox > 0);
   const [minutes, setMinutes] = useState(meta.timebox > 0 ? meta.timebox : 2);
   const cards = resolveDeck(deck);
@@ -68,6 +71,29 @@ export function SettingsDialog({ meta, onSave, onClose }: SettingsDialogProps) {
                 </button>
               ))}
             </div>
+          )}
+        </div>
+        <div className="danger-zone">
+          <p className="hint">
+            🧹 Räume löschen sich {RETENTION_DAYS} Tage nach der letzten Aktivität von selbst, mit allen Namen, Stimmen
+            und Runden.
+          </p>
+          {confirmDelete ? (
+            <div className="danger-confirm">
+              <span>Wirklich löschen? Das gilt für alle im Raum und lässt sich nicht zurückholen.</span>
+              <div className="danger-buttons">
+                <button type="button" className="btn ghost" onClick={() => setConfirmDelete(false)}>
+                  Abbrechen
+                </button>
+                <button type="button" className="btn danger" onClick={onDelete}>
+                  Ja, Raum löschen
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button type="button" className="btn ghost" onClick={() => setConfirmDelete(true)}>
+              Raum jetzt löschen
+            </button>
           )}
         </div>
         <div className="dialog-actions">

@@ -3149,3 +3149,38 @@ a {
   color: var(--text-muted);
   font-weight: 500;
 }
+
+/* Raum löschen: eigener Bereich im Einstellungsdialog */
+.danger-zone {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.danger-zone .btn.ghost {
+  justify-self: start;
+}
+
+.danger-confirm {
+  display: grid;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.danger-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn.danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn.danger:hover:not(:disabled) {
+  filter: brightness(1.08);
+}

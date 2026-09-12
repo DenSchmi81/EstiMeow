@@ -3,7 +3,7 @@ import { parseAvatar } from '../avatars';
 import { findTopic } from '../knowledge';
 import { computeAwards, computeSpotlight } from '../fun';
 import { sfx } from '../sounds';
-import { useRoom, type Profile, type ThrowKind } from '../sync/room';
+import { RETENTION_DAYS, useRoom, type Profile, type ThrowKind } from '../sync/room';
 import { AvatarImage } from './AvatarImage';
 import { AwardsOverlay } from './AwardsOverlay';
 import { Hand } from './Hand';
@@ -186,6 +186,18 @@ export function RoomPage({ roomId }: { roomId: string }) {
         </a>
       </CenterMessage>
     );
+  } else if (status === 'expired') {
+    body = (
+      <CenterMessage title="Raum abgelaufen">
+        <p>
+          Dieser Raum war länger als {RETENTION_DAYS} Tage unbenutzt und wurde gerade gelöscht. Namen, Stimmen und
+          Runden sind damit weg.
+        </p>
+        <a className="btn primary" href="#/">
+          Neuen Raum erstellen
+        </a>
+      </CenterMessage>
+    );
   } else if (status === 'missing' || !meta) {
     body = (
       <CenterMessage title="Raum nicht gefunden">
@@ -346,6 +358,10 @@ export function RoomPage({ roomId }: { roomId: string }) {
           onClose={() => setDialog(null)}
           onSave={(name, deck, timebox) => {
             void actions?.saveSettings(name, deck, timebox);
+            setDialog(null);
+          }}
+          onDelete={() => {
+            void actions?.deleteRoom();
             setDialog(null);
           }}
         />

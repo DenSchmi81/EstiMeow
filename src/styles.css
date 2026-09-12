@@ -804,21 +804,38 @@ a {
 }
 
 .pet-purr .cat-eyes-open,
-.pet-heart .cat-eyes-open {
+.pet-heart .cat-eyes-open,
+.pet-nuzzle .cat-eyes-open,
+.pet-blep .cat-eyes-open {
   opacity: 0;
 }
 
 .pet-purr .cat-eyes-happy,
-.pet-heart .cat-eyes-happy {
+.pet-heart .cat-eyes-happy,
+.pet-nuzzle .cat-eyes-happy,
+.pet-blep .cat-eyes-happy {
   opacity: 1;
 }
 
-.pet-blink .cat-eyes-open {
-  animation: pet-blink-open 1.4s ease-in-out;
+/* Köpfchen geben: der Kopf legt sich zweimal deutlich zur Seite */
+.pet-nuzzle .cat-head {
+  animation: pet-nuzzle 1.7s ease-in-out;
 }
 
-.pet-blink .cat-eyes-happy {
-  animation: pet-blink-closed 1.4s ease-in-out;
+/* Zunge zeigen */
+.pet-blep .cat-tongue {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: pet-blep 1.6s ease-in-out;
+}
+
+/* Ohren wackeln */
+.pet-ears .cat-ear-l {
+  animation: pet-ear-left 1.4s ease-in-out;
+}
+
+.pet-ears .cat-ear-r {
+  animation: pet-ear-right 1.4s ease-in-out;
 }
 
 .pet-purr .mascot {
@@ -872,39 +889,68 @@ a {
   }
 }
 
-@keyframes pet-blink-open {
-  0%,
-  100% {
-    opacity: 1;
+@keyframes pet-nuzzle {
+  15% {
+    transform: rotate(-17deg) translateY(2px);
   }
-  20%,
-  38% {
-    opacity: 0;
+  40% {
+    transform: rotate(9deg);
   }
-  55% {
-    opacity: 1;
+  65% {
+    transform: rotate(-14deg) translateY(2px);
   }
-  68%,
-  84% {
-    opacity: 0;
+  85% {
+    transform: rotate(4deg);
   }
 }
 
-@keyframes pet-blink-closed {
-  0%,
+@keyframes pet-blep {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.3);
+  }
+  12%,
+  78% {
+    opacity: 1;
+    transform: scale(1.15, 1.4);
+  }
   100% {
     opacity: 0;
+    transform: scaleY(0.3);
   }
-  20%,
-  38% {
-    opacity: 1;
+}
+
+@keyframes pet-ear-left {
+  20% {
+    transform: rotate(-22deg);
   }
-  55% {
-    opacity: 0;
+  45% {
+    transform: rotate(8deg);
   }
-  68%,
-  84% {
-    opacity: 1;
+  70% {
+    transform: rotate(-16deg);
+  }
+}
+
+@keyframes pet-ear-right {
+  20% {
+    transform: rotate(20deg);
+  }
+  45% {
+    transform: rotate(-8deg);
+  }
+  70% {
+    transform: rotate(15deg);
+  }
+}
+
+/* Bei reduzierter Bewegung bleiben Text und Augen, die Bewegung entfällt. */
+@media (prefers-reduced-motion: reduce) {
+  .pet-purr .mascot,
+  .pet-nuzzle .cat-head,
+  .pet-ears .cat-ear-l,
+  .pet-ears .cat-ear-r {
+    animation: none;
   }
 }
 

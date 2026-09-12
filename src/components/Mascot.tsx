@@ -49,10 +49,9 @@ interface HeadProps {
   closed?: boolean;
   /** Blickrichtung der Pupillen (x, y) */
   look?: [number, number];
-  tongue?: boolean;
 }
 
-function Head({ v, closed = false, look = [0, 0], tongue = false }: HeadProps) {
+function Head({ v, closed = false, look = [0, 0] }: HeadProps) {
   const [lx, ly] = look;
   return (
     <g className="cat-head">
@@ -99,7 +98,8 @@ function Head({ v, closed = false, look = [0, 0], tongue = false }: HeadProps) {
       )}
       <path d="M75 83 L85 83 L80 88 Z" style={{ fill: '#E98B9C', ...outline(v, 1.5) }} />
       <path d="M80 88 Q77 93 72 91 M80 88 Q83 93 88 91" style={{ fill: 'none', ...outline(v, 2) }} />
-      {tongue && <ellipse className="cat-tongue" cx="80" cy="94" rx="3.2" ry="2.6" fill="#E98B9C" />}
+      {/* Zunge immer im Bild, per CSS unsichtbar – so kann jede Pose „blep“ zeigen. */}
+      <ellipse className="cat-tongue" cx="80" cy="94" rx="3.2" ry="2.6" fill="#E98B9C" />
       <path d="M56 86 L32 82 M56 91 L33 94 M104 86 L128 82 M104 91 L127 94" style={{ ...outline(v, 1.4), opacity: 0.55 }} />
     </g>
   );
@@ -230,7 +230,7 @@ export function Mascot({ pose, variant, className, title }: MascotProps) {
         <svg viewBox="0 0 160 170" {...svgProps}>
           <SittingBody v={v} paws="left" />
           <g transform="rotate(6 80 104)">
-            <Head v={v} closed tongue />
+            <Head v={v} closed />
           </g>
           <g className="cat-groom-paw">
             <ellipse cx="98" cy="128" rx="12" ry="8" transform="rotate(-25 98 128)" style={{ fill: pawFill(v), ...outline(v) }} />

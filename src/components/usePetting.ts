@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 import { sfx } from '../sounds';
 
-export type PetReaction = 'purr' | 'heart' | 'meow' | 'blink';
+export type PetReaction = 'purr' | 'heart' | 'meow' | 'nuzzle' | 'blep' | 'ears';
 
 interface ReactionDef {
   id: PetReaction;
@@ -15,7 +15,9 @@ const REACTIONS: ReactionDef[] = [
   { id: 'purr', className: 'pet-purr', durationMs: 2200, label: 'prrr…', sound: () => sfx.purr() },
   { id: 'heart', className: 'pet-heart', durationMs: 1600, label: '♥' },
   { id: 'meow', className: 'pet-meow', durationMs: 1500, label: 'Miau!', sound: () => sfx.meow() },
-  { id: 'blink', className: 'pet-blink', durationMs: 1450 },
+  { id: 'nuzzle', className: 'pet-nuzzle', durationMs: 1800, label: 'schmust' },
+  { id: 'blep', className: 'pet-blep', durationMs: 1700, label: 'blep' },
+  { id: 'ears', className: 'pet-ears', durationMs: 1500, label: 'Ohren wackeln' },
 ];
 
 export interface PetLabel {

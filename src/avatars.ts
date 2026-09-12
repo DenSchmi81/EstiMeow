@@ -28,7 +28,7 @@ export interface Accessory extends AvatarItem {
 const PLACEMENTS: Record<Placement, { x: number; y: number; width: number; maxHeight: number; rotate?: number }> = {
   hat: { x: 50, y: 13, width: 58, maxHeight: 52 },
   eyes: { x: 50, y: 44, width: 56, maxHeight: 30 },
-  ears: { x: 50, y: 47, width: 78, maxHeight: 72 },
+  ears: { x: 50, y: 40, width: 48, maxHeight: 46 },
   neck: { x: 50, y: 84, width: 34, maxHeight: 40 },
   side: { x: 23, y: 21, width: 34, maxHeight: 34, rotate: -12 },
   corner: { x: 82, y: 83, width: 38, maxHeight: 38 },

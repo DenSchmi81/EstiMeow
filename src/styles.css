@@ -825,10 +825,6 @@ a {
   animation: pet-purr 0.12s linear infinite;
 }
 
-.pet-hop .mascot {
-  animation: pet-hop 0.9s ease-out;
-}
-
 .pet-label {
   position: absolute;
   bottom: 100%;
@@ -858,21 +854,6 @@ a {
   }
   to {
     transform: translateX(0.6px);
-  }
-}
-
-@keyframes pet-hop {
-  20% {
-    transform: translateY(-9px);
-  }
-  40% {
-    transform: none;
-  }
-  60% {
-    transform: translateY(-5px);
-  }
-  80% {
-    transform: none;
   }
 }
 

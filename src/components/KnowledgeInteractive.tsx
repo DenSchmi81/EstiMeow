@@ -181,10 +181,10 @@ function Dreieck() {
   const outline = corners.map((c) => `${point(c, 1).x},${point(c, 1).y}`).join(' ');
   const shape = corners.map((c) => `${point(c).x},${point(c).y}`).join(' ');
 
-  let hint = 'Agile Antwort: Zeit und Qualität liegen fest, der Umfang ist die Stellgröße.';
-  if (values.qualitaet <= 40) hint = 'Qualität als Ventil erzeugt technische Schulden – die Definition of Done ist nicht verhandelbar.';
-  else if (values.zeit <= 40 && values.umfang >= 70) hint = 'Viel Umfang in kurzer Zeit: In Scrum bleibt die Sprint-Länge fest, also den Umfang verkleinern.';
-  else if (values.umfang <= 30) hint = 'Kleiner Umfang, viel Zeit und Qualität: gut für ein klares Sprint-Ziel.';
+  let hint = 'In Scrum: Sprint-Länge fest, Qualität soll nicht sinken, Umfang ist nachverhandelbar.';
+  if (values.qualitaet <= 40) hint = 'Qualität als Ventil erzeugt technische Schulden. Der Scrum Guide sagt: Die Qualität sinkt nicht.';
+  else if (values.zeit <= 40 && values.umfang >= 70) hint = 'Viel Umfang in kurzer Zeit: Die Sprint-Länge liegt fest, also den Umfang verkleinern.';
+  else if (values.umfang <= 30) hint = 'Wenig Umfang bei viel Zeit und Qualität: gute Basis für ein klares Sprint-Ziel.';
 
   return (
     <div className="ki">
@@ -231,7 +231,7 @@ function Dreieck() {
             />
           ))}
           <button type="button" className="btn ghost ki-preset" onClick={() => setValues({ umfang: 40, zeit: 70, qualitaet: 70 })}>
-            Agile Einstellung
+            Scrum-Einstellung
           </button>
         </div>
       </div>

@@ -458,6 +458,36 @@ export const TOPICS: KnowledgeTopic[] = [
       { label: 'scrum.org – Was Scrum über Schätzungen sagt', url: 'https://www.scrum.org/resources/blog/what-scrum-says-about-estimates' },
     ],
   },
+  {
+    id: 'magisches-dreieck',
+    title: 'Magisches Dreieck',
+    category: 'Praxis',
+    icon: '🔺',
+    interactive: 'dreieck',
+    summary:
+      'Das magische Dreieck beschreibt die Spannung zwischen Umfang, Zeit und Qualität: Wer an einer Ecke zieht, bewegt die anderen. In Scrum liegen Sprint-Länge und Qualitätsanspruch fest, verhandelt wird der Umfang.',
+    points: [
+      'Das Modell wird üblicherweise Martin Barnes zugeschrieben, der es Ende der 1960er-Jahre in einem Kurs einführte. Die Zuschreibung stützt sich auf spätere Aussagen, nicht auf ein Dokument aus der Zeit.',
+      'Es gibt keine feste Ecken-Menge: Barnes sprach von Zeit, Kosten und Ergebnis, die Association for Project Management nennt Zeit, Kosten und Qualität, verbreitet ist auch Umfang, Zeit und Kosten mit Qualität in der Mitte. Hier siehst du Umfang, Zeit und Qualität.',
+      'Der Scrum Guide 2020 erwähnt weder das Dreieck noch Kosten oder Budget. Er sagt: Sprints haben eine feste Länge, die Qualität sinkt nicht, und der Umfang darf mit dem Product Owner nachverhandelt werden.',
+      'Daraus folgt die agile Lesart: Zeit ist durch den Sprint gesetzt, Qualität durch die Definition of Done, also bleibt der Umfang die Stellgröße. Das ist eine Ableitung, kein Zitat aus dem Guide.',
+      'Jim Highsmith schlägt ein anderes Dreieck vor: Wert, Qualität und Rahmenbedingungen, wobei Umfang, Termin und Kosten zu einer einzigen Ecke zusammenfallen.',
+      'Auch innerhalb der Projektmanagement-Verbände wird der Begriff Zwang kritisiert: Gemeint seien verhandelbare Erfolgskriterien und Spannungen, nicht Unveränderliches.',
+    ],
+    pitfalls: [
+      'Qualität als Ventil benutzen. Die agile Literatur hält sie für nicht verhandelbar, Verbände führen sie als Ecke – hier widersprechen sich die Quellen offen.',
+      'Das Dreieck als Erfolgsmaß lesen. Roger Atkinson zeigte 1999, dass Zeit und Kosten selbst nur Schätzungen sind und Erfolg mehr umfasst als die drei Ecken.',
+      'Termindruck mit mehr Personal beantworten. Das ist ein eigenes Thema (Brooks’ Gesetz, 1975) und keine Aussage des Dreiecks.',
+    ],
+    note: 'Projektmanagement-Wissen, kein Bestandteil von Scrum. Die Zuordnung der Ecken unterscheidet sich je nach Quelle.',
+    sources: [
+      { label: 'APM – Nachruf auf Martin Barnes (Zuschreibung des Dreiecks)', url: 'https://www.apm.org.uk/news/a-tribute-to-apm-founder-dr-martin-barnes-cbe/' },
+      { label: 'APM-Blog – Kritik am Begriff „Constraint“', url: 'https://www.apm.org.uk/blog/project-constraints-are-we-using-the-wrong-terminology/' },
+      { label: 'Scrum Guide 2020 – The Sprint (feste Länge, Qualität, Umfang)', url: 'https://scrumguides.org/scrum-guide.html#the-sprint' },
+      { label: 'Jim Highsmith – Agile Triangle', url: 'https://jimhighsmith.com/the-ghosts-of-project-managements-iron-triangle-still-haunt-agile-teams/' },
+      { label: 'Atkinson 1999 – Kritik am Iron Triangle (IJPM)', url: 'https://www.sciencedirect.com/science/article/abs/pii/S0263786398000696' },
+    ],
+  },
 ];
 
 export function findTopic(id: string | null): KnowledgeTopic | null {

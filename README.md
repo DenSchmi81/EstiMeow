@@ -56,4 +56,15 @@ Die Web-Konfiguration ist nicht geheim; abgesichert wird der Zugriff über die D
 
 ## Deployment
 
+Die App liegt zweimal:
+
+- **GitHub Pages** (per Actions, siehe unten): https://denschmi81.github.io/EstiMeow/
+- **Cloudflare Pages** (aus demselben Repo gebaut): https://estimeow.pages.dev
+
+Einstellungen für Cloudflare Pages: Build-Befehl `npm run build`, Ausgabeordner `dist`,
+Node-Version aus `.node-version` (22). Der Build braucht keine Umgebungsvariablen; die
+Firebase-Web-Konfiguration liegt im Code. Wichtig: Jede neue Adresse muss in der
+Firebase-Konsole unter Authentication → Settings → Authorized domains eingetragen werden,
+sonst schlägt die anonyme Anmeldung fehl.
+
 Jeder Push auf `main` baut die App und veröffentlicht sie über GitHub Actions auf GitHub Pages. Im Repository muss dafür unter **Settings → Pages** die Quelle **GitHub Actions** ausgewählt sein.

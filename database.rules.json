@@ -18,6 +18,8 @@
           "awardsAt": { ".validate": "newData.isNumber()" },
           "timebox": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10" },
           "timerEndsAt": { ".validate": "newData.isNumber()" },
+          "host": { ".validate": "newData.isString() && newData.val().length <= 64" },
+          "pinned": { ".validate": "newData.isString() && newData.val().length <= 40" },
           "$other": { ".validate": false }
         },
         "players": {

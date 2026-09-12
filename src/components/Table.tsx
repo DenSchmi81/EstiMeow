@@ -11,6 +11,8 @@ interface TableProps {
   suspense: boolean;
   spotlight: Spotlight | null;
   nudgeTarget: string | null;
+  /** uid der moderierenden Person */
+  hostId: string | null;
   round: number;
   meId: string | null;
   canThrow: boolean;
@@ -34,7 +36,7 @@ function arrangeSeats(players: Player[]) {
 }
 
 export function Table(props: TableProps) {
-  const { players, votes, revealed, suspense, spotlight, nudgeTarget, round, meId, canThrow, timer, onReveal, onNewRound, onThrow } =
+  const { players, votes, revealed, suspense, spotlight, nudgeTarget, hostId, round, meId, canThrow, timer, onReveal, onNewRound, onThrow } =
     props;
   const [pickerFor, setPickerFor] = useState<string | null>(null);
   const closePicker = useCallback(() => setPickerFor(null), []);
@@ -51,6 +53,7 @@ export function Table(props: TableProps) {
       placement={placement}
       spotlight={spotlight?.low.includes(player.id) ? 'low' : spotlight?.high.includes(player.id) ? 'high' : null}
       nudged={nudgeTarget === player.id}
+      isHost={player.id === hostId}
       canThrow={canThrow && player.id !== meId}
       pickerOpen={pickerFor === player.id}
       onTogglePicker={() => setPickerFor((current) => (current === player.id ? null : player.id))}

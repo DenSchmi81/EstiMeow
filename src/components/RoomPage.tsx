@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { parseAvatar } from '../avatars';
+import { findTopic } from '../knowledge';
 import { computeAwards, computeSpotlight } from '../fun';
 import { sfx } from '../sounds';
 import { useRoom, type Profile, type ThrowKind } from '../sync/room';
@@ -7,7 +8,7 @@ import { AvatarImage } from './AvatarImage';
 import { AwardsOverlay } from './AwardsOverlay';
 import { Hand } from './Hand';
 import { Header } from './Header';
-import { EyeIcon, GearIcon, TrophyIcon } from './Icons';
+import { BookIcon, EyeIcon, GearIcon, TrophyIcon } from './Icons';
 import { InviteButton } from './InviteButton';
 import { ProfileDialog } from './ProfileDialog';
 import { Results } from './Results';
@@ -15,6 +16,8 @@ import { SettingsDialog } from './SettingsDialog';
 import { Table } from './Table';
 import { ThrowLayer } from './ThrowLayer';
 import { TimeboxTimer } from './TimeboxTimer';
+import { KnowledgeDialog } from './KnowledgeDialog';
+import { PinnedKnowledge } from './PinnedKnowledge';
 
 const NAME_KEY = 'sr-name';
 const AVATAR_KEY = 'sr-avatar';
@@ -56,7 +59,7 @@ function CenterMessage({ title, spinner, children }: { title?: string; spinner?:
 
 export function RoomPage({ roomId }: { roomId: string }) {
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [dialog, setDialog] = useState<'profile' | 'settings' | null>(null);
+  const [dialog, setDialog] = useState<'profile' | 'settings' | 'knowledge' | null>(null);
   const [awardsOpen, setAwardsOpen] = useState(false);
   const room = useRoom(roomId, profile);
   const { status, meta, players, votes, rounds, stats, uid, actions } = room;
@@ -64,6 +67,10 @@ export function RoomPage({ roomId }: { roomId: string }) {
   const roomName = meta?.name;
   const revealed = meta ? meta.revealed : null;
   const awardsAt = meta ? meta.awardsAt : undefined;
+  // Moderation (Scrum Master): darf Wissenselemente für alle einblenden.
+  const isHost = uid !== null && meta?.host === uid;
+  const hostName = players.find((p) => p.id === meta?.host)?.name ?? null;
+  const pinnedTopic = findTopic(meta?.pinned ?? null);
 
   // Aufdecken live miterlebt (nicht beim Laden eines schon aufgedeckten Raums): erst Trommelwirbel, dann umdrehen.
   // Der Übergang wird schon beim Rendern erkannt – sonst blitzen die Karten einen Frame lang offen auf.
@@ -201,6 +208,7 @@ export function RoomPage({ roomId }: { roomId: string }) {
           round={meta.round}
           meId={uid}
           canThrow={profile !== null}
+          hostId={meta.host}
           timer={
             <TimeboxTimer
               endsAt={meta.timerEndsAt}
@@ -228,6 +236,9 @@ export function RoomPage({ roomId }: { roomId: string }) {
               </span>
             ))}
           </div>
+        )}
+        {pinnedTopic && (
+          <PinnedKnowledge topic={pinnedTopic} canUnpin={isHost} onUnpin={() => void actions?.pinTopic(null)} />
         )}
         {shownRevealed ? (
           <Results deck={meta.deck} players={seated} votes={votes} />
@@ -264,6 +275,15 @@ export function RoomPage({ roomId }: { roomId: string }) {
             </h1>
             <div className="header-actions">
               <InviteButton />
+              <button
+                type="button"
+                className="icon-btn"
+                title="Wissen zum Schätzen"
+                aria-label="Wissen zum Schätzen"
+                onClick={() => setDialog('knowledge')}
+              >
+                <BookIcon />
+              </button>
               <button
                 type="button"
                 className="icon-btn"
@@ -313,6 +333,16 @@ export function RoomPage({ roomId }: { roomId: string }) {
             void actions?.saveSettings(name, deck, timebox);
             setDialog(null);
           }}
+        />
+      )}
+      {dialog === 'knowledge' && (
+        <KnowledgeDialog
+          pinnedId={meta?.pinned ?? null}
+          isHost={isHost}
+          hostName={hostName}
+          onPin={(topicId) => void actions?.pinTopic(topicId)}
+          onClaimHost={() => void actions?.claimHost()}
+          onClose={() => setDialog(null)}
         />
       )}
       {awardsOpen && <AwardsOverlay awards={awards} onClose={closeAwards} />}

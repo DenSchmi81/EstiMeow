@@ -2557,3 +2557,394 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ---------- Wissens-Datenbank ---------- */
+
+.seat-host {
+  display: inline-flex;
+  margin-right: 4px;
+  color: var(--accent);
+  vertical-align: -3px;
+}
+
+.seat-host svg {
+  width: 14px;
+  height: 14px;
+}
+
+.dialog.wide:has(.kb) {
+  width: min(880px, 100%);
+}
+
+.kb {
+  display: grid;
+  grid-template-columns: minmax(180px, 232px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.kb-list-side {
+  display: grid;
+  gap: 10px;
+}
+
+.kb-search {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.kb-search:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.kb-list {
+  display: grid;
+  gap: 4px;
+  max-height: 46vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.kb-item {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 2px 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: none;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.kb-item:hover {
+  background: var(--surface-2);
+}
+
+.kb-item.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.kb-item-icon {
+  grid-row: span 2;
+  align-self: center;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.kb-item-title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.kb-item-cat,
+.kb-item-pinned {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.kb-item.active .kb-item-cat {
+  color: inherit;
+}
+
+.kb-item-pinned {
+  grid-column: 2;
+  color: var(--accent);
+}
+
+.kb-empty {
+  padding: 8px 10px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.kb-detail {
+  min-width: 0;
+}
+
+.kb-detail h3 {
+  margin: 0 0 6px;
+  font-size: 19px;
+}
+
+.kb-detail h4 {
+  margin: 16px 0 6px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.kb-detail-icon {
+  font-size: 20px;
+}
+
+.kb-summary {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.kb-points,
+.kb-sources {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.kb-sources {
+  font-size: 13px;
+}
+
+.kb-sources a {
+  color: var(--accent);
+}
+
+.kb-actions {
+  margin-top: 18px;
+}
+
+.kb-host-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Von der Moderation eingeblendetes Wissenselement */
+.pinned-knowledge {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  animation: fade 0.25s ease-out;
+}
+
+.pinned-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pinned-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.pinned-summary {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.pinned-points {
+  display: grid;
+  gap: 3px;
+  margin: 8px 0 0;
+  padding-left: 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.pinned-source {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ---------- Grafiken der Wissenselemente ---------- */
+
+.kv-figure {
+  margin: 12px 0 0;
+}
+
+.kv {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 520px;
+  overflow: visible;
+}
+
+.kv-small,
+.kv-label,
+.kv-num,
+.kv-dot-num {
+  fill: var(--text);
+}
+
+.kv-small {
+  font: 600 9.5px system-ui, sans-serif;
+}
+
+.kv-label {
+  font: 750 12px system-ui, sans-serif;
+}
+
+.kv-num {
+  font: 800 13px system-ui, sans-serif;
+  fill: var(--accent);
+}
+
+.kv-num-lg {
+  font-size: 24px;
+}
+
+.kv-muted {
+  fill: var(--text-muted);
+}
+
+.kv-box,
+.kv-panel {
+  fill: var(--surface-2);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.kv-panel-on {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+}
+
+.kv-card {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 1.6;
+}
+
+.kv-card-on {
+  fill: var(--accent-soft);
+}
+
+.kv-card-lg {
+  stroke-width: 2;
+}
+
+.kv-chip {
+  fill: var(--surface-2);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.kv-chip-on {
+  fill: color-mix(in srgb, var(--accent) 14%, transparent);
+  stroke: var(--accent);
+}
+
+.kv-chip-off {
+  fill: color-mix(in srgb, var(--danger) 12%, transparent);
+  stroke: color-mix(in srgb, var(--danger) 45%, transparent);
+}
+
+.kv-dot {
+  fill: var(--accent);
+}
+
+.kv-dot-num {
+  font: 800 10px system-ui, sans-serif;
+  fill: var(--accent-contrast);
+}
+
+.kv-arrow,
+.kv-loop,
+.kv-gate,
+.kv-line,
+.kv-check {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kv-check {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.kv-arrow-back {
+  stroke: color-mix(in srgb, var(--danger) 70%, var(--text-muted));
+}
+
+.kv-loop {
+  stroke-dasharray: 4 4;
+}
+
+.kv-gate {
+  stroke: var(--border);
+  stroke-width: 2;
+}
+
+.kv-axis {
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.kv-bar {
+  fill: var(--accent);
+}
+
+.kv-band {
+  fill: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.kv-avg {
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-dasharray: 5 4;
+}
+
+.kv-cone {
+  fill: color-mix(in srgb, var(--accent) 14%, transparent);
+  stroke: var(--accent);
+  stroke-width: 1.2;
+  stroke-dasharray: 4 4;
+}
+
+.kv-no {
+  fill: var(--surface);
+  stroke: color-mix(in srgb, var(--danger) 60%, transparent);
+  stroke-width: 1.6;
+}
+
+.kv-no-x {
+  fill: none;
+  stroke: var(--danger);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+@media (max-width: 700px) {
+  .kb {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .kb-list {
+    max-height: 30vh;
+  }
+}

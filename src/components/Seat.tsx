@@ -1,5 +1,6 @@
 import type { Player, ThrowKind } from '../sync/room';
 import { AvatarImage } from './AvatarImage';
+import { HostIcon } from './Icons';
 import { Mascot } from './Mascot';
 import { ThrowPicker } from './ThrowPicker';
 
@@ -13,6 +14,8 @@ interface SeatProps {
   spotlight: 'low' | 'high' | null;
   /** Die Anstups-Katze wartet auf diese Person. */
   nudged: boolean;
+  /** Moderiert den Raum (Scrum Master). */
+  isHost: boolean;
   canThrow: boolean;
   pickerOpen: boolean;
   onTogglePicker: () => void;
@@ -21,7 +24,7 @@ interface SeatProps {
 }
 
 export function Seat(props: SeatProps) {
-  const { player, vote, revealed, isMe, placement, spotlight, nudged, canThrow, pickerOpen } = props;
+  const { player, vote, revealed, isMe, placement, spotlight, nudged, isHost, canThrow, pickerOpen } = props;
   const hasVote = vote !== undefined;
   const state = hasVote ? (revealed ? 'revealed' : 'voted') : 'empty';
 
@@ -61,6 +64,11 @@ export function Seat(props: SeatProps) {
         <span className="seat-body">{body}</span>
       )}
       <span className="seat-name" title={player.name}>
+        {isHost && (
+          <span className="seat-host" title="Moderation (Scrum Master)" aria-label="Moderation">
+            <HostIcon />
+          </span>
+        )}
         {player.name}
         {isMe && <span className="you"> (du)</span>}
       </span>

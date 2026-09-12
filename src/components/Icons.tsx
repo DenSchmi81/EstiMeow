@@ -73,6 +73,19 @@ export const SpeakerOffIcon = () => (
   </svg>
 );
 
+export const BookIcon = () => (
+  <svg {...base}>
+    <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z" />
+    <path d="M8 7h7M8 11h7" />
+  </svg>
+);
+
+export const HostIcon = () => (
+  <svg {...base}>
+    <path d="M4 18h16M6 18V9l3.5 2.5L12 6l2.5 5.5L18 9v9" />
+  </svg>
+);
+
 export const TimerIcon = () => (
   <svg {...base}>
     <circle cx="12" cy="13" r="8" />

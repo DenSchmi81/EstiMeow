@@ -4,7 +4,8 @@ import { errorMessage, randomId } from '../util';
 import { getBackend, type Backend } from './backend';
 
 // Datenmodell unter rooms/<roomId>:
-//   meta                { name, deckId, deck[], revealed, round, createdAt, awardsAt, timebox, timerEndsAt }
+//   meta                { name, deckId, deck[], revealed, round, createdAt, awardsAt, timebox, timerEndsAt, host, pinned }
+//                       host = uid der moderierenden Person (Scrum Master), pinned = eingeblendetes Wissenselement
 //                       timebox = Minuten (0 = aus), timerEndsAt = Server-Zeit, zu der die laufende Timebox endet
 //   players/<uid>       { name, spectator, avatar, joinedAt }  – nur vom Spieler selbst beschreibbar
 //   votes/<round>/<uid> "5"                                   – neue Runde = round + 1, keine fremden Schreibzugriffe nötig
@@ -21,6 +22,10 @@ export interface RoomMeta {
   awardsAt: number | null;
   timebox: number;
   timerEndsAt: number | null;
+  /** uid der moderierenden Person (Scrum Master); null, solange niemand moderiert */
+  host: string | null;
+  /** Id des Wissenselements, das fuer alle eingeblendet ist */
+  pinned: string | null;
 }
 
 const MINUTE_MS = 60_000;
@@ -93,6 +98,8 @@ function normalizeMeta(raw: Record<string, unknown>): RoomMeta {
     awardsAt: typeof raw.awardsAt === 'number' ? raw.awardsAt : null,
     timebox: typeof raw.timebox === 'number' && raw.timebox > 0 ? raw.timebox : 0,
     timerEndsAt: typeof raw.timerEndsAt === 'number' ? raw.timerEndsAt : null,
+    host: typeof raw.host === 'string' ? raw.host : null,
+    pinned: typeof raw.pinned === 'string' ? raw.pinned : null,
   };
 }
 
@@ -122,10 +129,11 @@ function toThrowEvent(id: string, t: ThrowRecord): ThrowEvent | null {
 
 export async function createRoom(name: string, deckId: string, deck: string[]): Promise<string> {
   const backend = await getBackend();
-  await backend.signIn();
+  // Wer den Raum erstellt, moderiert ihn zuerst; die Rolle kann spaeter uebernommen werden.
+  const uid = await backend.signIn();
   const id = randomId(16);
   await backend.update(roomPath(id), {
-    meta: { name, deckId, deck, revealed: false, round: 1, createdAt: backend.serverTimestamp() },
+    meta: { name, deckId, deck, revealed: false, round: 1, createdAt: backend.serverTimestamp(), host: uid },
   });
   return id;
 }
@@ -358,6 +366,9 @@ export function useRoom(roomId: string, profile: Profile | null) {
           timerEndsAt: Math.max(snapshotRef.current.timerEndsAt ?? 0, backend.serverNow()) + MINUTE_MS,
         }),
       stopTimer: () => backend.update(`${base}/meta`, { timerEndsAt: null }),
+      claimHost: () => backend.update(`${base}/meta`, { host: uid }),
+      /** Wissenselement fuer alle einblenden; null blendet es wieder aus. */
+      pinTopic: (topicId: string | null) => backend.update(`${base}/meta`, { pinned: topicId }),
       startAwards: () => backend.update(`${base}/meta`, { awardsAt: backend.serverTimestamp() }),
       throwAt: async (to: string, kind: ThrowKind, item: string) => {
         const id = await backend.push(`${base}/throws`, { from: uid, to, kind, item, at: backend.serverTimestamp() });

@@ -124,7 +124,7 @@ function VelocityForecast({ sync }: { sync?: DemoSync }) {
         <text className="kv-num" x={14 + (likely - 0.5) * scale} y="12" textAnchor="middle">
           {likely}
         </text>
-        {Array.from({ length: Math.min(maxSprints + 1, 12) }, (_, i) => (
+        {Array.from({ length: Math.min(maxSprints, 10) }, (_, i) => (
           <text key={i} className="kv-small kv-muted" x={14 + (i + 0.5) * scale} y="66" textAnchor="middle">
             {i + 1}
           </text>
@@ -174,28 +174,28 @@ function SkalaSprung({ sync }: { sync?: DemoSync }) {
       </p>
       <svg
         className="kv ki-chart"
-        viewBox="0 0 330 88"
+        viewBox="0 0 330 96"
         role="img"
         aria-label={next ? `Sprung von ${current} auf ${next}` : `Höchster Wert ${current}`}
       >
-        <line className="kv-axis" x1="14" y1="72" x2="320" y2="72" />
-        <rect className="kv-bar" x="60" y={72 - current * barScale} width="54" height={current * barScale} rx="4" />
-        <text className="kv-num" x="87" y={66 - current * barScale} textAnchor="middle">
+        <line className="kv-axis" x1="14" y1="80" x2="320" y2="80" />
+        <rect className="kv-bar" x="60" y={80 - current * barScale} width="54" height={current * barScale} rx="4" />
+        <text className="kv-num" x="87" y={74 - current * barScale} textAnchor="middle">
           {current}
         </text>
         {next && (
           <>
-            <rect className="kv-bar" x="190" y={72 - next * barScale} width="54" height={next * barScale} rx="4" />
-            <text className="kv-num" x="217" y={66 - next * barScale} textAnchor="middle">
+            <rect className="kv-bar" x="190" y={80 - next * barScale} width="54" height={next * barScale} rx="4" />
+            <text className="kv-num" x="217" y={74 - next * barScale} textAnchor="middle">
               {next}
             </text>
-            <path className="kv-arrow" d="M124 40h56m0 0l-5-4m5 4l-5 4" />
-            <text className="kv-small kv-muted" x="152" y="34" textAnchor="middle">
+            <path className="kv-arrow" d="M124 48h56m0 0l-5-4m5 4l-5 4" />
+            <text className="kv-small kv-muted" x="152" y="42" textAnchor="middle">
               +{jump} %
             </text>
           </>
         )}
-        <text className="kv-small kv-muted" x="165" y="86" textAnchor="middle">
+        <text className="kv-small kv-muted" x="165" y="94" textAnchor="middle">
           Unterschiede unter etwa 30 Prozent kann niemand zuverlässig schätzen
         </text>
       </svg>
@@ -234,7 +234,7 @@ function Dreieck({ sync }: { sync?: DemoSync }) {
   }
 
   // Dreieck mit drei Achsen aus der Mitte; der Punkt je Achse zeigt den eingestellten Wert.
-  const center = { x: 165, y: 76 };
+  const center = { x: 165, y: 92 };
   const radius = 58;
   const angles: Record<Corner, number> = { umfang: -90, zeit: 30, qualitaet: 150 };
   const point = (corner: Corner, factor = values[corner] / MAX) => {
@@ -256,7 +256,7 @@ function Dreieck({ sync }: { sync?: DemoSync }) {
       <div className="ki-triangle">
         <svg
           className="kv"
-          viewBox="0 0 330 156"
+          viewBox="0 0 330 174"
           role="img"
           aria-label={`Umfang ${values.umfang}, Zeit ${values.zeit}, Qualität ${values.qualitaet}`}
         >
@@ -274,7 +274,7 @@ function Dreieck({ sync }: { sync?: DemoSync }) {
           <polygon className="ki-shape" points={shape} />
           {CORNERS.map((corner) => {
             const p = point(corner);
-            const label = point(corner, 1.28);
+            const label = point(corner, 1.36);
             return (
               <g key={corner}>
                 <circle className="kv-dot" cx={p.x} cy={p.y} r="4.5" />
@@ -366,8 +366,8 @@ function SchnittCheck({ sync }: { sync?: DemoSync }) {
         <rect className={level === 'ok' ? 'kv-bar' : 'ki-fill-warn'} x="24" y="18" width={fill} height="26" rx="7" />
         {[0.25, 0.5].map((mark) => (
           <g key={mark}>
-            <line className="kv-avg" x1={24 + barWidth * mark} y1="12" x2={24 + barWidth * mark} y2="50" />
-            <text className="kv-small kv-muted" x={24 + barWidth * mark} y="8" textAnchor="middle">
+            <line className="kv-avg" x1={24 + barWidth * mark} y1="14" x2={24 + barWidth * mark} y2="50" />
+            <text className="kv-small kv-muted" x={24 + barWidth * mark} y="10" textAnchor="middle">
               {mark * 100} %
             </text>
           </g>

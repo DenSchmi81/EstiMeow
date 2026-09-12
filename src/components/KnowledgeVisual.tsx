@@ -82,12 +82,12 @@ function StoryPoints() {
 
 function Skala() {
   const cards = [
-    { label: '1', h: 16 },
-    { label: '2', h: 21 },
-    { label: '3', h: 27 },
-    { label: '5', h: 35 },
-    { label: '8', h: 45 },
-    { label: '13', h: 57 },
+    { label: '1', h: 20 },
+    { label: '2', h: 25 },
+    { label: '3', h: 30 },
+    { label: '5', h: 37 },
+    { label: '8', h: 47 },
+    { label: '13', h: 58 },
     { label: '20', h: 70 },
   ];
   let x = 6;
@@ -159,7 +159,7 @@ function Velocity() {
   const scale = 58 / 32;
   const avgY = base - avg * scale;
   return (
-    <svg className="kv" viewBox="0 0 330 104" role="img" aria-label="Erledigte Punkte je Sprint mit Mittelwert">
+    <svg className="kv" viewBox="0 0 330 114" role="img" aria-label="Erledigte Punkte je Sprint mit Mittelwert">
       <line className="kv-axis" x1="32" y1={base} x2="320" y2={base} />
       <rect className="kv-band" x="32" y={avgY - 5} width="288" height="10" rx="5" />
       <line className="kv-avg" x1="32" y1={avgY} x2="320" y2={avgY} />
@@ -183,7 +183,7 @@ function Velocity() {
           </g>
         );
       })}
-      <text className="kv-small kv-muted" x="165" y="100" textAnchor="middle">
+      <text className="kv-small kv-muted" x="165" y="110" textAnchor="middle">
         Nur fertige Items zählen – die Streuung gehört dazu
       </text>
     </svg>
@@ -234,7 +234,7 @@ function Anchoring() {
           </text>
         </g>
       ))}
-      <text className="kv-small kv-muted" x="70" y="46" textAnchor="start">
+      <text className="kv-small kv-muted" x="6" y="46" textAnchor="start">
         alle ziehen mit
       </text>
       <path className="kv-arrow" d="M288 52h-118m0 0l5-4m-5 4l5 4" />
@@ -250,7 +250,7 @@ function Anchoring() {
           </text>
         </g>
       ))}
-      <text className="kv-small kv-muted" x="70" y="102" textAnchor="start">
+      <text className="kv-small kv-muted" x="6" y="102" textAnchor="start">
         Unterschiede bleiben
       </text>
       <text className="kv-small kv-muted" x="165" y="116" textAnchor="middle">
@@ -494,7 +494,7 @@ function WerSchaetzt() {
             {role.title}
           </text>
           {role.lines.map((line, j) => (
-            <text key={line} className="kv-small kv-muted" x={54 + i * 109} y={70 + j * 11} textAnchor="middle">
+            <text key={line} className="kv-small kv-muted" x={54 + i * 109} y={66 + j * 11} textAnchor="middle">
               {line}
             </text>
           ))}
@@ -528,7 +528,7 @@ function ZuGross() {
       </text>
       <circle className="kv-no" cx="236" cy="53" r="13" />
       <path className="kv-no-x" d="M230 47l12 12M242 47l-12 12" />
-      <text className="kv-small kv-muted" x="279" y="112" textAnchor="middle">
+      <text className="kv-small kv-muted" x="268" y="112" textAnchor="middle">
         passt nicht in einen Sprint
       </text>
       <text className="kv-small kv-muted" x="109" y="112" textAnchor="middle">
@@ -547,7 +547,7 @@ function Schneiden() {
     { letter: 'R', word: 'Regeln' },
   ];
   return (
-    <svg className="kv" viewBox="0 0 330 148" role="img" aria-label="Ein grosser Eintrag wird in fuenf Richtungen geschnitten, nicht nach technischen Schichten">
+    <svg className="kv" viewBox="0 0 330 164" role="img" aria-label="Ein grosser Eintrag wird in fuenf Richtungen geschnitten, nicht nach technischen Schichten">
       <rect className="kv-card kv-card-lg" x="6" y="18" width="60" height="56" rx="7" />
       <text className="kv-small" x="36" y="50" textAnchor="middle">
         zu groß
@@ -572,18 +572,18 @@ function Schneiden() {
       </text>
       {['Oberfläche', 'Logik', 'Datenbank'].map((layer, i) => (
         <g key={layer}>
-          <rect className="kv-chip kv-chip-off" x="86" y={106 + i * 13} width="158" height="11" rx="5" />
-          <text className="kv-small kv-muted" x="165" y={115 + i * 13} textAnchor="middle">
+          <rect className="kv-chip kv-chip-off" x="86" y={104 + i * 18} width="158" height="16" rx="8" />
+          <text className="kv-small kv-muted" x="165" y={115 + i * 18} textAnchor="middle">
             {layer}
           </text>
         </g>
       ))}
-      <circle className="kv-no" cx="60" cy="125" r="14" />
-      <path className="kv-no-x" d="M53 118l14 14M67 118l-14 14" />
-      <text className="kv-small kv-muted" x="288" y="128" textAnchor="middle">
+      <circle className="kv-no" cx="56" cy="131" r="14" />
+      <path className="kv-no-x" d="M49 124l14 14M63 124l-14 14" />
+      <text className="kv-small kv-muted" x="288" y="126" textAnchor="middle">
         nicht nach
       </text>
-      <text className="kv-small kv-muted" x="288" y="140" textAnchor="middle">
+      <text className="kv-small kv-muted" x="288" y="138" textAnchor="middle">
         Schichten
       </text>
     </svg>

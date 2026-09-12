@@ -3105,3 +3105,20 @@ a {
 .avatar-gallery-table small {
   color: var(--text-muted);
 }
+
+/* Entwickler-Galerie (#/wissen) */
+.kg-item {
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.kg-item h2 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
+.kg-item small {
+  color: var(--text-muted);
+  font-weight: 500;
+}

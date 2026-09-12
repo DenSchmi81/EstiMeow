@@ -3110,3 +3110,7 @@ a {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.ki-fill-warn {
+  fill: color-mix(in srgb, var(--danger) 55%, transparent);
+}

@@ -243,10 +243,65 @@ function Dreieck() {
   );
 }
 
+/** Passt ein Eintrag in den Sprint? Schwellen mit Quelle, keine erfundenen Zahlen. */
+function SchnittCheck() {
+  const [size, setSize] = useState(13);
+  const [velocity, setVelocity] = useState(26);
+  const share = size / velocity;
+  const perSprint = velocity / size;
+  const level = share > 0.5 ? 'stop' : share > 0.25 ? 'warn' : 'ok';
+  const verdict =
+    level === 'stop'
+      ? 'größer als die halbe Sprint-Kapazität – schneiden'
+      : level === 'warn'
+        ? 'großer Brocken – höchstens als Ausnahme'
+        : 'passt in den Sprint';
+  const barWidth = 280;
+  const fill = Math.min(share, 1) * barWidth;
+
+  return (
+    <div className="ki">
+      <div className="ki-controls">
+        <Slider label="Größe des Eintrags" value={size} min={1} max={60} onChange={setSize} suffix="Punkte" />
+        <Slider label="Velocity pro Sprint" value={velocity} min={5} max={80} onChange={setVelocity} suffix="Punkte" />
+      </div>
+      <p className="ki-result">
+        <strong>{Math.round(share * 100)} %</strong> eines Sprints – {verdict}
+      </p>
+      <svg className="kv ki-chart" viewBox="0 0 330 76" role="img" aria-label={verdict}>
+        <rect className="kv-panel" x="24" y="18" width={barWidth} height="26" rx="7" />
+        <rect className={level === 'ok' ? 'kv-bar' : 'ki-fill-warn'} x="24" y="18" width={fill} height="26" rx="7" />
+        {[0.25, 0.5].map((mark) => (
+          <g key={mark}>
+            <line className="kv-avg" x1={24 + barWidth * mark} y1="12" x2={24 + barWidth * mark} y2="50" />
+            <text className="kv-small kv-muted" x={24 + barWidth * mark} y="8" textAnchor="middle">
+              {mark * 100} %
+            </text>
+          </g>
+        ))}
+        <text className="kv-small kv-muted" x="24" y="66" textAnchor="start">
+          ein Sprint = {velocity} Punkte
+        </text>
+        <text className="kv-small kv-muted" x="304" y="66" textAnchor="end">
+          {perSprint >= 1 ? 'etwa ' + Math.floor(perSprint) + ' solche Einträge je Sprint' : 'passt nicht in einen Sprint'}
+        </text>
+      </svg>
+      <p className="ki-hint">
+        Woher die Marken kommen: Die Scrum Alliance nennt als Obergrenze, dass kein Eintrag größer als die halbe
+        Sprint-Dauer sein soll, und auch das nur als Ausnahme. Mike Cohn rechnet mit etwa 1 bis 1,5 Einträgen pro Person
+        und Sprint, bei sechs Personen also 6 bis 9 – daraus ergibt sich rechnerisch rund ein Achtel bis ein Sechstel
+        der Kapazität je Eintrag. Der Scrum Guide nennt keine Zahl; seine einzige Grenze ist, dass der Eintrag in einem
+        Sprint fertig werden kann.
+      </p>
+    </div>
+  );
+}
+
 const INTERACTIVES: Record<InteractiveKey, () => ReactElement> = {
   'velocity-forecast': VelocityForecast,
   'skala-sprung': SkalaSprung,
   dreieck: Dreieck,
+  'schnitt-check': SchnittCheck,
 };
 
 export function KnowledgeInteractive({ interactive }: { interactive: InteractiveKey | undefined }) {

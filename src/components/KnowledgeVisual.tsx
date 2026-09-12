@@ -507,6 +507,122 @@ function WerSchaetzt() {
   );
 }
 
+function ZuGross() {
+  return (
+    <svg className="kv" viewBox="0 0 330 120" role="img" aria-label="Mehrere kleine Eintraege passen in einen Sprint, ein zu grosser ragt heraus">
+      <rect className="kv-panel" x="6" y="20" width="206" height="66" rx="10" />
+      <text className="kv-small kv-muted" x="109" y="14" textAnchor="middle">
+        ein Sprint
+      </text>
+      {[0, 1, 2, 3].map((i) => (
+        <g key={i}>
+          <rect className="kv-card" x={18 + i * 48} y="34" width="38" height="38" rx="5" />
+          <text className="kv-num" x={37 + i * 48} y="58" textAnchor="middle">
+            3
+          </text>
+        </g>
+      ))}
+      <rect className="kv-card kv-card-on" x="236" y="8" width="86" height="90" rx="7" />
+      <text className="kv-num kv-num-lg" x="279" y="60" textAnchor="middle">
+        ?
+      </text>
+      <circle className="kv-no" cx="236" cy="53" r="13" />
+      <path className="kv-no-x" d="M230 47l12 12M242 47l-12 12" />
+      <text className="kv-small kv-muted" x="279" y="112" textAnchor="middle">
+        passt nicht in einen Sprint
+      </text>
+      <text className="kv-small kv-muted" x="109" y="112" textAnchor="middle">
+        mehrere kleine Einträge je Sprint
+      </text>
+    </svg>
+  );
+}
+
+function Schneiden() {
+  const slices = [
+    { letter: 'S', word: 'Spike' },
+    { letter: 'P', word: 'Pfade' },
+    { letter: 'I', word: 'Schnitt-' },
+    { letter: 'D', word: 'Daten' },
+    { letter: 'R', word: 'Regeln' },
+  ];
+  return (
+    <svg className="kv" viewBox="0 0 330 148" role="img" aria-label="Ein grosser Eintrag wird in fuenf Richtungen geschnitten, nicht nach technischen Schichten">
+      <rect className="kv-card kv-card-lg" x="6" y="18" width="60" height="56" rx="7" />
+      <text className="kv-small" x="36" y="50" textAnchor="middle">
+        zu groß
+      </text>
+      <path className="kv-arrow" d="M74 46h16m0 0l-5-4m5 4l-5 4" />
+      {slices.map((slice, i) => (
+        <g key={slice.letter}>
+          <rect className="kv-card kv-card-on" x={98 + i * 46} y="18" width="38" height="34" rx="5" />
+          <text className="kv-num" x={117 + i * 46} y="41" textAnchor="middle">
+            {slice.letter}
+          </text>
+          <text className="kv-small kv-muted" x={117 + i * 46} y="64" textAnchor="middle">
+            {slice.word}
+          </text>
+        </g>
+      ))}
+      <text className="kv-small kv-muted" x="209" y="76" textAnchor="middle">
+        stellen
+      </text>
+      <text className="kv-small kv-muted" x="165" y="96" textAnchor="middle">
+        senkrecht schneiden: jedes Stück zeigt selbst etwas
+      </text>
+      {['Oberfläche', 'Logik', 'Datenbank'].map((layer, i) => (
+        <g key={layer}>
+          <rect className="kv-chip kv-chip-off" x="86" y={106 + i * 13} width="158" height="11" rx="5" />
+          <text className="kv-small kv-muted" x="165" y={115 + i * 13} textAnchor="middle">
+            {layer}
+          </text>
+        </g>
+      ))}
+      <circle className="kv-no" cx="60" cy="125" r="14" />
+      <path className="kv-no-x" d="M53 118l14 14M67 118l-14 14" />
+      <text className="kv-small kv-muted" x="288" y="128" textAnchor="middle">
+        nicht nach
+      </text>
+      <text className="kv-small kv-muted" x="288" y="140" textAnchor="middle">
+        Schichten
+      </text>
+    </svg>
+  );
+}
+
+function Invest() {
+  const letters = [
+    { letter: 'I', word: 'unabhängig' },
+    { letter: 'N', word: 'verhandelbar' },
+    { letter: 'V', word: 'wertvoll' },
+    { letter: 'E', word: 'schätzbar' },
+    { letter: 'S', word: 'klein' },
+    { letter: 'T', word: 'testbar' },
+  ];
+  return (
+    <svg className="kv" viewBox="0 0 330 112" role="img" aria-label="INVEST: unabhaengig, verhandelbar, wertvoll, schaetzbar, klein, testbar">
+      {letters.map((item, i) => {
+        const x = 8 + (i % 3) * 106;
+        const y = 10 + Math.floor(i / 3) * 46;
+        return (
+          <g key={item.letter}>
+            <rect className="kv-panel kv-panel-on" x={x} y={y} width="98" height="36" rx="9" />
+            <text className="kv-num kv-num-lg" x={x + 22} y={y + 27} textAnchor="middle">
+              {item.letter}
+            </text>
+            <text className="kv-small" x={x + 62} y={y + 23} textAnchor="middle">
+              {item.word}
+            </text>
+          </g>
+        );
+      })}
+      <text className="kv-small kv-muted" x="165" y="106" textAnchor="middle">
+        Sechs Fragen an einen Eintrag, bevor er in einen Sprint geht
+      </text>
+    </svg>
+  );
+}
+
 const VISUALS: Record<VisualKey, () => ReactElement> = {
   'poker-ablauf': PokerAblauf,
   'story-points': StoryPoints,
@@ -523,6 +639,9 @@ const VISUALS: Record<VisualKey, () => ReactElement> = {
   forecast: Forecast,
   reestimate: Reestimate,
   'wer-schaetzt': WerSchaetzt,
+  'zu-gross': ZuGross,
+  schneiden: Schneiden,
+  invest: Invest,
 };
 
 export function KnowledgeVisual({ visual }: { visual: VisualKey | undefined }) {

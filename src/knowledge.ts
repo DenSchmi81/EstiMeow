@@ -29,10 +29,13 @@ export type VisualKey =
   | 'referenz'
   | 'forecast'
   | 'reestimate'
-  | 'wer-schaetzt';
+  | 'wer-schaetzt'
+  | 'zu-gross'
+  | 'schneiden'
+  | 'invest';
 
 /** Schlüssel des interaktiven Bausteins mit Reglern (siehe KnowledgeInteractive.tsx). */
-export type InteractiveKey = 'velocity-forecast' | 'skala-sprung' | 'dreieck';
+export type InteractiveKey = 'velocity-forecast' | 'skala-sprung' | 'dreieck' | 'schnitt-check';
 
 export interface KnowledgeTopic {
   id: string;
@@ -359,7 +362,7 @@ export const TOPICS: KnowledgeTopic[] = [
     id: 'refinement',
     title: 'Backlog Refinement',
     category: 'Scrum-Rahmen',
-    icon: '✂️',
+    icon: '🗂️',
     visual: 'refinement',
     summary:
       'Refinement zerlegt große Einträge und ergänzt Beschreibung, Reihenfolge und Größe. Es ist laufende Arbeit am Backlog, kein eigenes Event.',
@@ -486,6 +489,97 @@ export const TOPICS: KnowledgeTopic[] = [
       { label: 'Scrum Guide 2020 – The Sprint (feste Länge, Qualität, Umfang)', url: 'https://scrumguides.org/scrum-guide.html#the-sprint' },
       { label: 'Jim Highsmith – Agile Triangle', url: 'https://jimhighsmith.com/the-ghosts-of-project-managements-iron-triangle-still-haunt-agile-teams/' },
       { label: 'Atkinson 1999 – Kritik am Iron Triangle (IJPM)', url: 'https://www.sciencedirect.com/science/article/abs/pii/S0263786398000696' },
+    ],
+  },
+  {
+    id: 'zu-gross',
+    title: 'Wann ein Eintrag zu groß ist',
+    category: 'Praxis',
+    icon: '📏',
+    visual: 'zu-gross',
+    interactive: 'schnitt-check',
+    summary:
+      'Die einzige Grenze im Scrum Guide lautet: Ein Eintrag muss in einem Sprint fertig werden können. Alles Weitere sind Faustregeln – im Schätzgespräch gibt es aber deutliche Warnzeichen.',
+    points: [
+      'Der Scrum Guide 2020 nennt keine Zahl. Einträge, die das Team in einem Sprint erledigen kann, gelten als bereit zur Auswahl im Sprint Planning.',
+      'Die Zerlegung in Arbeit von einem Tag oder weniger beschreibt der Guide als häufige Praxis, nicht als Pflicht – und sie betrifft die Arbeit im Sprint, nicht den Backlog-Eintrag selbst.',
+      'Scrum Alliance: Kein Eintrag sollte größer als die halbe Sprint-Dauer sein, und selbst das nur als Ausnahme. Typisch seien in einem Zwei-Wochen-Sprint ein halber bis drei Tage.',
+      'Mike Cohn rechnet mit etwa 1 bis 1,5 Einträgen pro Person und Sprint, bei sechs Personen also 6 bis 9. Richard Lawrence nennt als Faustregel 6 bis 10 Einträge pro Sprint.',
+      'Warnzeichen beim Schätzen: Karten am oberen Ende der Skala, weit auseinanderliegende Schätzungen und mehr als drei Runden ohne Annäherung. Ein bis drei Runden genügen normalerweise.',
+      'Bill Wake begründet kleine Einträge damit, dass sie genauer geschätzt werden und sich klarer abgrenzen lassen.',
+      'Lange laufende Einträge verzögern Nutzen und Rückmeldung und laden dazu ein, den Umfang unbemerkt auszuweiten.',
+    ],
+    pitfalls: [
+      'Die verbreitete Regel „höchstens ein Viertel der Velocity“ als Tatsache behandeln. In den guten Quellen ist sie nicht zu finden – sie ist Folklore.',
+      'Ebenso „ab 13 Punkten ist es zu groß“: Das ist Gewohnheit im jeweiligen Team, keine belegte Schwelle.',
+      'Zu groß und zu unsicher verwechseln. Cohn trennt beides: Zu groß wird geschnitten, zu unsicher bekommt eine zeitlich begrenzte Untersuchung.',
+      'Übersehen, dass sich die Maßstäbe verschoben haben: Wake sprach 2003 von wenigen Personenwochen, heutige Praxis nennt wenige Tage.',
+    ],
+    note: 'Der Scrum Guide 2020 nennt keine Größenschwelle. Die Zahlen hier stammen aus Fachliteratur und Praxis und sind jeweils zugeordnet.',
+    sources: [
+      { label: 'Scrum Guide 2020 – Product Backlog', url: 'https://scrumguides.org/scrum-guide.html#product-backlog' },
+      { label: 'Scrum Alliance – Tipps zum Refinement (halbe Sprint-Dauer)', url: 'https://resources.scrumalliance.org/Article/6-tips-improving-product-backlog-refinement' },
+      { label: 'Mountain Goat Software – Planning Poker (Runden, Streuung)', url: 'https://www.mountaingoatsoftware.com/agile/planning-poker' },
+      { label: 'Humanizing Work – lang laufende Stories', url: 'https://www.humanizingwork.com/ask-humanizingwork-long-running-stories/' },
+      { label: 'Bill Wake – INVEST in good stories (2003)', url: 'https://xp123.com/invest-in-good-stories-and-smart-tasks/' },
+    ],
+  },
+  {
+    id: 'schneiden',
+    title: 'Einträge schneiden',
+    category: 'Praxis',
+    icon: '✂️',
+    visual: 'schneiden',
+    summary:
+      'Gut geschnitten heißt senkrecht durch alle Schichten, sodass jedes Stück selbst etwas zeigt. Cohns SPIDR und die Muster von Richard Lawrence liefern die Ansatzpunkte.',
+    points: [
+      'SPIDR von Mike Cohn: Spike als begrenzte Untersuchung, Paths für verschiedene Wege zum Ziel, Interfaces für stufenweise Oberflächen und Schnittstellen, Data für begrenzte Datenmenge oder -varianten, Rules für zunächst gelockerte Geschäftsregeln.',
+      'Cohn hat über Jahre mehr als tausend Einträge gesammelt und bewusst fünf statt zwanzig Techniken gewählt, damit man sie sich merken kann.',
+      'Richard Lawrence beschreibt neun Muster: Arbeitsschritte, CRUD-Operationen, Regelvarianten, Datenvarianten, einfache gegen aufwendige Eingabewege, tragende Infrastruktur zuerst, einfacher Fall vor Sonderfällen, Geschwindigkeit später und die begrenzte Untersuchung.',
+      'Gütekriterien nach Lawrence: senkrecht durch mehrere Schichten, jedes Stück eigenständig wertvoll und die Teile möglichst ähnlich groß.',
+      'Die Summe der Teile muss die alte Schätzung nicht ergeben. Beim Zerlegen entsteht neues Wissen, und das darf in die Zahlen einfließen.',
+      'Manche Einträge lassen sich nicht sinnvoll teilen. Cohn unterscheidet zusammengesetzte von wirklich komplexen Einträgen und empfiehlt für letztere Zwischenstände statt eines erzwungenen Schnitts.',
+    ],
+    pitfalls: [
+      'Nach technischen Schichten schneiden. Cohn hält dagegen, dass eine Oberfläche ohne passende Logik niemandem nützt; Lawrence sagt, so ein Schnitt sei klein, aber nicht unabhängig und wertvoll.',
+      'Nach Projektphasen schneiden, also Analyse, Umsetzung, Test. Das liefert keinen eigenen Wert. Diese Kritik ist aus den Kriterien abgeleitet, wörtlich habe ich sie in den Quellen nicht gefunden.',
+      'Die Lösung statt des Bedarfs beschreiben. Solche Einträge werden laut Cohn zu klein.',
+      'Für jeden Eintrag eine Untersuchung anlegen. Sie soll große Unsicherheit senken, nicht die alltägliche.',
+    ],
+    note: 'SPIDR und die Muster von Lawrence sind keine konkurrierenden Schulen, sie überlappen stark. Scrum schreibt kein Verfahren vor.',
+    sources: [
+      { label: 'Mountain Goat Software – SPIDR: fünf Wege zum Schneiden', url: 'https://www.mountaingoatsoftware.com/blog/five-simple-but-powerful-ways-to-split-user-stories' },
+      { label: 'Humanizing Work – Guide zum Story Splitting (Muster, Kriterien)', url: 'https://www.humanizingwork.com/the-humanizing-work-guide-to-splitting-user-stories/' },
+      { label: 'Mountain Goat Software – fünf Fehler beim Schneiden', url: 'https://www.mountaingoatsoftware.com/blog/five-story-splitting-mistakes-and-how-to-stop-making-them' },
+      { label: 'Mountain Goat Software – Teile müssen die Summe nicht ergeben', url: 'https://www.mountaingoatsoftware.com/blog/estimates-on-split-stories-do-not-need-to-equal-the-original' },
+      { label: 'Scrum Alliance – senkrechter Schnitt (Vertical Slice)', url: 'https://resources.scrumalliance.org/Article/key-skills-better-product-owner' },
+    ],
+  },
+  {
+    id: 'invest',
+    title: 'INVEST als Prüfung',
+    category: 'Praxis',
+    icon: '🔍',
+    visual: 'invest',
+    summary:
+      'Bill Wake fasste 2003 sechs Eigenschaften guter Einträge zusammen: unabhängig, verhandelbar, wertvoll, schätzbar, klein und testbar. Das ist eine schnelle Prüfung vor dem Sprint.',
+    points: [
+      'Independent: Die Einträge überlappen sich nicht und lassen sich in beliebiger Reihenfolge einplanen.',
+      'Negotiable: Die Details entstehen im Gespräch. Ein Eintrag ist kein fester Vertrag über Funktionen.',
+      'Valuable: Der Eintrag bringt erkennbaren Wert. Das Glossar der Agile Alliance ergänzt, dass er senkrecht geschnitten sein soll.',
+      'Estimable: Gut genug verstanden, um eine grobe Größe zu nennen. Wer nicht schätzen kann, braucht Klärung oder eine Untersuchung.',
+      'Small: Passt in eine Iteration. Wake schrieb 2003 von höchstens wenigen Personenwochen, heute sind wenige Tage üblich.',
+      'Testable: Wakes Probe ist die Frage, ob man einen Test dafür schreiben könnte.',
+    ],
+    pitfalls: [
+      'INVEST als Freigabekriterium benutzen und Einträge blockieren. Das erzeugt dasselbe Stufentor wie eine starre Definition of Ready.',
+      'Das S überbetonen. Cohn warnt, dass Einträge zu klein werden, wenn sie die Lösung beschreiben statt den Bedarf.',
+    ],
+    note: 'INVEST stammt aus dem Extreme-Programming-Umfeld und ist kein Bestandteil von Scrum.',
+    sources: [
+      { label: 'Bill Wake – INVEST in good stories (2003)', url: 'https://xp123.com/invest-in-good-stories-and-smart-tasks/' },
+      { label: 'Agile Alliance – Glossar INVEST', url: 'https://www.agilealliance.org/glossary/invest/' },
+      { label: 'Bill Wake – Twenty ways to split stories', url: 'https://xp123.com/twenty-ways-to-split-stories/' },
     ],
   },
 ];

@@ -31,6 +31,9 @@ export type VisualKey =
   | 'reestimate'
   | 'wer-schaetzt';
 
+/** Schlüssel des interaktiven Bausteins mit Reglern (siehe KnowledgeInteractive.tsx). */
+export type InteractiveKey = 'velocity-forecast' | 'skala-sprung' | 'dreieck';
+
 export interface KnowledgeTopic {
   id: string;
   title: string;
@@ -47,6 +50,8 @@ export interface KnowledgeTopic {
   visual?: VisualKey;
   /** Kurzes Symbol als visueller Anker in Liste und Karte. */
   icon: string;
+  /** Baustein mit Reglern zum Ausprobieren; wirkt nur lokal im eigenen Browser. */
+  interactive?: InteractiveKey;
   sources: KnowledgeSource[];
 }
 
@@ -116,6 +121,7 @@ export const TOPICS: KnowledgeTopic[] = [
     category: 'Schätzen',
     icon: '🃏',
     visual: 'skala',
+    interactive: 'skala-sprung',
     summary:
       'Übliche Decks wachsen in großen Sprüngen, etwa 1, 2, 3, 5, 8, 13, 20. Die Lücken sind gewollt, weil feine Unterschiede bei großen Einträgen ohnehin nicht erkennbar sind.',
     points: [
@@ -198,6 +204,7 @@ export const TOPICS: KnowledgeTopic[] = [
     category: 'Schätzen',
     icon: '📈',
     visual: 'velocity',
+    interactive: 'velocity-forecast',
     summary:
       'Velocity ist die Menge an Backlog, die ein Team pro Sprint fertig bekommt. Sie dient dem Team als Planungshilfe, nicht als Bewertung.',
     points: [

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { CATEGORIES, findTopic, searchTopics, TOPICS, type KnowledgeCategory } from '../knowledge';
 import { Dialog } from './Dialog';
 import { HostIcon } from './Icons';
+import { KnowledgeInteractive } from './KnowledgeInteractive';
 import { KnowledgeVisual } from './KnowledgeVisual';
 
 interface KnowledgeDialogProps {
@@ -84,6 +85,12 @@ export function KnowledgeDialog({ pinnedId, isHost, hostName, onPin, onClaimHost
               </h3>
               <p className="kb-summary">{selected.summary}</p>
               <KnowledgeVisual visual={selected.visual} />
+              {selected.interactive && (
+                <>
+                  <h4>Selbst ausprobieren</h4>
+                  <KnowledgeInteractive interactive={selected.interactive} />
+                </>
+              )}
               {selected.note && <p className="hint">ℹ️ {selected.note}</p>}
               <h4>Kernaussagen</h4>
               <ul className="kb-points">

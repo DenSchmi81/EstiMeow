@@ -2727,17 +2727,78 @@ a {
   flex-wrap: wrap;
 }
 
-/* Von der Moderation eingeblendetes Wissenselement */
-.pinned-knowledge {
-  width: 100%;
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 14px 16px;
+/* Von der Moderation eingeblendetes Wissenselement: Overlay für alle im Raum */
+.pinned-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgb(8 12 24 / 0.45);
+  backdrop-filter: blur(3px);
+  animation: fade 0.15s ease-out;
+}
+
+.pinned-overlay {
+  width: min(620px, 100%);
+  max-height: calc(100vh - 32px);
+  padding: 20px 22px;
   border: 1px solid var(--accent);
-  border-radius: 14px;
+  border-radius: 16px;
   background: var(--surface);
-  box-shadow: var(--shadow-sm);
-  animation: fade 0.25s ease-out;
+  box-shadow: var(--shadow-lg);
+  overflow-y: auto;
+  animation: pin-pop 0.28s cubic-bezier(0.3, 0.7, 0.4, 1.3) both;
+}
+
+@keyframes pin-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pinned-overlay {
+    animation: fade 0.15s ease-out both;
+  }
+}
+
+.pinned-from {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 6px;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.pinned-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.pinned-reopen {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 auto;
+  padding: 7px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.pinned-reopen:hover {
+  background: var(--surface-2);
 }
 
 .pinned-head {
@@ -2750,10 +2811,11 @@ a {
 .pinned-title {
   display: flex;
   align-items: center;
-  gap: 7px;
-  color: var(--accent);
-  font-size: 15px;
-  font-weight: 750;
+  gap: 8px;
+  margin: 0;
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 780;
 }
 
 .pinned-summary {
@@ -2946,5 +3008,105 @@ a {
 
   .kb-list {
     max-height: 30vh;
+  }
+}
+
+/* ---------- Interaktive Bausteine der Wissenselemente ---------- */
+
+.ki {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.ki-controls {
+  display: grid;
+  gap: 10px;
+}
+
+.ki-slider {
+  display: grid;
+  gap: 4px;
+}
+
+.ki-slider label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.ki-slider output {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+
+.ki-slider input[type='range'] {
+  width: 100%;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.ki-result {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.ki-result strong {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.ki-hint {
+  margin: 8px 0 0;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+
+.ki-chart {
+  margin-top: 10px;
+  max-width: 100%;
+}
+
+.ki-triangle {
+  display: grid;
+  grid-template-columns: minmax(200px, 1.1fr) minmax(180px, 1fr);
+  gap: 16px;
+  align-items: center;
+}
+
+.ki-preset {
+  justify-self: start;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.ki-outline {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.ki-shape {
+  fill: color-mix(in srgb, var(--accent) 22%, transparent);
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  transition: all 0.15s ease-out;
+}
+
+@media (max-width: 620px) {
+  .ki-triangle {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

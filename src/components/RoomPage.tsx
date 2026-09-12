@@ -61,6 +61,8 @@ export function RoomPage({ roomId }: { roomId: string }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [dialog, setDialog] = useState<'profile' | 'settings' | 'knowledge' | null>(null);
   const [awardsOpen, setAwardsOpen] = useState(false);
+  // Wer das eingeblendete Wissenselement schließt, blendet es nur für sich aus.
+  const [hiddenPin, setHiddenPin] = useState<string | null>(null);
   const room = useRoom(roomId, profile);
   const { status, meta, players, votes, rounds, stats, uid, actions } = room;
   const lastThrowAt = useRef(0);
@@ -237,8 +239,18 @@ export function RoomPage({ roomId }: { roomId: string }) {
             ))}
           </div>
         )}
-        {pinnedTopic && (
-          <PinnedKnowledge topic={pinnedTopic} canUnpin={isHost} onUnpin={() => void actions?.pinTopic(null)} />
+        {pinnedTopic && hiddenPin !== pinnedTopic.id && (
+          <PinnedKnowledge
+            topic={pinnedTopic}
+            canUnpin={isHost}
+            onUnpin={() => void actions?.pinTopic(null)}
+            onClose={() => setHiddenPin(pinnedTopic.id)}
+          />
+        )}
+        {pinnedTopic && hiddenPin === pinnedTopic.id && (
+          <button type="button" className="pinned-reopen" onClick={() => setHiddenPin(null)}>
+            <BookIcon /> <span aria-hidden="true">{pinnedTopic.icon}</span> {pinnedTopic.title} wieder anzeigen
+          </button>
         )}
         {shownRevealed ? (
           <Results deck={meta.deck} players={seated} votes={votes} />

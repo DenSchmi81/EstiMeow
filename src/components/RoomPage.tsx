@@ -311,7 +311,7 @@ export function RoomPage({ roomId }: { roomId: string }) {
               {meta.name}
             </h1>
             <div className="header-actions">
-              <InviteButton roomId={roomId} roomName={meta.name} codeHash={meta.codeHash} />
+              <InviteButton roomId={roomId} codeHash={meta.codeHash} />
               <button
                 type="button"
                 className="icon-btn"

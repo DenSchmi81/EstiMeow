@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { parseAvatar } from '../avatars';
 import { findTopic } from '../knowledge';
-import { isUnlocked, markUnlocked } from '../unlock';
+import { forgetCode, isUnlocked, markUnlocked } from '../unlock';
 import { computeAwards, computeSpotlight } from '../fun';
 import { sfx } from '../sounds';
 import { RETENTION_DAYS, useRoom, type Profile, type ThrowKind } from '../sync/room';
@@ -311,7 +311,7 @@ export function RoomPage({ roomId }: { roomId: string }) {
               {meta.name}
             </h1>
             <div className="header-actions">
-              <InviteButton />
+              <InviteButton roomId={roomId} roomName={meta.name} codeHash={meta.codeHash} />
               <button
                 type="button"
                 className="icon-btn"
@@ -359,8 +359,8 @@ export function RoomPage({ roomId }: { roomId: string }) {
       {meta && meta.codeHash && !unlocked && (
         <CodeGate
           expected={meta.codeHash}
-          onUnlocked={() => {
-            markUnlocked(roomId);
+          onUnlocked={(code) => {
+            markUnlocked(roomId, code);
             setUnlocked(true);
           }}
         />
@@ -375,7 +375,9 @@ export function RoomPage({ roomId }: { roomId: string }) {
         <SettingsDialog
           meta={meta}
           onClose={() => setDialog(null)}
-          onSave={(name, deck, timebox, codeHash) => {
+          onSave={(name, deck, timebox, codeHash, code) => {
+            if (code !== undefined) markUnlocked(roomId, code);
+            else if (codeHash === null) forgetCode(roomId);
             void actions?.saveSettings(name, deck, timebox, codeHash);
             setDialog(null);
           }}

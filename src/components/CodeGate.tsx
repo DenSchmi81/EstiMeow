@@ -5,7 +5,8 @@ import { Dialog } from './Dialog';
 interface CodeGateProps {
   /** Prüfsumme des hinterlegten Codes */
   expected: string;
-  onUnlocked: () => void;
+  /** Erhält den eingegebenen Code, damit „Einladen“ ihn im selben Tab mitkopieren kann. */
+  onUnlocked: (code: string) => void;
 }
 
 /** Fragt den Zugangscode ab, bevor der Raum sichtbar wird. */
@@ -21,7 +22,7 @@ export function CodeGate({ expected, onUnlocked }: CodeGateProps) {
     const matches = (await hashCode(code)) === expected;
     setBusy(false);
     if (matches) {
-      onUnlocked();
+      onUnlocked(code);
       return;
     }
     setError('Der Code stimmt nicht. Frag die Person, die den Raum erstellt hat.');

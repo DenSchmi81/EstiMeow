@@ -40,7 +40,7 @@ export function Home() {
       const codeHash = code.trim() ? await hashCode(code) : null;
       const id = await createRoom(name.trim() || 'EstiMeow', deck.deckId, cards, codeHash);
       // Wer den Raum anlegt, kennt den Code – sonst sperrt man sich selbst aus.
-      if (codeHash) markUnlocked(id);
+      if (codeHash) markUnlocked(id, code);
       window.location.hash = `#/r/${id}`;
     } catch (err) {
       setError(errorMessage(err));

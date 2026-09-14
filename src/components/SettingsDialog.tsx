@@ -15,6 +15,8 @@ interface SettingsDialogProps {
     deck: { deckId: string; cards: string[] } | null,
     timebox: number | null,
     codeHash: string | null | undefined,
+    /** Neuer Code im Klartext – bleibt im Tab, geht nie an die Datenbank. */
+    code?: string,
   ) => void;
   onClose: () => void;
   /** Löscht den Raum mit allen Namen, Stimmen und Runden. */
@@ -45,14 +47,15 @@ export function SettingsDialog({ meta, onSave, onClose, onDelete }: SettingsDial
           e.preventDefault();
           if (cards.length === 0) return;
           if (codeMode === 'set' && code.trim().length === 0) return;
-          const save = (codeHash: string | null | undefined) =>
+          const save = (codeHash: string | null | undefined, plain?: string) =>
             onSave(
               name.trim() || meta.name,
               deckChanged ? { deckId: deck.deckId, cards } : null,
               timebox !== meta.timebox ? timebox : null,
               codeHash,
+              plain,
             );
-          if (codeMode === 'set') void hashCode(code).then(save);
+          if (codeMode === 'set') void hashCode(code).then((hash) => save(hash, code));
           else save(codeMode === 'remove' ? null : undefined);
         }}
       >

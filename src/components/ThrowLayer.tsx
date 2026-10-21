@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { sfx } from '../sounds';
 import type { ThrowEvent } from '../sync/room';
-import { EMOJIS, MEMES } from '../throwables';
+import { EMOJIS, MEMES, REACTIONS } from '../throwables';
 
 interface ThrowLayerProps {
   subscribe: (listener: (event: ThrowEvent) => void) => () => void;
@@ -56,6 +56,10 @@ function createProjectile(event: ThrowEvent): HTMLElement | null {
 function launch(layer: HTMLElement, event: ThrowEvent) {
   // Hintergrund-Tabs pausieren Animationen – sonst stapeln sich hängengebliebene Würfe beim Zurückkehren.
   if (document.hidden) return;
+  if (event.kind === 'react') {
+    rise(layer, event);
+    return;
+  }
   const target = locate(event.to);
   const projectile = createProjectile(event);
   if (!target || !projectile) return;
@@ -133,6 +137,31 @@ function launch(layer: HTMLElement, event: ThrowEvent) {
       ).onfinish = () => outer.remove();
     }
   };
+}
+
+/** Reaktion: Das Emoji steigt am eigenen Platz auf und verschwindet – niemand wird getroffen. */
+function rise(layer: HTMLElement, event: ThrowEvent) {
+  if (!REACTIONS.includes(event.item)) return;
+  const at = locate(event.to);
+  if (!at) return;
+  const el = document.createElement('span');
+  el.className = 'reaction-float';
+  el.textContent = event.item;
+  el.style.left = `${at.x}px`;
+  el.style.top = `${at.y}px`;
+  layer.appendChild(el);
+  const drift = (Math.random() - 0.5) * 40;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  el.animate(
+    [
+      { transform: 'translate(-50%, -50%) scale(0.6)', opacity: 0 },
+      { transform: 'translate(-50%, -90%) scale(1.15)', opacity: 1, offset: 0.2 },
+      { transform: `translate(calc(-50% + ${drift}px), -260%) scale(1)`, opacity: 0 },
+    ],
+    { duration: reducedMotion ? 1 : 1800, easing: 'ease-out', fill: 'forwards' },
+  ).onfinish = () => el.remove();
+  // Sicherheitsnetz, falls die Animation unterwegs abbricht.
+  window.setTimeout(() => el.remove(), 4000);
 }
 
 function splash(layer: HTMLElement, emoji: string, x: number, y: number) {

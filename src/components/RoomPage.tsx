@@ -14,6 +14,7 @@ import { BookIcon, EyeIcon, GearIcon, TrophyIcon } from './Icons';
 import { CatVisitLayer } from './CatVisitLayer';
 import { InviteButton } from './InviteButton';
 import { ProfileDialog } from './ProfileDialog';
+import { ReactionButton } from './ReactionButton';
 import { Results } from './Results';
 import { SettingsDialog } from './SettingsDialog';
 import { SpectatorChip } from './SpectatorChip';
@@ -325,6 +326,7 @@ export function RoomPage({ roomId }: { roomId: string }) {
             </h1>
             <div className="header-actions">
               <InviteButton roomId={roomId} codeHash={meta.codeHash} />
+              {profile && uid && <ReactionButton onReact={(emoji) => handleThrow(uid, 'react', emoji)} />}
               <button
                 type="button"
                 className="icon-btn"

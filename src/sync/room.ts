@@ -61,7 +61,7 @@ export interface Profile {
   avatar: string | null;
 }
 
-export type ThrowKind = 'emoji' | 'meme' | 'cat';
+export type ThrowKind = 'emoji' | 'meme' | 'cat' | 'react';
 
 export interface ThrowEvent {
   id: string;
@@ -153,7 +153,7 @@ function normalizeStats(value: unknown): Record<string, PlayerStats> {
 
 function toThrowEvent(id: string, t: ThrowRecord): ThrowEvent | null {
   if (typeof t.from !== 'string' || typeof t.to !== 'string' || typeof t.item !== 'string') return null;
-  if (t.kind !== 'emoji' && t.kind !== 'meme' && t.kind !== 'cat') return null;
+  if (t.kind !== 'emoji' && t.kind !== 'meme' && t.kind !== 'cat' && t.kind !== 'react') return null;
   return { id, from: t.from, to: t.to, kind: t.kind, item: t.item };
 }
 
@@ -333,8 +333,8 @@ export function useRoom(roomId: string, profile: Profile | null) {
         }
         const event = toThrowEvent(id, record);
         if (!event) continue;
-        // Katzenbesuche zählen bewusst nicht als Treffer – sie sind nett gemeint.
-        if (event.to === uid && event.kind !== 'cat') {
+        // Katzenbesuche und eigene Reaktionen zählen bewusst nicht als Treffer.
+        if (event.to === uid && event.kind !== 'cat' && event.kind !== 'react') {
           const own = statsRef.current[uid];
           const hit = (own?.hit ?? 0) + 1;
           statsRef.current = { ...statsRef.current, [uid]: { thrown: own?.thrown ?? 0, hit } };
@@ -474,7 +474,7 @@ export function useRoom(roomId: string, profile: Profile | null) {
       startAwards: () => backend.update(`${base}/meta`, { awardsAt: backend.serverTimestamp() }),
       throwAt: async (to: string, kind: ThrowKind, item: string) => {
         const id = await backend.push(`${base}/throws`, { from: uid, to, kind, item, at: backend.serverTimestamp() });
-        if (kind !== 'cat') {
+        if (kind !== 'cat' && kind !== 'react') {
           const own = statsRef.current[uid];
           const thrown = (own?.thrown ?? 0) + 1;
           statsRef.current = { ...statsRef.current, [uid]: { thrown, hit: own?.hit ?? 0 } };

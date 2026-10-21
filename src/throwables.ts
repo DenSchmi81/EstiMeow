@@ -88,3 +88,6 @@ export const CAT_ACTS: CatAct[] = [
 export function findCatAct(id: string): CatAct | undefined {
   return CAT_ACTS.find((a) => a.id === id);
 }
+
+// Reaktionen steigen am eigenen Platz auf – wie in Teams-Calls, ohne jemanden zu treffen.
+export const REACTIONS = ['❤️', '😂', '👍', '👏', '🎉', '😮'];

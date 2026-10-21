@@ -3438,11 +3438,48 @@ a {
   display: inline-flex;
 }
 
+/* Der Knopf sitzt am eigenen Platz – dort, wo die Reaktion gleich aufsteigt. */
+.reaction-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.reaction-trigger svg {
+  width: 16px;
+  height: 16px;
+}
+
+.reaction-trigger:hover,
+.reaction-trigger[aria-expanded='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
+  opacity: 1;
+}
+
+.seat .reaction-wrap {
+  margin-top: 2px;
+}
+
+.spectator-chip .reaction-wrap {
+  margin-left: 2px;
+}
+
 .reaction-bar {
   position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 30;
+  left: 50%;
+  z-index: 40;
+  translate: calc(-50% + var(--shift, 0px)) 0;
   display: flex;
   gap: 2px;
   padding: 6px;
@@ -3451,6 +3488,14 @@ a {
   background: var(--surface);
   box-shadow: var(--shadow-lg);
   animation: pop 0.15s ease-out;
+}
+
+.reaction-bar.below {
+  top: calc(100% + 8px);
+}
+
+.reaction-bar.above {
+  bottom: calc(100% + 8px);
 }
 
 .reaction-btn {
@@ -3485,13 +3530,19 @@ a {
   }
 }
 
-/* Auf schmalen Schirmen passt die Leiste nicht neben den Knopf – dann mittig unter die Kopfzeile. */
+/* Offene Leiste über den Nachbarplätzen halten. */
+.seat:has(.reaction-bar),
+.seat-row:has(.reaction-bar),
+.seat-col:has(.reaction-bar),
+.spectators:has(.reaction-bar) {
+  position: relative;
+  z-index: 40;
+}
+
 @media (max-width: 640px) {
-  .reaction-bar {
-    position: fixed;
-    top: 56px;
-    right: auto;
-    left: 50%;
-    translate: -50% 0;
+  .reaction-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 19px;
   }
 }

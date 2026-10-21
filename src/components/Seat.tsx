@@ -2,6 +2,7 @@ import type { Player, ThrowKind } from '../sync/room';
 import { AvatarImage } from './AvatarImage';
 import { HostIcon } from './Icons';
 import { Mascot } from './Mascot';
+import { ReactionButton } from './ReactionButton';
 import { ThrowPicker } from './ThrowPicker';
 
 interface SeatProps {
@@ -21,6 +22,8 @@ interface SeatProps {
   onTogglePicker: () => void;
   onClosePicker: () => void;
   onThrow: (kind: ThrowKind, item: string) => void;
+  /** Nur am eigenen Platz: Reaktion zeigen, die dort aufsteigt. */
+  onReact?: (emoji: string) => void;
 }
 
 export function Seat(props: SeatProps) {
@@ -73,6 +76,7 @@ export function Seat(props: SeatProps) {
         {player.name}
         {isMe && <span className="you"> (du)</span>}
       </span>
+      {props.onReact && <ReactionButton onReact={props.onReact} placement={placement === 'above' ? 'above' : 'below'} />}
       {nudged && !pickerOpen && (
         <>
           <Mascot pose="nudge" variant="black" className="nudge-cat" />

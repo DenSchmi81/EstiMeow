@@ -1,5 +1,6 @@
 import type { Player, ThrowKind } from '../sync/room';
 import { AvatarImage } from './AvatarImage';
+import { ReactionButton } from './ReactionButton';
 import { ThrowPicker } from './ThrowPicker';
 
 interface SpectatorChipProps {
@@ -11,6 +12,8 @@ interface SpectatorChipProps {
   onTogglePicker: () => void;
   onClosePicker: () => void;
   onThrow: (kind: ThrowKind, item: string) => void;
+  /** Nur beim eigenen Chip: Reaktion zeigen, die dort aufsteigt. */
+  onReact?: (emoji: string) => void;
 }
 
 export function SpectatorChip(props: SpectatorChipProps) {
@@ -38,6 +41,7 @@ export function SpectatorChip(props: SpectatorChipProps) {
       ) : (
         body
       )}
+      {props.onReact && <ReactionButton onReact={props.onReact} placement="above" />}
       {pickerOpen && (
         <ThrowPicker
           targetName={player.name}

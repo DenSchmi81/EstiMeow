@@ -21,6 +21,8 @@ interface TableProps {
   onReveal: () => void;
   onNewRound: () => void;
   onThrow: (to: string, kind: ThrowKind, item: string) => void;
+  /** Reaktion der eigenen Person; fehlt, solange man den Raum nur anschaut. */
+  onReact?: (emoji: string) => void;
 }
 
 /** Verteilt die Plätze auf oben/unten; ab sechs Spielern sitzt je einer links und rechts. */
@@ -36,7 +38,7 @@ function arrangeSeats(players: Player[]) {
 }
 
 export function Table(props: TableProps) {
-  const { players, votes, revealed, suspense, spotlight, nudgeTarget, hostId, round, meId, canThrow, timer, onReveal, onNewRound, onThrow } =
+  const { players, votes, revealed, suspense, spotlight, nudgeTarget, hostId, round, meId, canThrow, timer, onReveal, onNewRound, onThrow, onReact } =
     props;
   const [pickerFor, setPickerFor] = useState<string | null>(null);
   const closePicker = useCallback(() => setPickerFor(null), []);
@@ -59,6 +61,7 @@ export function Table(props: TableProps) {
       onTogglePicker={() => setPickerFor((current) => (current === player.id ? null : player.id))}
       onClosePicker={closePicker}
       onThrow={(kind, item) => onThrow(player.id, kind, item)}
+      onReact={player.id === meId ? onReact : undefined}
     />
   );
 

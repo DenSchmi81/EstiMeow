@@ -1,16 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { REACTIONS } from '../throwables';
 import { SmileIcon } from './Icons';
+
+const VIEWPORT_MARGIN = 8;
 
 interface ReactionButtonProps {
   /** Schickt die Reaktion an alle; sie steigt am eigenen Platz auf. */
   onReact: (emoji: string) => void;
+  /** Die Leiste klappt nach oben, wenn unter dem Platz kein Raum ist. */
+  placement?: 'above' | 'below';
 }
 
 /** Reaktionen wie im Teams-Call: Sie gehören zur eigenen Person und treffen niemanden. */
-export function ReactionButton({ onReact }: ReactionButtonProps) {
+export function ReactionButton({ onReact, placement = 'below' }: ReactionButtonProps) {
   const [open, setOpen] = useState(false);
+  const [shift, setShift] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -28,11 +34,24 @@ export function ReactionButton({ onReact }: ReactionButtonProps) {
     };
   }, [open]);
 
+  // Die Leiste hängt mittig am Knopf – am Bildschirmrand wird sie zurückgeschoben.
+  useLayoutEffect(() => {
+    const el = barRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const center = rect.left + rect.width / 2 - shift;
+    const left = center - el.offsetWidth / 2;
+    const right = center + el.offsetWidth / 2;
+    const maxRight = document.documentElement.clientWidth - VIEWPORT_MARGIN;
+    const next = left < VIEWPORT_MARGIN ? VIEWPORT_MARGIN - left : right > maxRight ? maxRight - right : 0;
+    if (Math.abs(next - shift) > 0.5) setShift(next);
+  }, [open, shift]);
+
   return (
     <div className="reaction-wrap" ref={ref}>
       <button
         type="button"
-        className="icon-btn"
+        className="reaction-trigger"
         title="Reagieren"
         aria-label="Reagieren"
         aria-expanded={open}
@@ -41,7 +60,13 @@ export function ReactionButton({ onReact }: ReactionButtonProps) {
         <SmileIcon />
       </button>
       {open && (
-        <div className="reaction-bar" role="dialog" aria-label="Reaktion wählen">
+        <div
+          ref={barRef}
+          className={`reaction-bar ${placement}`}
+          style={{ '--shift': `${shift}px` } as CSSProperties}
+          role="dialog"
+          aria-label="Reaktion wählen"
+        >
           {REACTIONS.map((emoji) => (
             <button
               key={emoji}

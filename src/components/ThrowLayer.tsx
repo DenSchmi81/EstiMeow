@@ -150,18 +150,23 @@ function rise(layer: HTMLElement, event: ThrowEvent) {
   el.style.left = `${at.x}px`;
   el.style.top = `${at.y}px`;
   layer.appendChild(el);
-  const drift = (Math.random() - 0.5) * 40;
+  // Das Emoji steigt in Schlangenlinien auf – Ausschlag und Startseite wechseln, damit es nie gleich aussieht.
+  const sway = (16 + Math.random() * 12) * (Math.random() < 0.5 ? -1 : 1);
+  const step = (x: number, y: number) => `translate(calc(-50% + ${Math.round(x)}px), ${y}%) scale(1)`;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   el.animate(
     [
       { transform: 'translate(-50%, -50%) scale(0.6)', opacity: 0 },
-      { transform: 'translate(-50%, -90%) scale(1.15)', opacity: 1, offset: 0.2 },
-      { transform: `translate(calc(-50% + ${drift}px), -260%) scale(1)`, opacity: 0 },
+      { transform: 'translate(-50%, -90%) scale(1.15)', opacity: 1, offset: 0.12 },
+      { transform: step(sway, -140), opacity: 1, offset: 0.34 },
+      { transform: step(-sway * 0.9, -195), opacity: 1, offset: 0.56 },
+      { transform: step(sway * 0.7, -250), opacity: 0.85, offset: 0.78 },
+      { transform: step(-sway * 0.4, -310), opacity: 0 },
     ],
-    { duration: reducedMotion ? 1 : 1800, easing: 'ease-out', fill: 'forwards' },
+    { duration: reducedMotion ? 1 : 2300, easing: 'linear', fill: 'forwards' },
   ).onfinish = () => el.remove();
   // Sicherheitsnetz, falls die Animation unterwegs abbricht.
-  window.setTimeout(() => el.remove(), 4000);
+  window.setTimeout(() => el.remove(), 4500);
 }
 
 function splash(layer: HTMLElement, emoji: string, x: number, y: number) {

@@ -69,3 +69,22 @@ export const MEME_GROUPS: MemeGroup[] = [
 ];
 
 export const MEMES: Meme[] = MEME_GROUPS.flatMap((group) => group.memes);
+
+export interface CatAct {
+  id: string;
+  emoji: string;
+  text: string;
+  /** Kurzer Text, der beim Ziel erscheint, wenn die Katze dort ankommt. */
+  label: string;
+}
+
+// Statt zu werfen kann man auch die Tischkatze zu jemandem schicken – kleines Easteregg, bewusst sparsam.
+export const CAT_ACTS: CatAct[] = [
+  { id: 'wool', emoji: '🧶', text: 'Wollknäuel bringen', label: '🧶 für dich!' },
+  { id: 'nuzzle', emoji: '💞', text: 'Schmusen', label: 'schnurr …' },
+  { id: 'paw', emoji: '🐾', text: 'Pfote geben', label: 'tapp tapp' },
+];
+
+export function findCatAct(id: string): CatAct | undefined {
+  return CAT_ACTS.find((a) => a.id === id);
+}

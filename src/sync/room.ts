@@ -11,7 +11,7 @@ import { getBackend, type Backend } from './backend';
 //   votes/<round>/<uid> "5"                                   – neue Runde = round + 1, keine fremden Schreibzugriffe nötig
 //   rounds/<round>      { votes, names, avatars, deck, at }   – Schnappschuss beim Aufdecken, Grundlage der Awards
 //   stats/<uid>         { thrown, hit }                       – Wurf-Statistik, nur vom Spieler selbst beschreibbar
-//   throws/<pushId>     { from, to, kind, item, at }          – kurzlebige Emoji-/Meme-Würfe
+//   throws/<pushId>     { from, to, kind, item, at }          – kurzlebige Emoji-/Meme-Würfe und Katzenbesuche
 //   demo                { topic, values, at }                – Reglerwerte, die die Moderation allen vorfuehrt
 
 export interface RoomMeta {
@@ -61,7 +61,7 @@ export interface Profile {
   avatar: string | null;
 }
 
-export type ThrowKind = 'emoji' | 'meme';
+export type ThrowKind = 'emoji' | 'meme' | 'cat';
 
 export interface ThrowEvent {
   id: string;
@@ -153,7 +153,7 @@ function normalizeStats(value: unknown): Record<string, PlayerStats> {
 
 function toThrowEvent(id: string, t: ThrowRecord): ThrowEvent | null {
   if (typeof t.from !== 'string' || typeof t.to !== 'string' || typeof t.item !== 'string') return null;
-  if (t.kind !== 'emoji' && t.kind !== 'meme') return null;
+  if (t.kind !== 'emoji' && t.kind !== 'meme' && t.kind !== 'cat') return null;
   return { id, from: t.from, to: t.to, kind: t.kind, item: t.item };
 }
 
@@ -333,7 +333,8 @@ export function useRoom(roomId: string, profile: Profile | null) {
         }
         const event = toThrowEvent(id, record);
         if (!event) continue;
-        if (event.to === uid) {
+        // Katzenbesuche zählen bewusst nicht als Treffer – sie sind nett gemeint.
+        if (event.to === uid && event.kind !== 'cat') {
           const own = statsRef.current[uid];
           const hit = (own?.hit ?? 0) + 1;
           statsRef.current = { ...statsRef.current, [uid]: { thrown: own?.thrown ?? 0, hit } };
@@ -473,10 +474,12 @@ export function useRoom(roomId: string, profile: Profile | null) {
       startAwards: () => backend.update(`${base}/meta`, { awardsAt: backend.serverTimestamp() }),
       throwAt: async (to: string, kind: ThrowKind, item: string) => {
         const id = await backend.push(`${base}/throws`, { from: uid, to, kind, item, at: backend.serverTimestamp() });
-        const own = statsRef.current[uid];
-        const thrown = (own?.thrown ?? 0) + 1;
-        statsRef.current = { ...statsRef.current, [uid]: { thrown, hit: own?.hit ?? 0 } };
-        backend.update(`${base}/stats/${uid}`, { thrown }).catch(() => {});
+        if (kind !== 'cat') {
+          const own = statsRef.current[uid];
+          const thrown = (own?.thrown ?? 0) + 1;
+          statsRef.current = { ...statsRef.current, [uid]: { thrown, hit: own?.hit ?? 0 } };
+          backend.update(`${base}/stats/${uid}`, { thrown }).catch(() => {});
+        }
         window.setTimeout(() => {
           backend.remove(`${base}/throws/${id}`).catch(() => {});
         }, 8000);

@@ -89,7 +89,7 @@
             ".validate": "newData.hasChildren(['from', 'to', 'kind', 'item', 'at'])",
             "from": { ".validate": "newData.isString()" },
             "to": { ".validate": "newData.isString()" },
-            "kind": { ".validate": "newData.val() === 'emoji' || newData.val() === 'meme'" },
+            "kind": { ".validate": "newData.val() === 'emoji' || newData.val() === 'meme' || newData.val() === 'cat'" },
             "item": { ".validate": "newData.isString() && newData.val().length <= 20" },
             "at": { ".validate": "newData.isNumber() && newData.val() <= now" },
             "$other": { ".validate": false }

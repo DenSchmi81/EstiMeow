@@ -3,7 +3,7 @@ import type { CSSProperties, SVGProps } from 'react';
 // Das EstiMeow-Maskottchen: selbst gezeichnete Katzen, alle mit derselben schlanken Sitzfigur.
 
 export type CatVariant = 'ginger' | 'black' | 'grey' | 'calico' | 'siamese' | 'tuxedo';
-export type CatPose = 'sit' | 'doze' | 'nudge' | 'hold' | 'play' | 'groom' | 'coffee';
+export type CatPose = 'sit' | 'doze' | 'nudge' | 'hold' | 'play' | 'groom' | 'coffee' | 'wool';
 
 interface Palette {
   fur: string;
@@ -222,6 +222,25 @@ export function Mascot({ pose, variant, className, title }: MascotProps) {
             <ellipse cx="116" cy="152" rx="13" ry="9" style={{ fill: pawFill(v), ...outline(v) }} />
           </g>
           <Head v={v} look={[3, 2]} />
+        </svg>
+      );
+
+    case 'wool':
+      return (
+        <svg viewBox="0 0 220 170" {...svgProps}>
+          <SittingBody v={v} paws="left" />
+          <g className="cat-wool">
+            <circle cx="176" cy="146" r="22" style={{ fill: '#E8734A', ...outline(v, 2.5) }} />
+            <path
+              d="M158 140 C166 150 186 152 194 142 M160 154 C170 146 176 136 172 126 M186 128 C180 138 182 152 190 156"
+              style={{ fill: 'none', stroke: v.line, strokeWidth: 2, strokeLinecap: 'round' }}
+            />
+            <path d="M198 146 C210 150 214 140 206 134" style={{ fill: 'none', stroke: '#E8734A', strokeWidth: 3, strokeLinecap: 'round' }} />
+          </g>
+          <g className="cat-bat">
+            <ellipse cx="124" cy="150" rx="13" ry="9" style={{ fill: pawFill(v), ...outline(v) }} />
+          </g>
+          <Head v={v} look={[4, 3]} />
         </svg>
       );
 

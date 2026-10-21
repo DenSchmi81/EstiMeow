@@ -3,7 +3,7 @@ import { Mascot } from './Mascot';
 import { Seat } from './Seat';
 import { TableCat, tableCatAct } from './TableCat';
 
-const ROUNDS = [1, 2, 3, 4, 5];
+const ROUNDS = [1, 2, 3, 4, 5, 6];
 const noop = () => {};
 const caption = { textAlign: 'center', color: 'var(--text-muted)', fontSize: 14, fontWeight: 600, marginTop: 6 } as const;
 
@@ -38,7 +38,7 @@ export function CatGallery() {
           {ROUNDS.map((round) => {
             const act = tableCatAct(round);
             return (
-              <figure key={round} style={{ margin: 0, width: act.pose === 'play' ? 190 : 140 }}>
+              <figure key={round} style={{ margin: 0, width: act.pose === 'play' || act.pose === 'wool' ? 190 : 140 }}>
                 <Mascot pose={act.pose} variant={act.variant} />
                 <figcaption style={caption}>{act.label}</figcaption>
               </figure>

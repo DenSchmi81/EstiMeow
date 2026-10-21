@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import type { ThrowKind } from '../sync/room';
-import { EMOJIS, MEME_GROUPS } from '../throwables';
+import { CAT_ACTS, EMOJIS, MEME_GROUPS } from '../throwables';
 
 const VIEWPORT_MARGIN = 8;
 
@@ -20,8 +20,8 @@ export function ThrowPicker({ targetName, placement, onThrow, onClose }: ThrowPi
 
   useEffect(() => {
     const onPointerDown = (e: PointerEvent) => {
-      const seat = ref.current?.closest('.seat');
-      if (seat && !seat.contains(e.target as Node)) onClose();
+      const anchor = ref.current?.closest('[data-throw-anchor]');
+      if (anchor && !anchor.contains(e.target as Node)) onClose();
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -62,6 +62,9 @@ export function ThrowPicker({ targetName, placement, onThrow, onClose }: ThrowPi
         <button type="button" role="tab" aria-selected={tab === 'meme'} onClick={() => setTab('meme')}>
           Memes
         </button>
+        <button type="button" role="tab" aria-selected={tab === 'cat'} onClick={() => setTab('cat')}>
+          Katze
+        </button>
       </div>
       {tab === 'emoji' ? (
         <div className="emoji-grid">
@@ -74,6 +77,16 @@ export function ThrowPicker({ targetName, placement, onThrow, onClose }: ThrowPi
               onClick={() => onThrow('emoji', emoji)}
             >
               {emoji}
+            </button>
+          ))}
+        </div>
+      ) : tab === 'cat' ? (
+        <div className="cat-panel">
+          <p className="hint">Die Tischkatze läuft hinüber und kommt wieder zurück.</p>
+          {CAT_ACTS.map((act) => (
+            <button key={act.id} type="button" className="cat-act-btn" onClick={() => onThrow('cat', act.id)}>
+              <span aria-hidden="true">{act.emoji}</span>
+              {act.text}
             </button>
           ))}
         </div>

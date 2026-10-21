@@ -3259,3 +3259,174 @@ a {
   flex-wrap: wrap;
   gap: 10px;
 }
+
+/* ---------- Zuschauer bewerfen ---------- */
+
+.spectator-chip {
+  position: relative;
+  display: inline-flex;
+}
+
+.spectators:has(.throw-picker) {
+  position: relative;
+  z-index: 40;
+}
+
+.spectator-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: -3px -10px;
+  padding: 3px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.spectator-button:hover {
+  background: var(--surface-3, var(--surface-2));
+}
+
+/* ---------- Katze zu jemandem schicken ---------- */
+
+.cat-panel {
+  display: grid;
+  gap: 6px;
+  width: var(--picker-content);
+}
+
+.cat-panel .hint {
+  margin: 0 2px 2px;
+}
+
+.cat-act-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cat-act-btn:hover {
+  border-color: var(--accent);
+}
+
+.cat-act-btn span {
+  font-size: 20px;
+}
+
+.cat-visit-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+}
+
+.cat-visit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 54px;
+  margin: -27px 0 0 -27px;
+}
+
+.cat-visit .mascot {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.25));
+}
+
+.cat-visit.arrived .mascot {
+  animation: cat-visit-bob 0.6s ease-in-out infinite;
+}
+
+.cat-visit.act-paw.arrived .cat-poke {
+  animation: cat-poke 1.2s ease-in-out infinite;
+}
+
+.visit-label {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  translate: -50% 0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 13px;
+  white-space: nowrap;
+  animation: pop 0.2s ease-out;
+}
+
+/* Das Knäuel rollt der Katze voraus und bleibt beim Ziel liegen. */
+.visit-wool {
+  position: absolute;
+  top: 60%;
+  left: 68%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f08b63, #c9522b);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
+}
+
+.cat-visit.arrived .visit-wool {
+  animation: visit-wool-roll 0.6s ease-out forwards;
+}
+
+@keyframes cat-visit-bob {
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes visit-wool-roll {
+  to {
+    transform: translate(18px, 6px) rotate(360deg);
+  }
+}
+
+/* Tischkatze spielt mit dem Wollknäuel */
+.table-cat.act-wool {
+  width: 70px;
+}
+
+.cat-act.wooling .cat-bat {
+  animation: cat-bat 1.3s ease-in-out;
+}
+
+.cat-act.wooling .cat-wool {
+  animation: cat-wool-roll 2.2s ease-in-out;
+}
+
+@keyframes cat-wool-roll {
+  0%,
+  100% {
+    transform: none;
+  }
+  35% {
+    transform: translateX(16px) rotate(90deg);
+  }
+  70% {
+    transform: translateX(-6px) rotate(-40deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-visit.arrived .mascot,
+  .cat-visit.act-paw.arrived .cat-poke,
+  .cat-act.wooling .cat-bat,
+  .cat-act.wooling .cat-wool {
+    animation: none;
+  }
+}

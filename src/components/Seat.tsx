@@ -49,6 +49,7 @@ export function Seat(props: SeatProps) {
     <div
       className={`seat${isMe ? ' me' : ''}${spotlight ? ' spot' : ''}${nudged ? ' nudged' : ''}`}
       data-player-id={player.id}
+      data-throw-anchor=""
     >
       {canThrow ? (
         <button

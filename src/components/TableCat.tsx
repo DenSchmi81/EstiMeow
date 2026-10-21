@@ -19,6 +19,7 @@ const ACTS: TableCatAct[] = [
   { id: 'hunt', label: 'Jagt eine Fliege', pose: 'sit', variant: 'ginger', trigger: 'fly' },
   { id: 'groom', label: 'Putzt sich', pose: 'groom', variant: 'siamese', trigger: { className: 'grooming', durationMs: 2500 } },
   { id: 'coffee', label: 'Trinkt Kaffee', pose: 'coffee', variant: 'tuxedo', trigger: { className: 'sipping', durationMs: 2300 } },
+  { id: 'wool', label: 'Spielt mit dem Wollknäuel', pose: 'wool', variant: 'black', trigger: { className: 'wooling', durationMs: 2400 } },
 ];
 
 export function tableCatAct(round: number): TableCatAct {

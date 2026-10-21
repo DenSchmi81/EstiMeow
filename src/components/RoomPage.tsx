@@ -11,10 +11,12 @@ import { AwardsOverlay } from './AwardsOverlay';
 import { Hand } from './Hand';
 import { Header } from './Header';
 import { BookIcon, EyeIcon, GearIcon, TrophyIcon } from './Icons';
+import { CatVisitLayer } from './CatVisitLayer';
 import { InviteButton } from './InviteButton';
 import { ProfileDialog } from './ProfileDialog';
 import { Results } from './Results';
 import { SettingsDialog } from './SettingsDialog';
+import { SpectatorChip } from './SpectatorChip';
 import { Table } from './Table';
 import { ThrowLayer } from './ThrowLayer';
 import { TimeboxTimer } from './TimeboxTimer';
@@ -66,6 +68,8 @@ export function RoomPage({ roomId }: { roomId: string }) {
   // Wer das eingeblendete Wissenselement schließt, blendet es nur für sich aus.
   const [hiddenPin, setHiddenPin] = useState<string | null>(null);
   const [unlocked, setUnlocked] = useState(() => isUnlocked(roomId));
+  // Offener Wurf-Auswähler über einem Zuschauer-Chip
+  const [pickerFor, setPickerFor] = useState<string | null>(null);
   const room = useRoom(roomId, profile);
   const { status, meta, players, votes, rounds, stats, demo, uid, actions } = room;
   const lastThrowAt = useRef(0);
@@ -253,11 +257,19 @@ export function RoomPage({ roomId }: { roomId: string }) {
               <EyeIcon /> Zuschauer:
             </span>
             {spectators.map((s) => (
-              <span key={s.id} className="spectator-chip" data-player-id={s.id}>
-                <AvatarImage avatar={s.avatar} name={s.name} size="sm" />
-                {s.name}
-                {s.id === uid && ' (du)'}
-              </span>
+              <SpectatorChip
+                key={s.id}
+                player={s}
+                isMe={s.id === uid}
+                canThrow={profile !== null && s.id !== uid}
+                pickerOpen={pickerFor === s.id}
+                onTogglePicker={() => setPickerFor((current) => (current === s.id ? null : s.id))}
+                onClosePicker={() => setPickerFor(null)}
+                onThrow={(kind, item) => {
+                  setPickerFor(null);
+                  handleThrow(s.id, kind, item);
+                }}
+              />
             ))}
           </div>
         )}
@@ -298,6 +310,7 @@ export function RoomPage({ roomId }: { roomId: string }) {
           </p>
         ) : null}
         <ThrowLayer subscribe={room.onThrow} />
+        <CatVisitLayer subscribe={room.onThrow} round={meta.round} />
       </main>
     );
   }
